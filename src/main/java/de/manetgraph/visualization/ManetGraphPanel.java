@@ -24,7 +24,7 @@ import de.manetgraph.generator.ManetGraphGenerator;
 
 public class ManetGraphPanel extends JPanel {
 		
-	ManetGraph graph;
+	ManetGraph<ManetVertex, ManetEdge> graph;
 	Scope scope;	
 	
     private int vertexWidth = 50;
@@ -59,10 +59,10 @@ public class ManetGraphPanel extends JPanel {
         	ManetVertex source = graph.getEdgeSource(edge);
         	ManetVertex target = graph.getEdgeTarget(edge);
         	
-        	int x1 = (int) ((source.getX()) * xScale + padding);	
-        	int y1 = (int) ((scope.y.max - source.getY()) * yScale + padding); 
-        	int x2 = (int) ((target.getX()) * xScale + padding);	
-        	int y2 = (int) ((scope.y.max - target.getY()) * yScale + padding); 
+        	int x1 = (int) ((source.x()) * xScale + padding);	
+        	int y1 = (int) ((scope.y.max - source.y()) * yScale + padding); 
+        	int x2 = (int) ((target.x()) * xScale + padding);	
+        	int y2 = (int) ((scope.y.max - target.y()) * yScale + padding); 
         	g2.drawLine(x1, y1, x2, y2);
 
         	Point lineCenter = new Point(x1/2+x2/2, y1/2+y2/2); 
@@ -78,8 +78,8 @@ public class ManetGraphPanel extends JPanel {
                 
         for(ManetVertex vertex : graph.vertexSet()) {
         	
-            int x = (int) ((vertex.getX() * xScale + padding) - vertexWidth / 2);	
-        	int y = (int) (((scope.y.max - vertex.getY()) * yScale + padding) - vertexWidth / 2); 
+            int x = (int) ((vertex.x() * xScale + padding) - vertexWidth / 2);	
+        	int y = (int) (((scope.y.max - vertex.y()) * yScale + padding) - vertexWidth / 2); 
         	
         	g2.setStroke(VERTEX_STROKE);
         	g2.setColor(vertexColor);
@@ -114,27 +114,27 @@ public class ManetGraphPanel extends JPanel {
 		}
 	}
 	
-	private Scope getScope(ManetGraph graph) {
+	private Scope getScope(ManetGraph<ManetVertex,ManetEdge> graph) {
 		
 		Scope scope = new Scope();
 		
 		for(ManetVertex vertex : graph.vertexSet()) {
 		
 			if(!scope.isSet) {
-				scope.x = new Range(vertex.getX(), vertex.getX());
-				scope.y = new Range(vertex.getY(), vertex.getY());
+				scope.x = new Range(vertex.x(), vertex.x());
+				scope.y = new Range(vertex.y(), vertex.y());
 				scope.isSet = true;
 			}
 			else {				
-				if(vertex.getX() > scope.x.max)
-					scope.x.max = vertex.getX();
-				else if(vertex.getX() < scope.x.min)
-					scope.x.min = vertex.getX();
+				if(vertex.x() > scope.x.max)
+					scope.x.max = vertex.x();
+				else if(vertex.x() < scope.x.min)
+					scope.x.min = vertex.x();
 				
-				if(vertex.getY() > scope.y.max)
-					scope.y.max = vertex.getY();
-				else if(vertex.getY() < scope.y.min)
-					scope.y.min = vertex.getY();				
+				if(vertex.y() > scope.y.max)
+					scope.y.max = vertex.y();
+				else if(vertex.y() < scope.y.min)
+					scope.y.min = vertex.y();				
 			}   			
 		}	
 		
@@ -145,7 +145,7 @@ public class ManetGraphPanel extends JPanel {
     public static void main(String[] args) {
     	SwingUtilities.invokeLater(new Runnable() {
     		public void run() {                 		
-    			ManetGraph graph = ManetGraphGenerator.GenerateRandomGraph();      		   			      			
+    			ManetGraph<ManetVertex,ManetEdge> graph = ManetGraphGenerator.GenerateRandomGraph();
        			ManetGraphPanel panel = new ManetGraphPanel(graph);
        			Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
        			int width = (int) screenSize.getWidth() * 3/4;

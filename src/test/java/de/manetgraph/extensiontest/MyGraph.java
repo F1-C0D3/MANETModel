@@ -1,33 +1,38 @@
 package de.manetgraph.extensiontest;
 
-import de.manetgraph.ManetEdge;
-import de.manetgraph.ManetGraph;
-import de.manetgraph.ManetVertex;
+import java.util.function.Supplier;
 
-public class MyGraph extends ManetGraph{
+import de.manetgraph.ManetGraph;
+
+public class MyGraph extends ManetGraph<MyVertex, MyEdge>{
 
 	public MyGraph() {
-		
-		MyVertex a = new MyVertex(0,0);
+		super(MyEdge.class);
+				
+		MyVertex a = new MyVertex(1,1);
 		MyVertex b = new MyVertex(1,1);
 		
+		this.setEdgeSupplier(new MyEdgeSupplier());
+		this.setVertexSupplier(new MyVertexSupplier());
+				
 		this.addVertex(a);
-		this.addVertex(b);
-		
-		this.addEdge(a, b);
-		
+		MyEdge edge = this.addEdge(a, b);	
+		this.setEdgeWeight(edge, 5);
 	}
 	
-	public class MyVertex extends ManetVertex{
-
-		public MyVertex(double x, double y) {
-			super(x, y);
+	public class MyVertexSupplier implements Supplier<MyVertex> {
+		@Override
+		public MyVertex get() {
+			return new MyVertex(0, 0);
 		}	
 	}
 	
-	public class MyEdge extends ManetEdge {
-		
-	}	
+	public class MyEdgeSupplier implements Supplier<MyEdge> {
+		@Override
+		public MyEdge get() {
+			return new MyEdge();
+		}	
+	}
 }
 
 

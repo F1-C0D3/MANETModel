@@ -5,6 +5,10 @@ import java.util.List;
 import java.util.Random;
 import java.util.Set;
 
+import de.manetgraph.IManetEdge;
+import de.manetgraph.IManetGraph;
+import de.manetgraph.IManetVertex;
+import de.manetgraph.ManetEdge;
 import de.manetgraph.ManetGraph;
 import de.manetgraph.ManetVertex;
 import de.manetgraph.generator.Playground.Coordinate;
@@ -14,38 +18,45 @@ import de.manetgraph.util.Tuple;
 
 public class ManetGraphGenerator {
 		
-	public static ManetGraph GetSimpleGraph() {
+	public static void getASimpleGraph(IManetGraph graph) {
 				
-		ManetGraph graph = new ManetGraph();
+		List<IManetVertex> vertices = new ArrayList<>();	
+		IManetVertex source = graph.createVertex();
+		source.setPosition(0,0);
+		vertices.add(source);
+				
+		IManetVertex a = graph.createVertex();
+		source.setPosition(7,4);
+		vertices.add(a);
 		
-		List<ManetVertex> nodes = new ArrayList<ManetVertex>();			
-		ManetVertex source = new ManetVertex(0,0);
-		nodes.add(source);
-		ManetVertex a = new ManetVertex(7,4);
-		nodes.add(a);
-		ManetVertex b = new ManetVertex(2,7);
-		nodes.add(b);
-		ManetVertex c = new ManetVertex(3,12);
-		nodes.add(c);
-		ManetVertex target = new ManetVertex(10,10);
-		nodes.add(target);		
-		graph.addVertices(nodes);
+		IManetVertex b = graph.createVertex();
+		source.setPosition(2,7);
+		vertices.add(a);
 		
-		List<Tuple<ManetVertex, ManetVertex>> tuples = new ArrayList<>();	
-		tuples.add(new Tuple<ManetVertex, ManetVertex>(source, a));
-		tuples.add(new Tuple<ManetVertex, ManetVertex>(source, b));
-		tuples.add(new Tuple<ManetVertex, ManetVertex>(a, b));
-		tuples.add(new Tuple<ManetVertex, ManetVertex>(b, c));
-		tuples.add(new Tuple<ManetVertex, ManetVertex>(a, target));
-		tuples.add(new Tuple<ManetVertex, ManetVertex>(b, target));
-		graph.addEdges(tuples);	
+		IManetVertex c = graph.createVertex();
+		source.setPosition(3,12);
+		vertices.add(c);
 		
-		return graph;		
+		IManetVertex target = graph.createVertex();
+		source.setPosition(7,4);
+		vertices.add(target);		
+		
+		graph.addVertices(vertices);
+		
+		List<Tuple<IManetVertex, IManetVertex>> tuples = new ArrayList<>();	
+		tuples.add(new Tuple<IManetVertex, IManetVertex>(source, a));
+		tuples.add(new Tuple<IManetVertex, IManetVertex>(source, b));
+		tuples.add(new Tuple<IManetVertex, IManetVertex>(a, b));
+		tuples.add(new Tuple<IManetVertex, IManetVertex>(b, c));
+		tuples.add(new Tuple<IManetVertex, IManetVertex>(a, target));
+		tuples.add(new Tuple<IManetVertex, IManetVertex>(b, target));
+		graph.addEdges(tuples);			
 	}
 	
-	public static ManetGraph GenerateRandomGraph() {
+	
+	public static ManetGraph<ManetVertex,ManetEdge> GenerateRandomGraph() {
 		
-		ManetGraph graph = new ManetGraph();
+		ManetGraph<ManetVertex,ManetEdge> graph = new ManetGraph<ManetVertex,ManetEdge>(ManetEdge.class);
 		
 		Playground pg = new Playground();		
 		pg.height = new IntRange(0, 1000);
@@ -111,28 +122,28 @@ public class ManetGraphGenerator {
 				angleRadians = Math.toRadians(angleDegrees);
 				x = distance * Math.cos(angleRadians);
 				y = distance * Math.sin(angleRadians);
-				coordinate = new Coordinate(source.getX() + x, source.getY() + y);
+				coordinate = new Coordinate(source.x() + x, source.y() + y);
 			}
 			
 			if((angleDegrees > 90d) && (angleDegrees <= 180d)) {
 				angleRadians = Math.toRadians(180-angleDegrees);
 				x = distance * Math.cos(angleRadians);
 				y = distance * Math.sin(angleRadians);
-				coordinate = new Coordinate(source.getX() - x, source.getY() + y);		
+				coordinate = new Coordinate(source.x() - x, source.y() + y);		
 			}
 			
 			if((angleDegrees > 180d) && (angleDegrees <= 270d)) {
 				angleRadians = Math.toRadians(270-angleDegrees);
 				x = distance * Math.sin(angleRadians);
 				y = distance * Math.cos(angleRadians);
-				coordinate = new Coordinate(source.getX() - x, source.getY() - y);
+				coordinate = new Coordinate(source.x() - x, source.y() - y);
 			}
 							
 			if((angleDegrees > 270d) && (angleDegrees <= 360d)) {
 				angleRadians = Math.toRadians(360-angleDegrees);
 				x = distance * Math.cos(angleRadians);
 				y = distance * Math.sin(angleRadians);
-				coordinate = new Coordinate(source.getX() + x, source.getY() - y);	
+				coordinate = new Coordinate(source.x() + x, source.y() - y);	
 			}
 						
 			if(pg.isInside(coordinate)) 						

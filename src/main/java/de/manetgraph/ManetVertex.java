@@ -5,20 +5,18 @@ import java.util.Objects;
 public class ManetVertex implements IManetVertex {
 
 	int ID;
-	double x;
-	double y;
+	Coordinate coordinate;
 	
 	public ManetVertex(double x, double y) {
-		this.x = x;
-		this.y = y;
+		this.coordinate = new Coordinate(x,y);
 	}	
 	
-	public double getX() {
-		return this.x;
+	public double x() {
+		return this.coordinate.x();
 	}
 	
-	public double getY() {
-		return this.y;
+	public double y() {
+		return this.coordinate.y();
 	}
 	
 	public int getID() {
@@ -44,7 +42,17 @@ public class ManetVertex implements IManetVertex {
 	
 	@Override
 	public String toString() {
-	    return String.format("%d:(%.2f/%.2f)", this.ID, this.x, this.y);
+	    return String.format("%d:(%.2f/%.2f)", this.ID, this.coordinate.x(), this.coordinate.y());
+	}
+
+	@Override
+	public Coordinate getPostion() {
+		return this.coordinate;
+	}
+
+	@Override
+	public void setPosition(double x, double y) {
+		this.coordinate = new Coordinate(x,y);		
 	}
 	
 }
