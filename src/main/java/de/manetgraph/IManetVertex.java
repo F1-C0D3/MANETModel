@@ -1,5 +1,10 @@
 package de.manetgraph;
 
-public class IManetVertex {
+public interface IManetVertex extends IManetElement{
 
+	void setID(int ID);
+	int getID();
+	double getX();
+	double getY();
+	
 }

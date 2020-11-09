@@ -3,4 +3,22 @@
   <groupId>de.manetgraph</groupId>
   <artifactId>ManetGraph</artifactId>
   <version>0.0.1-SNAPSHOT</version>
+
+  <dependencies>
+  	
+  	<dependency>
+    	<groupId>org.jgrapht</groupId>
+    	<artifactId>jgrapht-core</artifactId>
+    	<version>1.5.0</version>
+	</dependency>
+
+	<dependency>
+   	 	<groupId>junit</groupId>
+   	 	<artifactId>junit</artifactId>
+    	<version>4.13.1</version>
+    	<scope>test</scope>
+	</dependency>
+	
+  </dependencies>
+  
 </project>
