@@ -2,9 +2,9 @@ package de.manetgraph;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Supplier;
 
 import org.jgrapht.graph.SimpleWeightedGraph;
-
 import de.manetgraph.util.Tuple;
 
 public class ManetGraph<V extends IManetVertex, E extends IManetEdge> extends SimpleWeightedGraph<V,E> implements IManetGraph<V,E> {
@@ -12,10 +12,11 @@ public class ManetGraph<V extends IManetVertex, E extends IManetEdge> extends Si
 	int vertexCount;
 	int edgeCount;
 	
-	public ManetGraph(Class<? extends E> edgeClass) {
+	public ManetGraph(Class<? extends V> vertexClass, Class<? extends E> edgeClass) {
 		super(edgeClass);
 		this.vertexCount = 1;
 		this.edgeCount = 1;
+		
 	}
 	
 	@Override

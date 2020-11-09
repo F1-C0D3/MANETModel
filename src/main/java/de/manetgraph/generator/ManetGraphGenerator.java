@@ -38,7 +38,7 @@ public class ManetGraphGenerator {
 		vertices.add(c);
 		
 		IManetVertex target = graph.createVertex();
-		source.setPosition(7,4);
+		source.setPosition(10,10);
 		vertices.add(target);		
 		
 		graph.addVertices(vertices);
@@ -51,8 +51,7 @@ public class ManetGraphGenerator {
 		tuples.add(new Tuple<IManetVertex, IManetVertex>(a, target));
 		tuples.add(new Tuple<IManetVertex, IManetVertex>(b, target));
 		graph.addEdges(tuples);			
-	}
-	
+	}	
 	
 	public static ManetGraph<ManetVertex,ManetEdge> GenerateRandomGraph() {
 		
