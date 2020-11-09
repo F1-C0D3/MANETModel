@@ -8,6 +8,7 @@ import org.jgrapht.graph.SimpleWeightedGraph;
 
 import de.manetgraph.util.Tuple;
 
+//public class ManetGraph<V extends ManetVertex, E extends ManetEdge> extends SimpleWeightedGraph<V, E>
 public class ManetGraph extends SimpleWeightedGraph<ManetVertex, ManetEdge>{
 	
 	int vertexCount;

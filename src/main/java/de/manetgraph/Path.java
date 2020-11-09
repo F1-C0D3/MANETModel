@@ -22,13 +22,13 @@ public class Path extends LinkedList<IManetElement>{
 	}
 	
 	@Override
-	public boolean add(IManetElement acoElement) {
-		super.add(acoElement);	
+	public boolean add(IManetElement manetElement) {
+		super.add(manetElement);	
 		
 		if(this.cost == null)
 			this.cost = new Cost();
 		
-		cost.addDistance(acoElement.getWeight());
+		cost.addDistance(manetElement.getWeight());
 		
 		return true;
 	}		
@@ -38,12 +38,12 @@ public class Path extends LinkedList<IManetElement>{
 		
 		String str = "";
 				
-		for(IManetElement acoElement: this) {	
-			if (acoElement instanceof IManetVertex) {		
-				str += String.format("[%s]", acoElement.toString());	
+		for(IManetElement manetElement: this) {	
+			if (manetElement instanceof IManetVertex) {		
+				str += String.format("[%s]", manetElement.toString());	
 			}
-			else if(acoElement instanceof IManetEdge) {	
-				str += String.format("- %.2f -", acoElement.getWeight());		
+			else if(manetElement instanceof IManetEdge) {	
+				str += String.format("- %.2f -", manetElement.getWeight());		
 			}
 		}	
 		
