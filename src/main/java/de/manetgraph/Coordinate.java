@@ -17,5 +17,4 @@ public class Coordinate {
 	public double y() {
 		return this.y;
 	}
-
 }

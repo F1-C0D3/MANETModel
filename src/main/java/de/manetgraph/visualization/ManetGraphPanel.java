@@ -19,8 +19,8 @@ import javax.swing.SwingUtilities;
 
 import de.manetgraph.ManetEdge;
 import de.manetgraph.ManetGraph;
+import de.manetgraph.ManetGraphSupplier;
 import de.manetgraph.ManetVertex;
-import de.manetgraph.generator.ManetGraphGenerator;
 
 public class ManetGraphPanel extends JPanel {
 		
@@ -34,7 +34,7 @@ public class ManetGraphPanel extends JPanel {
     private Color edgeColor = Color.BLACK;
     private Color vertexColor = Color.LIGHT_GRAY;
 
-    public ManetGraphPanel(ManetGraph graph) {
+    public ManetGraphPanel(ManetGraph<ManetVertex, ManetEdge> graph) {
         this.graph = graph;      
         this.scope = this.getScope(graph);
     }
@@ -144,21 +144,25 @@ public class ManetGraphPanel extends JPanel {
     
     public static void main(String[] args) {
     	SwingUtilities.invokeLater(new Runnable() {
-    		public void run() {                 		
-    			ManetGraph<ManetVertex,ManetEdge> graph = ManetGraphGenerator.GenerateRandomGraph();
-       			ManetGraphPanel panel = new ManetGraphPanel(graph);
-       			Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-       			int width = (int) screenSize.getWidth() * 3/4;
-       			int height = (int) screenSize.getHeight() * 3/4;
-       			panel.setPreferredSize(new Dimension(width, height));
-       			panel.setFont(new Font("Consolas", Font.PLAIN, 16));  
-       			panel.setLayout(null);
-       			JFrame frame = new JFrame("AcoGraph");
-       			frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-       			frame.getContentPane().add(panel);
-       			frame.pack();
-       			frame.setLocationRelativeTo(null);
-       			frame.setVisible(true);   
+    		public void run() {        
+    		    			
+    			ManetGraph<ManetVertex, ManetEdge> graph = new ManetGraph<ManetVertex, ManetEdge>(new ManetGraphSupplier.ManetVertexSupplier(), new ManetGraphSupplier.ManetEdgeSupplier());
+    			graph.generateRandomGraph();
+    	
+	       		ManetGraphPanel panel = new ManetGraphPanel(graph);
+	       		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+	       		int width = (int) screenSize.getWidth() * 3/4;
+	       		int height = (int) screenSize.getHeight() * 3/4;
+	       		panel.setPreferredSize(new Dimension(width, height));
+	       		panel.setFont(new Font("Consolas", Font.PLAIN, 16));  
+	       		panel.setLayout(null);
+	       		JFrame frame = new JFrame("AcoGraph");
+	       		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+	       		frame.getContentPane().add(panel);
+	       		frame.pack();
+	       		frame.setLocationRelativeTo(null);
+	       		frame.setVisible(true);  
+	
     		}
         });
     }

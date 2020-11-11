@@ -7,7 +7,6 @@ import org.jgrapht.graph.DefaultWeightedEdge;
 public class ManetEdge extends DefaultWeightedEdge implements IManetEdge, Comparable<ManetEdge> {
 
 	int ID;
-	double pheromone;
 	
 	public void setID(int ID) {
 		this.ID = ID;
@@ -37,7 +36,7 @@ public class ManetEdge extends DefaultWeightedEdge implements IManetEdge, Compar
 	
 	@Override
 	public String toString() {
-	    return String.format("%d:[%s]- %.2f/%.2f -[%s]", this.ID, this.getSource().toString(), this.pheromone, this.getWeight(), this.getTarget().toString());
+	    return String.format("%d:[%s]- %.2f -[%s]", this.ID, this.getSource().toString(), this.getWeight(), this.getTarget().toString());
 	}
 	
 }

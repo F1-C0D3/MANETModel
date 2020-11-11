@@ -2,14 +2,26 @@ package de.manetgraph;
 
 import java.util.Objects;
 
-public class ManetVertex implements IManetVertex {
+public class ManetVertex implements IManetVertex{
 
-	int ID;
-	Coordinate coordinate;
+	private int ID;
+	private Coordinate coordinate;
+	
+	public ManetVertex() {
+		
+	}	
 	
 	public ManetVertex(double x, double y) {
 		this.coordinate = new Coordinate(x,y);
-	}	
+	}
+	
+	public int getID() {
+		return this.ID;
+	}
+	
+	public void setID(int ID) {
+		this.ID = ID;
+	}
 	
 	public double x() {
 		return this.coordinate.x();
@@ -19,12 +31,14 @@ public class ManetVertex implements IManetVertex {
 		return this.coordinate.y();
 	}
 	
-	public int getID() {
-		return this.ID;
+	@Override
+	public Coordinate getPostion() {
+		return this.coordinate;
 	}
-	
-	public void setID(int ID) {
-		this.ID = ID;
+
+	@Override
+	public void setPosition(double x, double y) {
+		this.coordinate = new Coordinate(x,y);		
 	}
 	
 	public double getWeight() {
@@ -43,16 +57,5 @@ public class ManetVertex implements IManetVertex {
 	@Override
 	public String toString() {
 	    return String.format("%d:(%.2f/%.2f)", this.ID, this.coordinate.x(), this.coordinate.y());
-	}
-
-	@Override
-	public Coordinate getPostion() {
-		return this.coordinate;
-	}
-
-	@Override
-	public void setPosition(double x, double y) {
-		this.coordinate = new Coordinate(x,y);		
-	}
-	
+	}	
 }

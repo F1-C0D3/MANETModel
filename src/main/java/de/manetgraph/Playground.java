@@ -1,4 +1,4 @@
-package de.manetgraph.generator;
+package de.manetgraph;
 
 public class Playground {
 	
@@ -14,7 +14,7 @@ public class Playground {
 	}
 	
 	public boolean isInside(Coordinate coordinate) {
-		return (coordinate.x >= width.min && coordinate.x <= width.max) && (coordinate.y >= height.min && coordinate.y <= height.max);	
+		return (coordinate.x() >= width.min && coordinate.x() <= width.max) && (coordinate.y() >= height.min && coordinate.y() <= height.max);	
 	}
 	
 	public static class IntRange{	
@@ -36,14 +36,4 @@ public class Playground {
 			this.max = max;
 		}
 	}
-	
-	public static class Coordinate {		
-		public double x;
-		public double y;
-		
-		public Coordinate(double x, double y) {
-			this.x = x;
-			this.y = y;
-		}	
-	}	
 }
