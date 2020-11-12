@@ -20,7 +20,7 @@ public class ManetEdge extends DefaultWeightedEdge implements IManetEdge, Compar
 	public double getWeight() {
 		return super.getWeight();
 	}
-
+	
 	public int compareTo(ManetEdge edge) {	
 		return Double.compare(edge.getWeight(), this.getWeight());
 	}

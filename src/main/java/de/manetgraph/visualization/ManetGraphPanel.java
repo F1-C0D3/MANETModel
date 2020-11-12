@@ -39,6 +39,22 @@ public class ManetGraphPanel extends JPanel {
         this.scope = this.getScope(graph);
     }
     
+    void paintEdgeText() {
+    	
+    }
+    
+    void paintEdge(){
+    	
+    }
+    
+    void paintVertex() {
+    	
+    }
+    
+    void paintPath() {
+    	
+    }
+    
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
@@ -147,7 +163,7 @@ public class ManetGraphPanel extends JPanel {
     		public void run() {        
     		    			
     			ManetGraph<ManetVertex, ManetEdge> graph = new ManetGraph<ManetVertex, ManetEdge>(new ManetGraphSupplier.ManetVertexSupplier(), new ManetGraphSupplier.ManetEdgeSupplier());
-    			graph.generateRandomGraph();
+    			graph.generateGridGraph();
     	
 	       		ManetGraphPanel panel = new ManetGraphPanel(graph);
 	       		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();

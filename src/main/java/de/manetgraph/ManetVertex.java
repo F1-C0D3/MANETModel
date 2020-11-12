@@ -31,12 +31,10 @@ public class ManetVertex implements IManetVertex{
 		return this.coordinate.y();
 	}
 	
-	@Override
 	public Coordinate getPostion() {
 		return this.coordinate;
 	}
 
-	@Override
 	public void setPosition(double x, double y) {
 		this.coordinate = new Coordinate(x,y);		
 	}
