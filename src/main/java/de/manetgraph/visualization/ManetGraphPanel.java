@@ -21,6 +21,7 @@ import de.manetgraph.ManetEdge;
 import de.manetgraph.ManetGraph;
 import de.manetgraph.ManetGraphSupplier;
 import de.manetgraph.ManetVertex;
+import de.manetgraph.util.Tuple;
 
 public class ManetGraphPanel extends JPanel {
 		
@@ -70,20 +71,21 @@ public class ManetGraphPanel extends JPanel {
         g2.setStroke(EDGE_STROKE);
         g2.setColor(edgeColor);
         
-        for(ManetEdge edge : graph.edgeSet()) {
+        for(ManetEdge edge : graph.getEdges()) {
         	
-        	ManetVertex source = graph.getEdgeSource(edge);
-        	ManetVertex target = graph.getEdgeTarget(edge);
+        	Tuple<ManetVertex,ManetVertex> vertexTuple = graph.getVerticesOf(edge);
+        	ManetVertex vertex1 = vertexTuple.getFirst();
+        	ManetVertex vertex2 = vertexTuple.getSecond();
         	
-        	int x1 = (int) ((source.x()) * xScale + padding);	
-        	int y1 = (int) ((scope.y.max - source.y()) * yScale + padding); 
-        	int x2 = (int) ((target.x()) * xScale + padding);	
-        	int y2 = (int) ((scope.y.max - target.y()) * yScale + padding); 
+        	int x1 = (int) ((vertex1.x()) * xScale + padding);	
+        	int y1 = (int) ((scope.y.max - vertex1.y()) * yScale + padding); 
+        	int x2 = (int) ((vertex2.x()) * xScale + padding);	
+        	int y2 = (int) ((scope.y.max - vertex2.y()) * yScale + padding); 
         	g2.drawLine(x1, y1, x2, y2);
 
         	Point lineCenter = new Point(x1/2+x2/2, y1/2+y2/2); 
         	        	
-        	String str = String.format("%.2f", edge.getWeight());	
+        	String str = String.format("%d: %.2f / %.2f", edge.getID(), edge.getOccupation(), edge.getDistance());	
         	FontMetrics fm = g2.getFontMetrics();
             Rectangle2D stringBounds = fm.getStringBounds(str, g2);        
             g2.setColor(Color.GRAY);
@@ -92,7 +94,7 @@ public class ManetGraphPanel extends JPanel {
             
         }
                 
-        for(ManetVertex vertex : graph.vertexSet()) {
+        for(ManetVertex vertex : graph.getVertices()) {
         	
             int x = (int) ((vertex.x() * xScale + padding) - vertexWidth / 2);	
         	int y = (int) (((scope.y.max - vertex.y()) * yScale + padding) - vertexWidth / 2); 
@@ -134,7 +136,7 @@ public class ManetGraphPanel extends JPanel {
 		
 		Scope scope = new Scope();
 		
-		for(ManetVertex vertex : graph.vertexSet()) {
+		for(ManetVertex vertex : graph.getVertices()) {
 		
 			if(!scope.isSet) {
 				scope.x = new Range(vertex.x(), vertex.x());
@@ -161,10 +163,9 @@ public class ManetGraphPanel extends JPanel {
     public static void main(String[] args) {
     	SwingUtilities.invokeLater(new Runnable() {
     		public void run() {        
-    		    			
+    		    		
     			ManetGraph<ManetVertex, ManetEdge> graph = new ManetGraph<ManetVertex, ManetEdge>(new ManetGraphSupplier.ManetVertexSupplier(), new ManetGraphSupplier.ManetEdgeSupplier());
-    			graph.generateGridGraph();
-    	
+    			graph.generateRandomGraph();
 	       		ManetGraphPanel panel = new ManetGraphPanel(graph);
 	       		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 	       		int width = (int) screenSize.getWidth() * 3/4;
@@ -177,8 +178,7 @@ public class ManetGraphPanel extends JPanel {
 	       		frame.getContentPane().add(panel);
 	       		frame.pack();
 	       		frame.setLocationRelativeTo(null);
-	       		frame.setVisible(true);  
-	
+	       		frame.setVisible(true);  	       		
     		}
         });
     }

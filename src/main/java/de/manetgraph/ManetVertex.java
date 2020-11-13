@@ -7,9 +7,7 @@ public class ManetVertex implements IManetVertex{
 	private int ID;
 	private Coordinate coordinate;
 	
-	public ManetVertex() {
-		
-	}	
+	public ManetVertex() {}	
 	
 	public ManetVertex(double x, double y) {
 		this.coordinate = new Coordinate(x,y);
@@ -39,7 +37,11 @@ public class ManetVertex implements IManetVertex{
 		this.coordinate = new Coordinate(x,y);		
 	}
 	
-	public double getWeight() {
+	public double getDistance() {
+		return 0;
+	}
+	
+	public double getOccupation() {
 		return 0;
 	}
 
