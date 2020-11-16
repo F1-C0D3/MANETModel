@@ -1,4 +1,4 @@
-package de.manetgraph;
+package de.manetmodel.graph;
 
 import java.util.function.Supplier;
 

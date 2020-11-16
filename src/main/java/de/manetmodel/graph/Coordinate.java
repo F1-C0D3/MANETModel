@@ -1,4 +1,4 @@
-package de.manetgraph;
+package de.manetmodel.graph;
 
 public class Coordinate {
 	

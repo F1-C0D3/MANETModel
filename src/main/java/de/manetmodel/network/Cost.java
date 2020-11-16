@@ -1,14 +1,13 @@
-package de.manetgraph;
+package de.manetmodel.network;
 
 import java.util.ArrayList;
 
-public class ManetCost implements Comparable<ManetCost>{
+public class Cost implements Comparable<Cost>{
 
 	private double distance;
 	private ArrayList<Integer> occupation;
 	
-	
-	public ManetCost(){
+	public Cost(){
 		this.distance = 0;
 		this.occupation = new ArrayList<Integer>();
 	}
@@ -38,14 +37,14 @@ public class ManetCost implements Comparable<ManetCost>{
 		return this.occupation;
 	}
 		
-	public boolean isCheaper(ManetCost cost) {
+	public boolean isCheaper(Cost cost) {
 		if(cost != null) 
 			if(this.distance < cost.getDistance()) 
 				return true;	
 		return false;
 	}
 
-	public int compareTo(ManetCost cost) {	
+	public int compareTo(Cost cost) {	
 		return Double.compare(this.distance, cost.getDistance());
 	}
 	

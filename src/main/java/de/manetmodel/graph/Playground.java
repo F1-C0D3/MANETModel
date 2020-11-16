@@ -1,4 +1,4 @@
-package de.manetgraph;
+package de.manetmodel.graph;
 
 public class Playground {
 	
@@ -13,8 +13,8 @@ public class Playground {
 		
 	}
 	
-	public boolean isInside(Coordinate coordinate) {
-		return (coordinate.x() >= width.min && coordinate.x() <= width.max) && (coordinate.y() >= height.min && coordinate.y() <= height.max);	
+	public boolean isInside(double x, double y) {
+		return (x >= width.min && x <= width.max) && (y >= height.min && y <= height.max);	
 	}
 	
 	public static class IntRange{	

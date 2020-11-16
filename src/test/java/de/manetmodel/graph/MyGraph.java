@@ -1,15 +1,13 @@
-package de.manetgraph.extensiontest;
+package de.manetmodel.graph;
 
 import java.util.function.Supplier;
 
-import de.manetgraph.ManetGraph;
+import de.manetmodel.graph.ManetGraph;
 
 public class MyGraph extends ManetGraph<MyVertex, MyEdge>{
 
-	public MyGraph() {
-		
-		super(new MyVertexSupplier(), new MyEdgeSupplier());
-			
+	public MyGraph() {	
+		super(new MyVertexSupplier(), new MyEdgeSupplier());			
 	}
 	
 	public static class MyVertexSupplier implements Supplier<MyVertex> {

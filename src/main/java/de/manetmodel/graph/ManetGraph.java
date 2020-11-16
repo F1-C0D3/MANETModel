@@ -1,17 +1,18 @@
- package de.manetgraph;
+ package de.manetmodel.graph;
 
+import java.awt.Color;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
 import java.util.function.Supplier;
 
-import org.jgrapht.graph.DefaultUndirectedWeightedGraph;
-import org.jgrapht.graph.SimpleWeightedGraph;
-
-import de.manetgraph.Playground.DoubleRange;
-import de.manetgraph.Playground.IntRange;
-import de.manetgraph.util.Triple;
-import de.manetgraph.util.Tuple;
+import de.manetmodel.graph.Playground.DoubleRange;
+import de.manetmodel.graph.Playground.IntRange;
+import de.manetmodel.util.Tuple;
+import de.manetmodel.visualization.VisualEdge;
+import de.manetmodel.visualization.VisualGraph;
+import de.manetmodel.visualization.VisualVertex;
 
 public class ManetGraph<V extends ManetVertex, E extends ManetEdge>{
 
@@ -24,10 +25,8 @@ public class ManetGraph<V extends ManetVertex, E extends ManetEdge>{
 	private ArrayList<V> vertices;
 	private ArrayList<E> edges;
 	
-	ArrayList<ArrayList<Tuple<Integer,Integer>>> vertexAdjacencies;
-	ArrayList<Tuple<Integer,Integer>> edgeAdjacencies;
-	
-	private ArrayList<ManetPath> paths;
+	private ArrayList<ArrayList<Tuple<Integer,Integer>>> vertexAdjacencies;
+	private ArrayList<Tuple<Integer,Integer>> edgeAdjacencies;
 	
 	public ManetGraph(Supplier<V> vertexSupplier, Supplier<E> edgeSupplier) {
 		this.vertexSupplier = vertexSupplier;
@@ -39,7 +38,7 @@ public class ManetGraph<V extends ManetVertex, E extends ManetEdge>{
 		this.vertexAdjacencies = new ArrayList<ArrayList<Tuple<Integer,Integer>>>();
 		this.edgeAdjacencies = new ArrayList<Tuple<Integer,Integer>>();
 	}
-
+	
 	public V addVertex(double x, double y) {
 		V vertex = this.vertexSupplier.get();
 		vertex.setID(vertexCount++);
@@ -53,7 +52,24 @@ public class ManetGraph<V extends ManetVertex, E extends ManetEdge>{
 		if(vertex.getPostion() == null) return false;
 		vertex.setID(vertexCount++);
 		this.vertices.add(vertex);
+		this.vertexAdjacencies.add(new ArrayList<Tuple<Integer,Integer>>());
 		return true;	
+	}
+		
+	public V getVertex(int ID) {		
+		return this.vertices.get(ID);
+	}
+	
+	public Tuple<V,V> getVerticesOf(E edge){
+		Tuple<Integer,Integer> vertexIDs = this.edgeAdjacencies.get(edge.getID());
+		return new Tuple <V,V>(this.vertices.get(vertexIDs.getFirst()), this.vertices.get(vertexIDs.getSecond()));
+	}
+	
+	public E getEdge(V source, V target) {			
+		for(Tuple<Integer,Integer> adjacency : vertexAdjacencies.get(source.getID())) 
+			if(adjacency.getSecond() == target.getID()) 
+				return this.edges.get(adjacency.getFirst());				
+		return null;
 	}
 	
 	public boolean containsEdge(V source, V target) {
@@ -67,29 +83,13 @@ public class ManetGraph<V extends ManetVertex, E extends ManetEdge>{
 		if(containsEdge(source, target)) return null;
 		E edge = this.edgeSupplier.get();
 		edge.setID(edgeCount++);	
-		edge.getCost().setDistance(this.getDistance(source, target));	
+		edge.setDistance(this.getDistance(source, target));	
 		edge.setVertexIDs(source.getID(), target.getID());
 		this.edges.add(edge);	
 		this.vertexAdjacencies.get(source.getID()).add(new Tuple<Integer,Integer>(edge.getID(), target.getID()));
 		this.vertexAdjacencies.get(target.getID()).add(new Tuple<Integer,Integer>(edge.getID(), source.getID()));
 		this.edgeAdjacencies.add(new Tuple<Integer,Integer>(source.getID(), target.getID()));
 		return edge;
-	}
-		
-	public V getVertex(int ID) {		
-		return this.vertices.get(ID);
-	}
-	
-	public E getEdge(V source, V target) {			
-		for(Tuple<Integer,Integer> adjacency : vertexAdjacencies.get(source.getID())) 
-			if(adjacency.getSecond() == target.getID()) 
-				return this.edges.get(adjacency.getFirst());				
-		return null;
-	}
-	
-	public Tuple<V,V> getVerticesOf(E edge){
-		Tuple<Integer,Integer> vertexIDs = this.edgeAdjacencies.get(edge.getID());
-		return new Tuple <V,V>(this.vertices.get(vertexIDs.getFirst()),this.vertices.get(vertexIDs.getSecond()));
 	}
 	
 	public List<E> getEdgesOf(V vertex){
@@ -175,13 +175,59 @@ public class ManetGraph<V extends ManetVertex, E extends ManetEdge>{
 		Generator generator = new Generator();	
 		return generator.generateGridGraph();		
 	}
+	
+	public Tuple<IManetVertex,IManetVertex> getVerticesOf(IManetEdge edge){
+		Tuple<Integer,Integer> vertexIDs = this.edgeAdjacencies.get(edge.getID());
+		return new Tuple <IManetVertex,IManetVertex>(this.vertices.get(vertexIDs.getFirst()), this.vertices.get(vertexIDs.getSecond()));
+	}
+	
+    public Iterator<V> vertexBaseIterator() {  	
+        Iterator<V> iterator = new Iterator<V>() {
+        	private int i = 0;
+            @Override
+            public boolean hasNext() {
+                return i < vertices.size() && vertices.get(i) != null;
+            }
+            @Override
+            public V next() {
+                return vertices.get(i++);
+            }
+        };
+        return iterator;
+    }
+    
+    public Iterator<E> edgeBaseIterator() {  	
+        Iterator<E> iterator = new Iterator<E>() {
+        	private int i = 0;
+            @Override
+            public boolean hasNext() {
+                return i < edges.size() && edges.get(i) != null;
+            }
+            @Override
+            public E next() {
+                return edges.get(i++);
+            }
+        };
+        return iterator;
+    }
+    
+    public VisualGraph toVisualGraph() {
 		
-	public class IO {
+		VisualGraph graph = new VisualGraph(Color.WHITE, Color.LIGHT_GRAY, Color.BLACK);
 		
-		public void exportGraph() {
-			
+		for(V vertex : vertices) 
+			graph.addVertex(new VisualVertex(vertex.getID(), vertex.getPostion()));
+		
+		for(E edge : edges) {
+			Tuple<V,V> vertices = getVerticesOf(edge);
+			graph.addEdge(new VisualEdge(edge.getID(), vertices.getFirst().getPostion(), vertices.getSecond().getPostion(), String.format("%d / %.2f", edge.getOccupation().size(), edge.getDistance())));
 		}
 		
+		return graph;
+	}
+		
+	public class IO {
+				
 		public void importGraph() {
 			
 		}	
@@ -240,7 +286,6 @@ public class ManetGraph<V extends ManetVertex, E extends ManetEdge>{
 			}
 			
 			generateOccupation();
-			
 			return vertexCount;
 		}
 		
@@ -262,7 +307,7 @@ public class ManetGraph<V extends ManetVertex, E extends ManetEdge>{
 			}		
 		}
 		
-		public void generateOccupation() {
+		private void generateOccupation() {
 			
 			for(E edge : edges) {
 			
@@ -272,14 +317,14 @@ public class ManetGraph<V extends ManetVertex, E extends ManetEdge>{
 				for(V v : nextHops) 
 					if(!v.equals(vertices.getSecond())) 
 						for(E e : getEdgesOf(v))
-							edge.getCost().addOccupation(e.getID());
+							edge.addOccupation(e.getID());
 
 				nextHops = getNextHopsOf(vertices.getSecond());
 						
 				for(V v : nextHops) 
 					if(!v.equals(vertices.getSecond())) 
 						for(E e : getEdgesOf(v))
-							edge.getCost().addOccupation(e.getID());
+							edge.addOccupation(e.getID());
 			}
 		}
 		
@@ -289,19 +334,17 @@ public class ManetGraph<V extends ManetVertex, E extends ManetEdge>{
 			pg.height = new IntRange(0, 10000);
 			pg.width = new IntRange(0, 10000);
 			pg.edgeCount = new IntRange(2, 4);
-			pg.vertexCount = new IntRange(50, 100);
-			pg.vertexDistance = new DoubleRange(50d, 100d);	
-			pg.edgeDistance = new DoubleRange(50d, 75d);
+			pg.vertexCount = new IntRange(50, 1000);
+			pg.vertexDistance = new DoubleRange(25d, 50d);	
+			pg.edgeDistance = new DoubleRange(25d, 35d);
 					
 			V currentVertex = addVertex(0, 0);
 			int vertexCount = 1;
 			
-			while(getVertices().size() < pg.vertexCount.max) {
-									
+			while(getVertices().size() < pg.vertexCount.max) {							
 				Coordinate coordinate = generateRandomCoordinate(currentVertex, pg, 100);
 									
-				if(coordinate != null)  {
-								
+				if(coordinate != null)  {						
 					V newVertex = addVertex(coordinate.x(), coordinate.y());
 					addEdge(currentVertex, newVertex);		
 					currentVertex = newVertex;	
@@ -310,14 +353,12 @@ public class ManetGraph<V extends ManetVertex, E extends ManetEdge>{
 					
 					List<V> verticesInRadius = getVerticesInRadius(currentVertex, pg.edgeDistance.max);
 					
-					if(verticesInRadius.size() < edgeCount) {
-						
+					if(verticesInRadius.size() < edgeCount) {					
 						for(V vertex : verticesInRadius) 
 							addEdge(currentVertex, vertex);				
 					}
 					else {
-						List<V> randomVertices = getRandomNofM(edgeCount, verticesInRadius);
-						
+						List<V> randomVertices = getRandomNofM(edgeCount, verticesInRadius);				
 						for(V vertex : randomVertices) 
 							addEdge(currentVertex, vertex);
 					}
@@ -331,8 +372,7 @@ public class ManetGraph<V extends ManetVertex, E extends ManetEdge>{
 		
 		private Coordinate generateRandomCoordinate(V source, Playground pg, int attemps) {
 				
-			Coordinate coordinate = null;	
-						
+			Coordinate coordinate = null;				
 			int i = 1;
 			
 			while(i <= attemps) {
@@ -369,10 +409,9 @@ public class ManetGraph<V extends ManetVertex, E extends ManetEdge>{
 					coordinate = new Coordinate(source.x() + x, source.y() - y);	
 				}
 							
-				if(pg.isInside(coordinate)) 						
+				if(pg.isInside(coordinate.x(),coordinate.y())) 						
 					if(getVerticesInRadius(coordinate, pg.vertexDistance.min).isEmpty()) 
-						return coordinate;
-					
+						return coordinate;			
 				i++;	
 			}
 								

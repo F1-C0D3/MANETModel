@@ -1,4 +1,4 @@
-package de.manetgraph.util;
+package de.manetmodel.util;
 
 public class Triple<F, S, T> {
     private F first;

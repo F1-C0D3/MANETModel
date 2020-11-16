@@ -1,4 +1,4 @@
-package de.manetgraph.extensiontest;
+package de.manetmodel.graph;
 
 import org.junit.Test;
 
@@ -11,7 +11,7 @@ public class MyGraphApp {
 					
 		graph.generateRandomGraph();
 		
-		System.out.println(graph.vertexSet().size() + " " + graph.edgeSet().size());	
+		System.out.println(graph.getVertices().size() + " " + graph.getEdges().size());	
 		
 	}		
 }

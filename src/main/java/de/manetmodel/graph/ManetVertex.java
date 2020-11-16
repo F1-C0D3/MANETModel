@@ -1,8 +1,9 @@
-package de.manetgraph;
+package de.manetmodel.graph;
 
 import java.util.Objects;
+import java.util.Set;
 
-public class ManetVertex implements IManetVertex{
+public class ManetVertex implements IManetVertex, IManetElement{
 
 	private int ID;
 	private Coordinate coordinate;
@@ -41,8 +42,8 @@ public class ManetVertex implements IManetVertex{
 		return 0;
 	}
 	
-	public double getOccupation() {
-		return 0;
+	public Set<Integer> getOccupation() {
+		return null;
 	}
 
 	@Override
