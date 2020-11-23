@@ -13,9 +13,15 @@ public class ManetPath<N extends ManetVertex, L extends ManetEdge> extends Linke
 	double distance;
 	Set<Integer> occupation;
 
-	public ManetPath(N source)
+	public ManetPath(N source, N target)
 	{
+		this();
 		this.add(new Tuple<L, N>(null, source));
+
+	}
+
+	public ManetPath()
+	{
 		this.occupation = new HashSet<Integer>();
 		this.distance = 0;
 	}
