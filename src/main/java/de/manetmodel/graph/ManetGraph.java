@@ -197,6 +197,12 @@ public class ManetGraph<V extends ManetVertex, E extends ManetEdge>
 		generator.generateTrapeziumGraph();
 	}
 
+	public void generateDeadEndGraph()
+	{
+		Generator generator = new Generator();
+		generator.generateDeadEndGraph();
+	}
+
 	public int generateRandomGraph()
 	{
 		Generator generator = new Generator();
@@ -214,6 +220,11 @@ public class ManetGraph<V extends ManetVertex, E extends ManetEdge>
 		Tuple<Integer, Integer> vertexIDs = this.edgeAdjacencies.get(edge.getID());
 		return new Tuple<IManetVertex, IManetVertex>(this.vertices.get(vertexIDs.getFirst()),
 				this.vertices.get(vertexIDs.getSecond()));
+	}
+
+	private ArrayList<ArrayList<Tuple<Integer, Integer>>> getVertexAdjacencies()
+	{
+		return vertexAdjacencies;
 	}
 
 	public Iterator<V> vertexBaseIterator()
@@ -284,6 +295,11 @@ public class ManetGraph<V extends ManetVertex, E extends ManetEdge>
 		{
 
 		}
+
+		public ArrayList<ArrayList<Tuple<Integer, Integer>>> exportPrimitiveVertexAdjacencies()
+		{
+			return getVertexAdjacencies();
+		}
 	}
 
 	public class Generator
@@ -306,6 +322,32 @@ public class ManetGraph<V extends ManetVertex, E extends ManetEdge>
 			addEdge(b, target);
 
 			generateOccupation();
+		}
+
+		public void generateDeadEndGraph()
+		{
+			V source = addVertex(0, 0);
+			V a = addVertex(7, 4);
+			V b = addVertex(2, 7);
+			V c = addVertex(7, 0);
+			V d = addVertex(6, 3);
+			V e = addVertex(5, 4);
+			V f = addVertex(4, 5);
+			V g = addVertex(3, 6);
+			V target = addVertex(10, 10);
+
+			addEdge(source, a);
+			addEdge(source, b);
+			addEdge(source, c);
+			addEdge(source, d);
+			addEdge(source, e);
+			addEdge(source, f);
+			addEdge(source, g);
+
+			addEdge(a, target);
+
+			generateOccupation();
+
 		}
 
 		public void generateTrapeziumGraph()
