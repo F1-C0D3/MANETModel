@@ -12,11 +12,14 @@ public class ManetPath<N extends ManetVertex, L extends ManetEdge> extends Linke
 
 	double distance;
 	Set<Integer> occupation;
+	private N source;
+	private N target;
 
 	public ManetPath(N source, N target)
 	{
 		this();
-		this.add(new Tuple<L, N>(null, source));
+		this.source = source;
+		this.target = target;
 
 	}
 
@@ -28,7 +31,12 @@ public class ManetPath<N extends ManetVertex, L extends ManetEdge> extends Linke
 
 	public N getSource()
 	{
-		return this.get(0).getSecond();
+		return this.source;
+	}
+
+	public N getTarget()
+	{
+		return this.target;
 	}
 
 	public boolean isShorter(ManetPath<N, L> path)
