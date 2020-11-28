@@ -10,6 +10,7 @@ import java.util.function.Supplier;
 import de.manetmodel.graph.Playground.DoubleRange;
 import de.manetmodel.graph.Playground.IntRange;
 import de.manetmodel.util.RandomNumbers;
+import de.manetmodel.util.Topology;
 import de.manetmodel.util.Tuple;
 import de.manetmodel.visualization.VisualEdge;
 import de.manetmodel.visualization.VisualGraph;
@@ -185,10 +186,10 @@ public class ManetGraph<V extends ManetVertex, E extends ManetEdge>
 		return str;
 	}
 
-	public void generateSimpleGraph()
+	public void generateSimpleGraph(double edgeDistance)
 	{
 		Generator generator = new Generator();
-		generator.generateSimpleGraph();
+		generator.generateSimpleGraph(edgeDistance);
 	}
 
 	public void generateTrapeziumGraph()
@@ -197,16 +198,16 @@ public class ManetGraph<V extends ManetVertex, E extends ManetEdge>
 		generator.generateTrapeziumGraph();
 	}
 
-	public void generateDeadEndGraph()
+	public void generateAlmostDeadEndGraph()
 	{
 		Generator generator = new Generator();
-		generator.generateDeadEndGraph();
+		generator.generateAlmostDeadEndGraph();
 	}
 
-	public int generateRandomGraph()
+	public int generateRandomGraph(double edgeDistance)
 	{
 		Generator generator = new Generator();
-		return generator.generateRandomGraph();
+		return generator.generateRandomGraph(edgeDistance);
 	}
 
 	public int generateGridGraph()
@@ -283,6 +284,7 @@ public class ManetGraph<V extends ManetVertex, E extends ManetEdge>
 			graph.addEdge(
 					new VisualEdge(edge.getID(), vertices.getFirst().getPostion(), vertices.getSecond().getPostion(),
 							String.format("%d / %.2f", edge.getOccupation().size(), edge.getDistance())));
+
 		}
 
 		return graph;
@@ -305,26 +307,23 @@ public class ManetGraph<V extends ManetVertex, E extends ManetEdge>
 	public class Generator
 	{
 
-		public void generateSimpleGraph()
+		public void generateSimpleGraph(double edgeDistance)
 		{
-
-			V source = addVertex(0, 0);
-			V a = addVertex(7, 4);
-			V b = addVertex(2, 7);
-			V c = addVertex(3, 12);
-			V target = addVertex(10, 10);
-
+			V source = addVertex(0d, 0d);
+			V a = addVertex(41.21, 56.24);
+			V b = addVertex(76.51, 8.77);
+			V c = addVertex(92.88, 38.26);
+			V target = addVertex(147.49, 99.35);
+			addEdge(source, a);
 			addEdge(source, a);
 			addEdge(source, b);
 			addEdge(a, b);
+			addEdge(a, c);
 			addEdge(b, c);
-			addEdge(a, target);
-			addEdge(b, target);
-
-			generateOccupation();
+			addEdge(c, target);
 		}
 
-		public void generateDeadEndGraph()
+		public void generateAlmostDeadEndGraph()
 		{
 			V source = addVertex(0, 0);
 			V a = addVertex(7, 4);
@@ -373,28 +372,27 @@ public class ManetGraph<V extends ManetVertex, E extends ManetEdge>
 			pg.height = new IntRange(0, 1000);
 			pg.width = new IntRange(0, 1000);
 			pg.edgeCount = new IntRange(4, 4);
-			pg.vertexCount = new IntRange(50, 100);
-			pg.vertexDistance = new DoubleRange(75d, 75d);
+			pg.vertexCount = new IntRange(50, 50);
 			pg.edgeDistance = new DoubleRange(100d, 100d);
 
 			V currentVertex = addVertex(0, 0);
 			int vertexCount = 1;
 
-			while ((currentVertex.x() <= pg.width.max - pg.vertexDistance.max) && vertexCount < pg.vertexCount.max)
+			while ((currentVertex.x() <= pg.width.max - pg.edgeDistance.max) && vertexCount < pg.vertexCount.max)
 			{
 
 				if (vertexCount > 1)
 				{
-					double xOffset = RandomNumbers.getRandom(pg.vertexDistance.min, pg.vertexDistance.max);
+					double xOffset = RandomNumbers.getRandom(pg.edgeDistance.min, pg.edgeDistance.max);
 					V newVertex = addVertex(currentVertex.x() + xOffset, 0);
 					currentVertex = newVertex;
 					vertexCount++;
 					generateEdges(newVertex, pg);
 				}
 
-				while (currentVertex.y() <= (pg.height.max - pg.vertexDistance.max))
+				while (currentVertex.y() <= (pg.height.max - pg.edgeDistance.max))
 				{
-					double yOffset = RandomNumbers.getRandom(pg.vertexDistance.min, pg.vertexDistance.max);
+					double yOffset = RandomNumbers.getRandom(pg.edgeDistance.min, pg.edgeDistance.max);
 					V newVertex = addVertex(currentVertex.x(), currentVertex.y() + yOffset);
 					currentVertex = newVertex;
 					vertexCount++;
@@ -449,46 +447,37 @@ public class ManetGraph<V extends ManetVertex, E extends ManetEdge>
 			}
 		}
 
-		public int generateRandomGraph()
+		public int generateRandomGraph(double edgeDistance)
 		{
 
 			Playground pg = new Playground();
 			pg.height = new IntRange(0, 10000);
 			pg.width = new IntRange(0, 10000);
-			pg.edgeCount = new IntRange(2, 4);
-			pg.vertexCount = new IntRange(50, 1000);
-			pg.vertexDistance = new DoubleRange(25d, 50d);
-			pg.edgeDistance = new DoubleRange(25d, 35d);
+			pg.edgeCount = new IntRange(1, 4);
+			pg.vertexCount = new IntRange(5, 5);
+			pg.edgeDistance = new DoubleRange(15d, 100d);
 
-			V currentVertex = addVertex(0, 0);
+			addVertex(0, 0);
 			int vertexCount = 1;
 
 			while (getVertices().size() < pg.vertexCount.max)
 			{
-				Coordinate coordinate = generateRandomCoordinate(currentVertex, pg, 100);
+				V randomVertex = getVertex(RandomNumbers.getRandom(0, getVertices().size()));
+				Coordinate coordinate = generateRandomCoordinate(randomVertex, pg, 100);
 
-				if (coordinate != null)
+				List<V> verticesInRadius = getVerticesInRadius(coordinate, pg.edgeDistance.max);
+				int edgeCount = RandomNumbers.getRandom(pg.edgeCount.min, pg.edgeCount.max);
+
+				if (verticesInRadius.size() < edgeCount)
 				{
 					V newVertex = addVertex(coordinate.x(), coordinate.y());
-					addEdge(currentVertex, newVertex);
-					currentVertex = newVertex;
 					vertexCount++;
-					int edgeCount = RandomNumbers.getRandom(pg.edgeCount.min, pg.edgeCount.max);
 
-					List<V> verticesInRadius = getVerticesInRadius(currentVertex, pg.edgeDistance.max);
-
-					if (verticesInRadius.size() < edgeCount)
+					for (V vertex : verticesInRadius)
 					{
-						for (V vertex : verticesInRadius)
-							addEdge(currentVertex, vertex);
-					} else
-					{
-						List<V> randomVertices = getRandomNofM(edgeCount, verticesInRadius);
-						for (V vertex : randomVertices)
-							addEdge(currentVertex, vertex);
+						addEdge(newVertex, vertex);
 					}
-				} else
-					break;
+				}
 			}
 
 			generateOccupation();
@@ -499,12 +488,10 @@ public class ManetGraph<V extends ManetVertex, E extends ManetEdge>
 		{
 
 			Coordinate coordinate = null;
-			int i = 1;
 
-			while (i <= attemps)
+			do
 			{
-
-				double distance = RandomNumbers.getRandom(pg.vertexDistance.min, pg.vertexDistance.max);
+				double distance = RandomNumbers.getRandom(pg.edgeDistance.min, pg.edgeDistance.max);
 				double angleDegrees = RandomNumbers.getRandom(0d, 360d);
 				double angleRadians, x, y;
 
@@ -539,14 +526,9 @@ public class ManetGraph<V extends ManetVertex, E extends ManetEdge>
 					y = distance * Math.sin(angleRadians);
 					coordinate = new Coordinate(source.x() + x, source.y() - y);
 				}
+			} while (!pg.isInside(coordinate.x(), coordinate.y()));
 
-				if (pg.isInside(coordinate.x(), coordinate.y()))
-					if (getVerticesInRadius(coordinate, pg.vertexDistance.min).isEmpty())
-						return coordinate;
-				i++;
-			}
-
-			return null;
+			return coordinate;
 		}
 
 		private List<V> getRandomNofM(int n, List<V> m)
@@ -562,5 +544,39 @@ public class ManetGraph<V extends ManetVertex, E extends ManetEdge>
 
 			return vertices;
 		}
+
+		private Coordinate getCoordinateByV(double angle, double edgeDistance, V v)
+		{
+			double rad = Math.toRadians(angle);
+			double x = v.getPostion().x() + edgeDistance * Math.cos(rad);
+			double y = v.getPostion().y() + edgeDistance * Math.cos(rad);
+			return new Coordinate(x, y);
+		}
+	}
+
+	public void createManetGraph(Topology type, double edgeDistance)
+	{
+		switch (type)
+		{
+		case GRID:
+			generateGridGraph();
+			break;
+		case SIMPLE:
+			generateSimpleGraph(edgeDistance);
+			break;
+		case RANDOM:
+			generateRandomGraph(edgeDistance);
+			break;
+		case DEADEND:
+			generateAlmostDeadEndGraph();
+			break;
+		case TRAPEZIUM:
+			generateTrapeziumGraph();
+			break;
+
+		default:
+			break;
+		}
+
 	}
 }
