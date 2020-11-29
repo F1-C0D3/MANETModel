@@ -10,6 +10,11 @@ public class ManetPath<N extends ManetVertex, L extends ManetEdge> extends Linke
 	private N source;
 	private N target;
 
+	public ManetPath(){
+		this.source = null;
+		this.target = null;
+	}
+	
 	public ManetPath(N source){
 		this.source = source;
 		super.add(new Tuple<L, N>(null, source));
