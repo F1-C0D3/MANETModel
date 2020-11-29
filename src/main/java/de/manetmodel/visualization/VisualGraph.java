@@ -3,7 +3,12 @@ package de.manetmodel.visualization;
 import java.awt.Color;
 import java.util.ArrayList;
 
-public class VisualGraph {
+import de.manetmodel.graph.ManetEdge;
+import de.manetmodel.graph.ManetPath;
+import de.manetmodel.graph.ManetVertex;
+import de.manetmodel.util.Tuple;
+
+public class VisualGraph<V extends ManetVertex, E extends ManetEdge> {
 
 	Color playgroundColor;
 	Color vertexColor;
@@ -35,4 +40,15 @@ public class VisualGraph {
 	public ArrayList<VisualEdge> getEdges() {
 		return this.edges;
 	}	
+	
+	public void addPath(ManetPath<V,E> path, Color color) {
+		
+		for (Tuple<E, V> edgeAndVertex : path)
+		{
+			if (edgeAndVertex.getFirst() != null)
+				edges.get(edgeAndVertex.getFirst().getID()).setColor(color);
+			
+			vertices.get(edgeAndVertex.getSecond().getID()).setBackgroundColor(color);
+		}	
+	}
 }

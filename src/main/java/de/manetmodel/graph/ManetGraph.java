@@ -186,10 +186,10 @@ public class ManetGraph<V extends ManetVertex, E extends ManetEdge>
 		return str;
 	}
 
-	public void generateSimpleGraph(double edgeDistance)
+	public void generateSimpleGraph()
 	{
 		Generator generator = new Generator();
-		generator.generateSimpleGraph(edgeDistance);
+		generator.generateSimpleGraph();
 	}
 
 	public void generateTrapeziumGraph()
@@ -204,10 +204,10 @@ public class ManetGraph<V extends ManetVertex, E extends ManetEdge>
 		generator.generateAlmostDeadEndGraph();
 	}
 
-	public int generateRandomGraph(double edgeDistance)
+	public int generateRandomGraph(Playground playground)
 	{
 		Generator generator = new Generator();
-		return generator.generateRandomGraph(edgeDistance);
+		return generator.generateRandomGraph(playground);
 	}
 
 	public int generateGridGraph()
@@ -228,7 +228,7 @@ public class ManetGraph<V extends ManetVertex, E extends ManetEdge>
 		return vertexAdjacencies;
 	}
 
-	public Iterator<V> vertexBaseIterator()
+	public Iterator<V> vertexIterator()
 	{
 		Iterator<V> iterator = new Iterator<V>()
 		{
@@ -249,7 +249,7 @@ public class ManetGraph<V extends ManetVertex, E extends ManetEdge>
 		return iterator;
 	}
 
-	public Iterator<E> edgeBaseIterator()
+	public Iterator<E> edgeIterator()
 	{
 		Iterator<E> iterator = new Iterator<E>()
 		{
@@ -270,21 +270,23 @@ public class ManetGraph<V extends ManetVertex, E extends ManetEdge>
 		return iterator;
 	}
 
-	public VisualGraph toVisualGraph()
+	public VisualGraph<V,E> toVisualGraph()
 	{
-
-		VisualGraph graph = new VisualGraph(Color.WHITE, Color.LIGHT_GRAY, Color.BLACK);
+		VisualGraph<V,E> graph = new VisualGraph<V,E>(Color.WHITE, Color.LIGHT_GRAY, Color.BLACK);
 
 		for (V vertex : vertices)
-			graph.addVertex(new VisualVertex(vertex.getID(), vertex.getPostion()));
+			graph.addVertex(new VisualVertex(vertex.getID(), vertex.getPostion(), Color.LIGHT_GRAY, Color.BLACK));
 
 		for (E edge : edges)
 		{
 			Tuple<V, V> vertices = getVerticesOf(edge);
 			graph.addEdge(
-					new VisualEdge(edge.getID(), vertices.getFirst().getPostion(), vertices.getSecond().getPostion(),
-							String.format("%d / %.2f", edge.getOccupation().size(), edge.getDistance())));
-
+				new VisualEdge(
+						edge.getID(), 
+						vertices.getFirst().getID(), 
+						vertices.getSecond().getID(), 
+						String.format("%d / %.2f", edge.getOccupation().size(), edge.getDistance()),
+						Color.BLACK));
 		}
 
 		return graph;
@@ -292,10 +294,13 @@ public class ManetGraph<V extends ManetVertex, E extends ManetEdge>
 
 	public class IO
 	{
-
 		public void importGraph()
 		{
 
+		}
+		
+		public void exportGraph() {
+			
 		}
 
 		public ArrayList<ArrayList<Tuple<Integer, Integer>>> exportPrimitiveVertexAdjacencies()
@@ -306,8 +311,7 @@ public class ManetGraph<V extends ManetVertex, E extends ManetEdge>
 
 	public class Generator
 	{
-
-		public void generateSimpleGraph(double edgeDistance)
+		public void generateSimpleGraph()
 		{
 			V source = addVertex(0d, 0d);
 			V a = addVertex(41.21, 56.24);
@@ -406,21 +410,19 @@ public class ManetGraph<V extends ManetVertex, E extends ManetEdge>
 
 			List<V> verticesInRadius = getVerticesInRadius(source, edgeDistance);
 
-			if (verticesInRadius.size() < edgeCount)
-			{
+			if (verticesInRadius.size() < edgeCount) {
 				for (V vertex : verticesInRadius)
 					addEdge(source, vertex);
-			} else
-			{
+			} 
+			else {
 				List<V> randomVertices = getRandomNofM(edgeCount, verticesInRadius);
 				for (V vertex : randomVertices)
 					addEdge(source, vertex);
 			}
 		}
 
-		public int generateRandomGraph(double edgeDistance)
+		public int generateRandomGraph(Playground playground)
 		{
-
 			Playground pg = new Playground();
 			pg.height = new IntRange(0, 10000);
 			pg.width = new IntRange(0, 10000);
@@ -496,6 +498,7 @@ public class ManetGraph<V extends ManetVertex, E extends ManetEdge>
 					y = distance * Math.sin(angleRadians);
 					coordinate = new Coordinate(source.x() + x, source.y() - y);
 				}
+				
 			} while (!pg.isInside(coordinate.x(), coordinate.y()));
 
 			return coordinate;
@@ -525,10 +528,10 @@ public class ManetGraph<V extends ManetVertex, E extends ManetEdge>
 			generateGridGraph();
 			break;
 		case SIMPLE:
-			generateSimpleGraph(edgeDistance);
+			generateSimpleGraph();
 			break;
 		case RANDOM:
-			generateRandomGraph(edgeDistance);
+			generateRandomGraph(new Playground());
 			break;
 		case DEADEND:
 			generateAlmostDeadEndGraph();

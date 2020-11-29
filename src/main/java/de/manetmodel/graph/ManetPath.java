@@ -1,32 +1,25 @@
 package de.manetmodel.graph;
 
-import java.util.HashSet;
 import java.util.LinkedList;
-import java.util.Set;
 
 import de.manetmodel.util.Tuple;
 
-public class ManetPath<N extends ManetVertex, L extends ManetEdge> extends LinkedList<Tuple<L, N>>
-		implements Comparable<ManetPath<N, L>>
+public class ManetPath<N extends ManetVertex, L extends ManetEdge> extends LinkedList<Tuple<L, N>> implements Comparable<ManetPath<N, L>>
 {
-
 	double distance;
-	Set<Integer> occupation;
 	private N source;
 	private N target;
 
-	public ManetPath(N source, N target)
-	{
-		this();
+	public ManetPath(N source){
 		this.source = source;
-		this.target = target;
-
+		super.add(new Tuple<L, N>(null, source));
+		this.target = null;
 	}
-
-	public ManetPath()
-	{
-		this.occupation = new HashSet<Integer>();
-		this.distance = 0;
+	
+	public ManetPath(N source, N target){
+		this.source = source;
+		super.add(new Tuple<L, N>(null, source));
+		this.target = target;
 	}
 
 	public N getSource()
@@ -51,17 +44,11 @@ public class ManetPath<N extends ManetVertex, L extends ManetEdge> extends Linke
 		return this.distance;
 	}
 
-	public Set<Integer> getOccupation()
-	{
-		return this.occupation;
-	}
-
 	@Override
 	public boolean add(Tuple<L, N> linkAndNode)
 	{
 		super.add(linkAndNode);
 		this.distance += linkAndNode.getFirst().getDistance();
-		this.occupation.addAll(linkAndNode.getFirst().getOccupation());
 		return true;
 	}
 
@@ -81,11 +68,6 @@ public class ManetPath<N extends ManetVertex, L extends ManetEdge> extends Linke
 	public int compareDistanceTo(ManetPath<N, L> path)
 	{
 		return Double.compare(this.distance, path.getDistance());
-	}
-
-	public int compareOccupationTo(ManetPath<N, L> path)
-	{
-		return Integer.compare(this.occupation.size(), path.getOccupation().size());
 	}
 
 	@Override
