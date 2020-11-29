@@ -344,9 +344,6 @@ public class ManetGraph<V extends ManetVertex, E extends ManetEdge>
 			addEdge(source, g);
 
 			addEdge(a, target);
-
-			generateOccupation();
-
 		}
 
 		public void generateTrapeziumGraph()
@@ -361,8 +358,6 @@ public class ManetGraph<V extends ManetVertex, E extends ManetEdge>
 			addEdge(a, b);
 			addEdge(a, target);
 			addEdge(b, target);
-
-			generateOccupation();
 		}
 
 		public int generateGridGraph()
@@ -400,7 +395,6 @@ public class ManetGraph<V extends ManetVertex, E extends ManetEdge>
 				}
 			}
 
-			generateOccupation();
 			return vertexCount;
 		}
 
@@ -421,29 +415,6 @@ public class ManetGraph<V extends ManetVertex, E extends ManetEdge>
 				List<V> randomVertices = getRandomNofM(edgeCount, verticesInRadius);
 				for (V vertex : randomVertices)
 					addEdge(source, vertex);
-			}
-		}
-
-		private void generateOccupation()
-		{
-
-			for (E edge : edges)
-			{
-
-				Tuple<V, V> vertices = getVerticesOf(edge);
-				List<V> nextHops = getNextHopsOf(vertices.getFirst());
-
-				for (V v : nextHops)
-					if (!v.equals(vertices.getSecond()))
-						for (E e : getEdgesOf(v))
-							edge.addOccupation(e.getID());
-
-				nextHops = getNextHopsOf(vertices.getSecond());
-
-				for (V v : nextHops)
-					if (!v.equals(vertices.getSecond()))
-						for (E e : getEdgesOf(v))
-							edge.addOccupation(e.getID());
 			}
 		}
 
@@ -480,7 +451,6 @@ public class ManetGraph<V extends ManetVertex, E extends ManetEdge>
 				}
 			}
 
-			generateOccupation();
 			return vertexCount;
 		}
 
@@ -545,13 +515,6 @@ public class ManetGraph<V extends ManetVertex, E extends ManetEdge>
 			return vertices;
 		}
 
-		private Coordinate getCoordinateByV(double angle, double edgeDistance, V v)
-		{
-			double rad = Math.toRadians(angle);
-			double x = v.getPostion().x() + edgeDistance * Math.cos(rad);
-			double y = v.getPostion().y() + edgeDistance * Math.cos(rad);
-			return new Coordinate(x, y);
-		}
 	}
 
 	public void createManetGraph(Topology type, double edgeDistance)
