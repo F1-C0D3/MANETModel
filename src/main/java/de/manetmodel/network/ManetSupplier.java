@@ -2,12 +2,13 @@ package de.manetmodel.network;
 
 import java.util.function.Supplier;
 
-public class ManetSupplier implements Supplier<Manet<Node, Link>>
+public class ManetSupplier implements Supplier<Manet<Node, Link, RadioWavePropagation<?>>>
 {
 	@Override
-	public Manet<Node, Link> get()
+	public Manet<Node, Link, RadioWavePropagation<?>> get()
 	{
-		Manet<Node, Link> graph = new Manet<Node, Link>(new ManeNodeSupplier(), new ManetLinkSupplier());
+		Manet<Node, Link, RadioWavePropagation<?>> graph = new Manet<Node, Link, RadioWavePropagation<?>>(
+				new ManetNodeSupplier(), new ManetLinkSupplier());
 		return graph;
 	}
 
@@ -20,7 +21,7 @@ public class ManetSupplier implements Supplier<Manet<Node, Link>>
 		}
 	}
 
-	public static class ManeNodeSupplier implements Supplier<Node>
+	public static class ManetNodeSupplier implements Supplier<Node>
 	{
 		@Override
 		public Node get()
