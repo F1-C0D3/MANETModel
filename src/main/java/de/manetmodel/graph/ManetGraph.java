@@ -204,16 +204,16 @@ public class ManetGraph<V extends ManetVertex, E extends ManetEdge>
 		generator.generateAlmostDeadEndGraph();
 	}
 
-	public int generateRandomGraph(Playground playground)
+	public int generateRandomGraph(Playground pg)
 	{
 		Generator generator = new Generator();
-		return generator.generateRandomGraph(playground);
+		return generator.generateRandomGraph(pg);
 	}
 
-	public int generateGridGraph()
+	public int generateGridGraph(Playground pg)
 	{
 		Generator generator = new Generator();
-		return generator.generateGridGraph();
+		return generator.generateGridGraph(pg);
 	}
 
 	public Tuple<IManetVertex, IManetVertex> getVerticesOf(IManetEdge edge)
@@ -364,24 +364,21 @@ public class ManetGraph<V extends ManetVertex, E extends ManetEdge>
 			addEdge(b, target);
 		}
 
-		public int generateGridGraph()
-		{
-
-			Playground pg = new Playground();
+		public int generateGridGraph(Playground pg){
+			
+			/*Playground pg = new Playground();
 			pg.height = new IntRange(0, 1000);
 			pg.width = new IntRange(0, 1000);
 			pg.edgeCount = new IntRange(4, 4);
 			pg.vertexCount = new IntRange(50, 50);
-			pg.edgeDistance = new DoubleRange(100d, 100d);
+			pg.edgeDistance = new DoubleRange(100d, 100d);*/
 
 			V currentVertex = addVertex(0, 0);
 			int vertexCount = 1;
 
-			while ((currentVertex.x() <= pg.width.max - pg.edgeDistance.max) && vertexCount < pg.vertexCount.max)
-			{
-
-				if (vertexCount > 1)
-				{
+			while ((currentVertex.x() <= pg.width.max - pg.edgeDistance.max) && vertexCount < pg.vertexCount.max){
+				
+				if (vertexCount > 1){
 					double xOffset = RandomNumbers.getRandom(pg.edgeDistance.min, pg.edgeDistance.max);
 					V newVertex = addVertex(currentVertex.x() + xOffset, 0);
 					currentVertex = newVertex;
@@ -389,8 +386,7 @@ public class ManetGraph<V extends ManetVertex, E extends ManetEdge>
 					generateEdges(newVertex, pg);
 				}
 
-				while (currentVertex.y() <= (pg.height.max - pg.edgeDistance.max))
-				{
+				while (currentVertex.y() <= (pg.height.max - pg.edgeDistance.max) && vertexCount < pg.vertexCount.max){
 					double yOffset = RandomNumbers.getRandom(pg.edgeDistance.min, pg.edgeDistance.max);
 					V newVertex = addVertex(currentVertex.x(), currentVertex.y() + yOffset);
 					currentVertex = newVertex;
@@ -398,7 +394,6 @@ public class ManetGraph<V extends ManetVertex, E extends ManetEdge>
 					generateEdges(newVertex, pg);
 				}
 			}
-
 			return vertexCount;
 		}
 
@@ -421,14 +416,14 @@ public class ManetGraph<V extends ManetVertex, E extends ManetEdge>
 			}
 		}
 
-		public int generateRandomGraph(Playground playground)
+		public int generateRandomGraph(Playground pg)
 		{
-			Playground pg = new Playground();
+			/*Playground pg = new Playground();
 			pg.height = new IntRange(0, 10000);
 			pg.width = new IntRange(0, 10000);
 			pg.edgeCount = new IntRange(1, 4);
 			pg.vertexCount = new IntRange(5, 5);
-			pg.edgeDistance = new DoubleRange(15d, 100d);
+			pg.edgeDistance = new DoubleRange(15d, 100d);*/
 
 			addVertex(0, 0);
 			int vertexCount = 1;
@@ -525,7 +520,7 @@ public class ManetGraph<V extends ManetVertex, E extends ManetEdge>
 		switch (type)
 		{
 		case GRID:
-			generateGridGraph();
+			generateGridGraph(new Playground());
 			break;
 		case SIMPLE:
 			generateSimpleGraph();
