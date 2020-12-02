@@ -14,3 +14,6 @@ Ideen:
 - Idee 1
 - Idee 2
 - Idee 3
+
+- ConsoleApp:
+  - 
