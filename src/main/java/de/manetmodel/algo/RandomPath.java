@@ -11,31 +11,31 @@ import de.manetmodel.graph.ManetVertex;
 import de.manetmodel.util.RandomNumbers;
 import de.manetmodel.util.Tuple;
 
-public class RandomPath
+public class RandomPath<V extends ManetVertex, E extends ManetEdge>
 {
 
-	private ManetGraph<ManetVertex, ManetEdge> manetGraph;
+	private ManetGraph<V, E> manetGraph;
 
-	public RandomPath(ManetGraph<ManetVertex, ManetEdge> manetGraph)
+	public RandomPath(ManetGraph<V, E> manetGraph)
 	{
 		this.manetGraph = manetGraph;
 	}
 
-	public ManetPath<ManetVertex, ManetEdge> compute(ManetVertex source, ManetVertex target)
+	public ManetPath<V, E> compute(V source, V target)
 	{
-		ManetPath<ManetVertex, ManetEdge> randomPath = new ManetPath<ManetVertex, ManetEdge>();
-		Set<ManetEdge> visited = new HashSet<ManetEdge>();
+		ManetPath<V, E> randomPath = new ManetPath<V, E>();
+		Set<E> visited = new HashSet<E>();
 
 		while (source.getID() != target.getID())
 		{
-			List<ManetEdge> edges = manetGraph.getEdgesOf(source);
+			List<E> edges = manetGraph.getEdgesOf(source);
 			edges.removeIf(e -> visited.contains(e));
 
 			if (!edges.isEmpty())
 			{
-				ManetEdge edge = edges.get(RandomNumbers.getRandom(0, edges.size()));
+				E edge = edges.get(RandomNumbers.getRandom(0, edges.size()));
 				visited.add(edge);
-				randomPath.add(new Tuple<ManetEdge, ManetVertex>(edge, source));
+				randomPath.add(new Tuple<E, V>(edge, source));
 				source = manetGraph.getTargetOf(source, edge);
 			} else
 			{
