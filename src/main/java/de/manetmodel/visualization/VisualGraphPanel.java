@@ -13,7 +13,10 @@ import java.awt.Stroke;
 import java.awt.Toolkit;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -25,24 +28,22 @@ import de.manetmodel.graph.IManetVertex;
 import de.manetmodel.graph.ManetEdge;
 import de.manetmodel.graph.ManetGraph;
 import de.manetmodel.graph.ManetGraphSupplier;
+import de.manetmodel.graph.ManetPath;
 import de.manetmodel.graph.ManetVertex;
 import de.manetmodel.util.Tuple;
 
-public class VisualGraphPanel extends JPanel {
+public class VisualGraphPanel<V extends ManetVertex, E extends ManetEdge> extends JPanel {
 		
-	VisualGraph graph;
+	VisualGraph<V,E> graph;	
 	Scope scope;	
-	
-    private int vertexWidth = 50;
+    private int vertexWidth = 50; 
     private int padding = vertexWidth;
-    private static final Stroke EDGE_STROKE = new BasicStroke(2);
-    private static final Stroke VERTEX_STROKE = new BasicStroke(2);
-    private Color edgeColor = Color.BLACK;
-    private Color vertexColor = Color.LIGHT_GRAY;
-    double xScale;
-    double yScale;
+    private static final Stroke EDGE_STROKE = new BasicStroke(2);  
+    private static final Stroke VERTEX_STROKE = new BasicStroke(2);  
+    double xScale;   
+    double yScale; 
 
-    public VisualGraphPanel(VisualGraph graph) {
+    public VisualGraphPanel(VisualGraph<V,E> graph) {
         this.graph = graph;      
         this.scope = this.getScope(graph);
         System.out.println(graph.getVertices().size());
@@ -53,16 +54,16 @@ public class VisualGraphPanel extends JPanel {
         g2.fillRect(padding, padding, getWidth() - (2 * padding), getHeight() - 2 * padding);
     }
         
-    public void paintEdge(Graphics2D g2, VisualEdge link) {
-    	int x1 = (int) ((link.getSource().x()) * xScale + padding);	
-    	int y1 = (int) ((scope.y.max - link.getSource().y()) * yScale + padding); 
-    	int x2 = (int) ((link.getTarget().x()) * xScale + padding);	
-    	int y2 = (int) ((scope.y.max - link.getTarget().y()) * yScale + padding);   
+    public void paintEdge(Graphics2D g2, VisualEdge edge) {
+    	int x1 = (int) ((graph.vertices.get(edge.getSource()).x()) * xScale + padding);	
+    	int y1 = (int) ((scope.y.max - graph.vertices.get(edge.getSource()).y()) * yScale + padding); 
+    	int x2 = (int) ((graph.vertices.get(edge.getTarget()).x()) * xScale + padding);	
+    	int y2 = (int) ((scope.y.max - graph.vertices.get(edge.getTarget()).y()) * yScale + padding);   
     	g2.setStroke(EDGE_STROKE);
-        g2.setColor(edgeColor);   
+        g2.setColor(edge.getColor());   
     	g2.drawLine(x1, y1, x2, y2);
     	Point lineCenter = new Point(x1/2+x2/2, y1/2+y2/2);      	        	
-    	String str = String.format("%d: %s", link.getID(), link.getText());	
+    	String str = String.format("%d: %s", edge.getID(), edge.getText());	
     	FontMetrics fm = g2.getFontMetrics();
         Rectangle2D stringBounds = fm.getStringBounds(str, g2);        
         g2.setColor(Color.GRAY);
@@ -70,25 +71,21 @@ public class VisualGraphPanel extends JPanel {
         g2.drawString(str, lineCenter.x - (int) stringBounds.getCenterX(), lineCenter.y - (int) stringBounds.getCenterY());  
     }
     
-    public void paintVertex(Graphics2D g2, VisualVertex node) {
-    	int x = (int) ((node.x() * xScale + padding) - vertexWidth / 2);	
-    	int y = (int) (((scope.y.max - node.y()) * yScale + padding) - vertexWidth / 2); 
+    public void paintVertex(Graphics2D g2, VisualVertex vertex) {
+    	int x = (int) ((vertex.x() * xScale + padding) - vertexWidth / 2);	
+    	int y = (int) (((scope.y.max - vertex.y()) * yScale + padding) - vertexWidth / 2); 
     	g2.setStroke(VERTEX_STROKE);
-    	g2.setColor(vertexColor);
+    	g2.setColor(vertex.getBackgroundColor());
         g2.fillOval(x, y, vertexWidth, vertexWidth);
-        g2.setColor(edgeColor);
+        g2.setColor(vertex.getBorderColor());
         g2.drawOval(x, y, vertexWidth, vertexWidth);   
-        String str = Integer.toString(node.getID());
+        String str = Integer.toString(vertex.getID());
         FontMetrics fm = g2.getFontMetrics();
         Rectangle2D stringBounds = fm.getStringBounds(str, g2);  
         Point vertexCenter = new Point(x+(vertexWidth/2), y+(vertexWidth/2));
         g2.drawString(str, vertexCenter.x - (int) stringBounds.getCenterX(), vertexCenter.y - (int) stringBounds.getCenterY());
     }
-       
-    void paintPath() {
-    	
-    }
-      
+        
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
@@ -104,29 +101,30 @@ public class VisualGraphPanel extends JPanel {
         	this.paintEdge(g2, edge);
            
         for(VisualVertex vertex : graph.getVertices())  	        	
-        	this.paintVertex(g2, vertex);         
+        	this.paintVertex(g2, vertex);          
     } 
  
-	private class Scope {
-    	Range x;
-    	Range y;  	
-    	boolean isSet = false;     	
-    	@Override
+	private class Scope {	
+	    Range x;
+	    Range y;  	
+	    boolean isSet = false;     	
+	    @Override
     	public String toString() {
             return String.format("x:%d-%d, y:%d-%d", this.x.min, this.x.max, this.y.min, this.y.max);
     	}
     }
     
-    private class Range {
+
+    private class Range {	
 		double min;
-		double max;
+		double max;	
 		public Range(double min, double max) {
 			this.min = min;
 			this.max = max;
 		}
 	}
 	
-	private Scope getScope(VisualGraph graph) {
+	private Scope getScope(VisualGraph<V,E> graph) {
 		
 		Scope scope = new Scope();
 		        
@@ -152,14 +150,40 @@ public class VisualGraphPanel extends JPanel {
 		
 		return scope;
 	}
-
+	
+	public VisualGraph<V,E> getVisualGraph(){
+		return this.graph;
+	}
+	
+	public void updateVisualGraph(VisualGraph<V,E> graph) {
+		this.graph = graph;
+	}
     
     public static void main(String[] args) {
     	SwingUtilities.invokeLater(new Runnable() {
     		public void run() {        	    		
-    			ManetGraph<ManetVertex, ManetEdge> graph = new ManetGraph<ManetVertex, ManetEdge>(new ManetGraphSupplier.ManetVertexSupplier(), new ManetGraphSupplier.ManetEdgeSupplier());
-    			graph.generateGridGraph();
-	       		VisualGraphPanel panel = new VisualGraphPanel(graph.toVisualGraph());
+    			
+    			ManetGraph<ManetVertex, ManetEdge> graph = new ManetGraph<ManetVertex, ManetEdge>(new ManetGraphSupplier.ManetVertexSupplier(), new ManetGraphSupplier.ManetEdgeSupplier());	
+    			ManetVertex source = graph.addVertex(0d, 0d);
+    			ManetVertex a = graph.addVertex(41.21, 56.24);
+    			ManetVertex b = graph.addVertex(76.51, 8.77);
+    			ManetVertex c = graph.addVertex(92.88, 38.26);
+    			ManetVertex target = graph.addVertex(147.49, 99.35);
+    			ManetEdge sourceToA = graph.addEdge(source, a);
+    			ManetEdge sourceToB = graph.addEdge(source, b);
+    			ManetEdge aToB = graph.addEdge(a, b);
+    			ManetEdge aToC = graph.addEdge(a, c);
+    			ManetEdge bToC = graph.addEdge(b, c);
+    			ManetEdge cToTarget = graph.addEdge(c, target);
+    			 		
+    			ManetPath<ManetVertex, ManetEdge> path = new ManetPath<ManetVertex, ManetEdge>(source);
+    			path.add(new Tuple<ManetEdge, ManetVertex>(sourceToB, b));
+    			path.add(new Tuple<ManetEdge, ManetVertex>(bToC, c));
+    			path.add(new Tuple<ManetEdge, ManetVertex>(cToTarget, target));
+    			
+    			VisualGraphPanel<ManetVertex, ManetEdge> panel = new VisualGraphPanel<ManetVertex, ManetEdge>(graph.toVisualGraph());
+    			panel.getVisualGraph().addPath(path, Color.RED);
+	       			       			
 	       		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 	       		int width = (int) screenSize.getWidth() * 3/4;
 	       		int height = (int) screenSize.getHeight() * 3/4;
