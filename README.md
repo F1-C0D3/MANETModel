@@ -15,5 +15,3 @@ Ideen:
 - Idee 2
 - Idee 3
 
-- ConsoleApp:
-  - 
