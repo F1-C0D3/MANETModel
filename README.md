@@ -9,7 +9,6 @@ Klement:
 Eike: 
 - [ ] Console App
 - [ ] Anpassung/Überarbeitung der Generatoren
-- [ ] 
 
 Ideen:
 - Idee 1
