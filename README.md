@@ -1,6 +1,16 @@
 # ManetGraph
 
-Tasks:
-- [x] Finish my changes
-- [ ] Push my commits to GitHub
-- [ ] Open a pull request
+Klement:
+- [x] A
+- [ ] B
+- [ ] C
+
+
+Eike: 
+- [ ] Console App
+- [ ] Adjust Generators
+- 
+
+Ideas:
+- ..
+- .
