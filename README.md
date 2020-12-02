@@ -1,16 +1,17 @@
 # ManetGraph
 
 Klement:
-- [x] A
-- [ ] B
-- [ ] C
+- [x] Aufgabe 1
+- [ ] Aufgabe 2
+- [ ] Aufgabe 3
 
 
 Eike: 
 - [ ] Console App
-- [ ] Adjust Generators
-- 
+- [ ] Anpassung/Überarbeitung der Generatoren
+- [ ] 
 
-Ideas:
-- ..
-- .
+Ideen:
+- Idee 1
+- Idee 2
+- Idee 3
