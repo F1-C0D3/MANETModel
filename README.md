@@ -1,9 +1,8 @@
 # ManetGraph
 
 Klement:
-- [x] Aufgabe 1
-- [ ] Aufgabe 2
-- [ ] Aufgabe 3
+- [ ] Flow implementation
+- [ ] Complete Occupation model
 
 
 Eike: 
