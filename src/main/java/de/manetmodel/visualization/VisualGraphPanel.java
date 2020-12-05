@@ -39,6 +39,7 @@ public class VisualGraphPanel<V extends ManetVertex, E extends ManetEdge> extend
     private int vertexWidth = 50; 
     private int padding = vertexWidth;
     private static final Stroke EDGE_STROKE = new BasicStroke(2);  
+    private static final Stroke EDGE_PATH_STROKE = new BasicStroke(10);
     private static final Stroke VERTEX_STROKE = new BasicStroke(2);  
     double xScale;   
     double yScale; 
@@ -58,10 +59,16 @@ public class VisualGraphPanel<V extends ManetVertex, E extends ManetEdge> extend
     	int x1 = (int) ((graph.vertices.get(edge.getSource()).x()) * xScale + padding);	
     	int y1 = (int) ((scope.y.max - graph.vertices.get(edge.getSource()).y()) * yScale + padding); 
     	int x2 = (int) ((graph.vertices.get(edge.getTarget()).x()) * xScale + padding);	
-    	int y2 = (int) ((scope.y.max - graph.vertices.get(edge.getTarget()).y()) * yScale + padding);   
+    	int y2 = (int) ((scope.y.max - graph.vertices.get(edge.getTarget()).y()) * yScale + padding); 
+    	
+    	g2.setStroke(EDGE_PATH_STROKE);
+        g2.setColor(Color.LIGHT_GRAY);   
+    	g2.drawLine(x1, y1, x2, y2);	
+    	
     	g2.setStroke(EDGE_STROKE);
         g2.setColor(edge.getColor());   
     	g2.drawLine(x1, y1, x2, y2);
+    	
     	Point lineCenter = new Point(x1/2+x2/2, y1/2+y2/2);      	        	
     	String str = String.format("%d: %s", edge.getID(), edge.getText());	
     	FontMetrics fm = g2.getFontMetrics();
@@ -74,11 +81,13 @@ public class VisualGraphPanel<V extends ManetVertex, E extends ManetEdge> extend
     public void paintVertex(Graphics2D g2, VisualVertex vertex) {
     	int x = (int) ((vertex.x() * xScale + padding) - vertexWidth / 2);	
     	int y = (int) (((scope.y.max - vertex.y()) * yScale + padding) - vertexWidth / 2); 
+    	  	
     	g2.setStroke(VERTEX_STROKE);
     	g2.setColor(vertex.getBackgroundColor());
         g2.fillOval(x, y, vertexWidth, vertexWidth);
         g2.setColor(vertex.getBorderColor());
-        g2.drawOval(x, y, vertexWidth, vertexWidth);   
+        g2.drawOval(x, y, vertexWidth, vertexWidth); 
+   
         String str = Integer.toString(vertex.getID());
         FontMetrics fm = g2.getFontMetrics();
         Rectangle2D stringBounds = fm.getStringBounds(str, g2);  

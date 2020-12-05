@@ -294,13 +294,12 @@ public class ManetGraph<V extends ManetVertex, E extends ManetEdge>
 
 	public class IO
 	{
-		public void importGraph()
-		{
+		public void importGraph(){
 
 		}
 		
 		public void exportGraph() {
-			
+						
 		}
 
 		public ArrayList<ArrayList<Tuple<Integer, Integer>>> exportPrimitiveVertexAdjacencies()
