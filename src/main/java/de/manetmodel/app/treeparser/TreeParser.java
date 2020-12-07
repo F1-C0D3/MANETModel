@@ -60,7 +60,7 @@ public class TreeParser {
 		
 		if(string.isEmpty()) {
 			if(option.requiresOption()) {
-				System.out.format(option.getOptions().toString());
+				System.out.format("%s\n", option.getOptions().toString());
 				this.setState(option, input);
 				return;		
 			}
@@ -79,6 +79,7 @@ public class TreeParser {
 					case INT: 
 						input.INT = scanner.nextInt();
 						consume(string.substring(input.INT.toString().length()), valueOption, input);
+						break;
 					case STRING: 
 						break;
 					case DOUBLE:

@@ -1,22 +1,28 @@
 package de.manetmodel.graph;
 
 import java.awt.Color;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
 import java.util.function.Supplier;
 
-import de.manetmodel.graph.Playground.DoubleRange;
-import de.manetmodel.graph.Playground.IntRange;
 import de.manetmodel.util.RandomNumbers;
 import de.manetmodel.util.Topology;
 import de.manetmodel.util.Tuple;
 import de.manetmodel.visualization.VisualEdge;
 import de.manetmodel.visualization.VisualGraph;
 import de.manetmodel.visualization.VisualVertex;
+import jakarta.xml.bind.JAXBContext;
+import jakarta.xml.bind.JAXBException;
 
-public class ManetGraph<V extends ManetVertex, E extends ManetEdge>
+public class ManetGraph<V extends ManetVertex, E extends ManetEdge> implements Serializable
 {
 
 	private final Supplier<V> vertexSupplier;
@@ -179,13 +185,6 @@ public class ManetGraph<V extends ManetVertex, E extends ManetEdge>
 		return nextHops;
 	}
 
-	@Override
-	public String toString()
-	{
-		String str = "Not implemented yet";
-		return str;
-	}
-
 	public void generateSimpleGraph()
 	{
 		Generator generator = new Generator();
@@ -290,16 +289,43 @@ public class ManetGraph<V extends ManetVertex, E extends ManetEdge>
 		}
 
 		return graph;
+	}	
+	
+	@Override
+	public String toString()
+	{
+		StringBuffer stringBuffer = new StringBuffer();
+						
+		for(V vertex : this.vertices)
+			stringBuffer.append(vertex);
+		
+		for(E edge : this.edges)
+			stringBuffer.append(edge);
+		
+		// private ArrayList<ArrayList<Tuple<Integer, Integer>>> vertexAdjacencies;
+		// private ArrayList<Tuple<Integer, Integer>> edgeAdjacencies;
+				
+		return stringBuffer.toString();
 	}
 
 	public class IO
 	{
-		public void importGraph(){
-
+		public void importGraph(String filePath){
+		
 		}
 		
-		public void exportGraph() {
-						
+		public void exportGraph(String filePath) {						
+			/*try {			 
+			    JAXBContext jaxbContent = JAXBContext.newInstance(ManetVerte.class);
+			    Marshaller mar= context.createMarshaller();
+			    mar.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
+			    mar.marshal(book, new File("./book.xml"));
+	 
+	        } catch (JAXBException exception) {
+	        	exception.printStackTrace();
+	        } catch (IOException exception) {
+	        	
+	        }*/
 		}
 
 		public ArrayList<ArrayList<Tuple<Integer, Integer>>> exportPrimitiveVertexAdjacencies()

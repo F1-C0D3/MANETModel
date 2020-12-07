@@ -1,9 +1,10 @@
 package de.manetmodel.graph;
 
+import java.io.Serializable;
 import java.util.Objects;
 import java.util.Set;
 
-public class ManetVertex implements IManetVertex, IManetElement{
+public class ManetVertex implements IManetVertex, Serializable{
 
 	private int ID;
 	private Coordinate coordinate;
@@ -57,6 +58,8 @@ public class ManetVertex implements IManetVertex, IManetElement{
 	
 	@Override
 	public String toString() {
-	    return String.format("%d:(%.2f/%.2f)", this.ID, this.coordinate.x(), this.coordinate.y());
-	}	
+		return new StringBuffer("ID: ").append(this.ID)
+				.append(", x: ").append(this.coordinate.x())
+				.append(", y: ").append(this.coordinate.y()).toString();
+	}
 }

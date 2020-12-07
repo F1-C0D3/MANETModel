@@ -1,16 +1,25 @@
 package de.manetmodel.graph;
 
+import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 import de.manetmodel.util.Tuple;
 
-public class ManetEdge implements IManetElement, IManetEdge, Comparable<ManetEdge> {
+import jakarta.xml.bind.annotation.*;
 
+@XmlRootElement(name="ManetEdge")
+public class ManetEdge implements IManetEdge, Comparable<ManetEdge> {
+
+	@XmlElement(required=true)
 	int ID;
+	@XmlElement(required=true)
 	int vertexID1;
+	@XmlElement(required=true)
 	int vertexID2;
+	@XmlElement(required=false)
 	double distance;
+	@XmlElement(required=false)
 	Set<Integer> occupation;
 	
 	public void setID(int ID) {
@@ -31,7 +40,6 @@ public class ManetEdge implements IManetElement, IManetEdge, Comparable<ManetEdg
 		return new Tuple<Integer,Integer>(this.vertexID1, vertexID2);
 	}
 	
-	@Override
 	public double getDistance() {
 		return this.distance;
 	}
@@ -76,6 +84,9 @@ public class ManetEdge implements IManetElement, IManetEdge, Comparable<ManetEdg
 	
 	@Override
 	public String toString() {
-	    return String.format("%d: [%d]- %.2f -[%d]", this.ID, this.vertexID1, this.getDistance(), this.vertexID2);
+		return new StringBuffer("ID: ").append(this.ID)
+				.append(", vertexID: ").append(this.vertexID1)
+				.append(", vertexID: ").append(this.vertexID2)
+                .append(", distance: ").append(this.distance).toString();
 	}
 }
