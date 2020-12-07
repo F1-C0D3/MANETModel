@@ -11,7 +11,7 @@ public class MyManetApp
 
 		MyManet graph = new MyManet();
 
-		graph.generateRandomGraph(100d);
+		graph.generateSimpleGraph();
 
 		System.out.println(graph.getVertices().size() + " " + graph.getEdges().size());
 

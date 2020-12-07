@@ -9,7 +9,7 @@ public class MyGraphApp {
 				
 		MyGraph graph = new MyGraph();
 					
-		graph.generateRandomGraph();
+		graph.generateSimpleGraph();
 		
 		System.out.println(graph.getVertices().size() + " " + graph.getEdges().size());	
 		

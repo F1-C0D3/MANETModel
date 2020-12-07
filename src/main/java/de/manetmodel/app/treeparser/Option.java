@@ -1,22 +1,22 @@
-package de.manetgraph.app.treeparser;
+package de.manetmodel.app.treeparser;
 
 import java.util.ArrayList;
 import java.util.Iterator;
 
-import de.manetgraph.app.treeparser.KeyOption;
-import de.manetgraph.app.treeparser.OptionManager;
-import de.manetgraph.app.treeparser.OptionVisitor;
-import de.manetgraph.app.treeparser.ValueOption;
+import de.manetmodel.app.treeparser.KeyOption;
+import de.manetmodel.app.treeparser.OptionManager;
+import de.manetmodel.app.treeparser.OptionVisitor;
+import de.manetmodel.app.treeparser.ValueOption;
 
 public abstract class Option
 {
 	protected Info info;
 	protected Function function;
 	private ArrayList<Option> options;
-	protected boolean isOptional;		
+	protected Requirement requirement;		
 	
 	public Option() {
-		this.isOptional = false;
+		this.requirement = new Requirement(false);
 		this.options = new ArrayList<Option>();
 	}
 	
@@ -58,10 +58,20 @@ public abstract class Option
 		return this.function;
 	}
 	
+	public Requirement getRequirement() {
+		return this.requirement;
+	}
+	
 	public Boolean isOptional() {
-		return isOptional;
+		return this.requirement.isOptional();
 	} 
 	
+	public Boolean requiresOption() {		
+		for(Option option : this.options)
+        	if(!option.isOptional()) return true;      	    
+		return false;		
+	}
+		
 	@Override
 	public String toString() {
 		 StringBuilder stringBuilder = new StringBuilder();

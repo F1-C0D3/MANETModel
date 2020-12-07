@@ -1,4 +1,4 @@
-package de.manetgraph.app;
+package de.manetmodel.app;
 
 import java.awt.Container;
 import java.awt.Dimension;
@@ -12,15 +12,16 @@ import java.util.Scanner;
 import javax.imageio.ImageIO;
 import javax.swing.JFrame;
 
-import de.manetgraph.app.treeparser.Function;
-import de.manetgraph.app.treeparser.Info;
-import de.manetgraph.app.treeparser.Input;
-import de.manetgraph.app.treeparser.Key;
-import de.manetgraph.app.treeparser.Value;
-import de.manetgraph.app.treeparser.KeyOption;
-import de.manetgraph.app.treeparser.TreeParser;
-import de.manetgraph.app.treeparser.ValueOption;
-import de.manetgraph.app.treeparser.ValueType;
+import de.manetmodel.app.treeparser.Function;
+import de.manetmodel.app.treeparser.Info;
+import de.manetmodel.app.treeparser.Input;
+import de.manetmodel.app.treeparser.Key;
+import de.manetmodel.app.treeparser.KeyOption;
+import de.manetmodel.app.treeparser.Requirement;
+import de.manetmodel.app.treeparser.TreeParser;
+import de.manetmodel.app.treeparser.Value;
+import de.manetmodel.app.treeparser.ValueOption;
+import de.manetmodel.app.treeparser.ValueType;
 import de.manetmodel.graph.ManetEdge;
 import de.manetmodel.graph.ManetGraph;
 import de.manetmodel.graph.ManetGraphSupplier;
@@ -28,6 +29,7 @@ import de.manetmodel.graph.ManetVertex;
 import de.manetmodel.graph.Playground;
 import de.manetmodel.graph.Playground.DoubleRange;
 import de.manetmodel.graph.Playground.IntRange;
+import de.manetmodel.util.RandomNumbers;
 import de.manetmodel.visualization.VisualGraphPanel;
 
 public class App {
@@ -48,12 +50,12 @@ public class App {
 		
 		// create random 100	
 		KeyOption random = new KeyOption(new Key("random"), new Info("create a random graph"), new Function(App::createRandom));
-		random.add(new ValueOption(new Value(ValueType.INT), new Info("number of nodes"), new Function(App::createRandom))); 	
+		random.add(new ValueOption(new Value(ValueType.INT), new Info("number of nodes"), new Function(App::createRandom), new Requirement(true))); 	
 		
 		create.add(random);	
 		// create grid 100
 		KeyOption grid = new KeyOption(new Key("grid"), new Info("create a grid graph"), new Function(App::createGrid));
-		grid.add(new ValueOption(new Value(ValueType.INT), new Info("number of nodes"), new Function(App::createGrid))); 
+		grid.add(new ValueOption(new Value(ValueType.INT), new Info("number of nodes"), new Function(App::createGrid), new Requirement(true))); 
 		create.add(grid);	
 		
 		parser.addOption(create);
@@ -127,9 +129,16 @@ public class App {
 	}
 		
 	public static void main(String[] args) {	
+				
+		Playground pg = new Playground();
+		pg.height = new IntRange(0, 10000);
+		pg.width = new IntRange(0, 10000);
+		pg.edgeCount = new IntRange(2, 4);
+		pg.vertexCount = new IntRange(100, 100);
+		pg.edgeDistance = new DoubleRange(50d, 100d);	
 		
 		graph = new ManetGraph<ManetVertex, ManetEdge>(new ManetGraphSupplier.ManetVertexSupplier(), new ManetGraphSupplier.ManetEdgeSupplier());
-		graph.generateSimpleGraph();
+		graph.generateRandomGraph(pg);
 		
 		panel = new VisualGraphPanel<ManetVertex, ManetEdge>(graph.toVisualGraph());
    		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
@@ -163,14 +172,26 @@ public class App {
 	}
 	
 	private static void createRandom(Input input) {		
+		
+		System.out.println("createRandom");
+		
+		int numberOfVertices;
+		
+		if(!input.hasINT())
+			numberOfVertices = RandomNumbers.getRandom(50, 100);
+		else
+			numberOfVertices = input.INT;
+				
 		Playground pg = new Playground();
 		pg.height = new IntRange(0, 10000);
 		pg.width = new IntRange(0, 10000);
 		pg.edgeCount = new IntRange(4, 4);
-		pg.vertexCount = new IntRange(input.INT, input.INT);
-		pg.edgeDistance = new DoubleRange(50d, 100d);			
+		pg.vertexCount = new IntRange(numberOfVertices, numberOfVertices);
+		pg.edgeDistance = new DoubleRange(50d, 100d);		
+		
 		graph = new ManetGraph<ManetVertex, ManetEdge>(new ManetGraphSupplier.ManetVertexSupplier(), new ManetGraphSupplier.ManetEdgeSupplier());
-		graph.generateRandomGraph(pg);			
+		graph.generateRandomGraph(pg);		
+		
 		panel.updateVisualGraph(graph.toVisualGraph());
 		panel.repaint();
 	}
@@ -189,15 +210,11 @@ public class App {
 	}
 	
 	private static void addVertex(Input input) {				
-		graph.addVertex(
-				input.DOUBLE_TUPLE.getFirst(), 
-				input.DOUBLE_TUPLE.getSecond());
+		graph.addVertex(input.DOUBLE_TUPLE.getFirst(), input.DOUBLE_TUPLE.getSecond());
     }
 	
 	private static void addEdge(Input input) {
-		graph.addEdge(
-				graph.getVertex(input.INT_TUPLE.getFirst()), 
-				graph.getVertex(input.INT_TUPLE.getSecond()));
+		graph.addEdge(graph.getVertex(input.INT_TUPLE.getFirst()), graph.getVertex(input.INT_TUPLE.getSecond()));
     }
 	
 	private static void removeVertex(Input input) {
@@ -241,8 +258,15 @@ public class App {
 	}
 	
 	private static void help(Input input) {
+		
 
     }
+	
+	private static void helpWithCommand() {
+		
+		
+		
+	}
 	
 	private static void printOptions() {										
 		

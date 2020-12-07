@@ -1,15 +1,15 @@
-package de.manetgraph.app.treeparser;
+package de.manetmodel.app.treeparser;
 
 public class KeyOption extends Option {
 	private Key flag;
 	private Key command;
 	
-	public KeyOption(String flag, Key command, Info info, Function function, boolean isOptional) {
+	public KeyOption(String flag, Key command, Info info, Function function, Requirement requirement) {
 		this.flag = new Key(flag);
 		this.command = command;
 		super.info = info;
-		super.isOptional = isOptional;
 		super.function = function;	
+		super.requirement = requirement;
 	}
 	
 	public KeyOption(String flag, Key command, Info info, Function function) {
@@ -19,12 +19,12 @@ public class KeyOption extends Option {
 		super.function = function;	
 	}	
 			
-	public KeyOption(Key command, Info info, Function function, boolean isOptional) {
+	public KeyOption(Key command, Info info, Function function, Requirement requirement) {
 		this.flag = new Key("");
 		this.command = command;
 		super.info = info;
-		super.isOptional = isOptional;
-		super.function = function;	
+		super.function = function;
+		super.requirement = requirement;
 	}
 	
 	public KeyOption(Key command, Info info, Function function) {
@@ -34,11 +34,11 @@ public class KeyOption extends Option {
 		super.function = function;	
 	}
 			
-	public KeyOption(Key command, Info info,  boolean isOptional) {
+	public KeyOption(Key command, Info info, Requirement requirement) {
 		this.flag = new Key("");
 		this.command = command;
 		super.info = info;
-		super.isOptional = isOptional;
+		super.requirement = requirement;
 	}
 	
 	public KeyOption(Key command, Info info) {
@@ -61,6 +61,9 @@ public class KeyOption extends Option {
 	
 	@Override
 	protected String buildString() {
-		return String.format("%s", this.getCommand().toString());
+		return String.format("KeyOption(Key(\"%s\"), Info(\"%s\"), Requirement(%s))", 
+				this.getCommand().toString(), 
+				this.getInfo().toString(),
+				this.getRequirement().toString());
 	}
 }

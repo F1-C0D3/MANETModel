@@ -1,7 +1,7 @@
-package de.manetgraph.app.treeparser;
+package de.manetmodel.app.treeparser;
 
-import de.manetgraph.app.treeparser.TreeParser.KeyOption;
-import de.manetgraph.app.treeparser.TreeParser.ValueOption;
+import de.manetmodel.app.treeparser.KeyOption;
+import de.manetmodel.app.treeparser.ValueOption;
 
 public class AddOptionVisitor implements OptionVisitor {
     private OptionManager optionManager;

@@ -1,13 +1,13 @@
-package de.manetgraph.app.treeparser;
+package de.manetmodel.app.treeparser;
 
 public class ValueOption extends Option{
 	private Value value;
 	
-	public ValueOption(Value value, Info info, Function function, boolean isOptional) {
+	public ValueOption(Value value, Info info, Function function, Requirement requirement) {
 		this.value = value;
 		super.info = info;
 		super.function = function;
-		super.isOptional = isOptional;
+		super.requirement = requirement;
 	}
 	
 	public ValueOption(Value value, Info info, Function function) {
@@ -16,10 +16,10 @@ public class ValueOption extends Option{
 		super.function = function;
 	}
 	
-	public ValueOption(Value value, Info info, boolean isOptional) {
+	public ValueOption(Value value, Info info, Requirement requirement) {
 		this.value = value;
 		super.info = info;
-		super.isOptional = isOptional;
+		super.requirement = requirement;
 	}
 	
 	public ValueOption(Value value, Info info) {
@@ -36,12 +36,7 @@ public class ValueOption extends Option{
 	}
 	
 	@Override
-	public String toString() {
-		return String.format("%s : %s", this.getValue().toString(), this.getInfo().toString());
-	}
-	
-	@Override
 	protected String buildString() {
-		return value.getType().toString();
+		return String.format("ValueOpton(ValueType(\"%s\"), Requirement(\"%s\")", value.getType().toString(), this.getRequirement().toString());
 	}
 }

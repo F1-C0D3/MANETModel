@@ -1,4 +1,4 @@
-package de.manetgraph.app.treeparser;
+package de.manetmodel.app.treeparser;
 
 public class Info extends Element {
 	public final String string;

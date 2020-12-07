@@ -1,7 +1,7 @@
-package de.manetgraph.app.treeparser;
+package de.manetmodel.app.treeparser;
 
-import de.manetgraph.app.treeparser.Element;
-import de.manetgraph.app.treeparser.ValueType;
+import de.manetmodel.app.treeparser.Element;
+import de.manetmodel.app.treeparser.ValueType;
 
 public class Value extends Element{
 	private ValueType type;

@@ -47,7 +47,6 @@ public class VisualGraphPanel<V extends ManetVertex, E extends ManetEdge> extend
     public VisualGraphPanel(VisualGraph<V,E> graph) {
         this.graph = graph;      
         this.scope = this.getScope(graph);
-        System.out.println(graph.getVertices().size());
     }
     
     public void paintPlayground(Graphics2D g2) {
@@ -101,7 +100,8 @@ public class VisualGraphPanel<V extends ManetVertex, E extends ManetEdge> extend
         Graphics2D g2 = (Graphics2D) g;     
         g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         
-        this.scope = this.getScope(graph);
+        if(graph.getVertices().isEmpty()) return;
+        
         this.xScale = ((double) getWidth() - 2 * padding) / (scope.x.max);
         this.yScale = ((double) getHeight() - 2 * padding) / (scope.y.max);      
 
@@ -156,7 +156,8 @@ public class VisualGraphPanel<V extends ManetVertex, E extends ManetEdge> extend
 				else if(node.y() < scope.y.min)
 					scope.y.min = node.y();				
 			}   			
-		}		
+		}
+        
 		return scope;
 	}
 	
@@ -166,6 +167,7 @@ public class VisualGraphPanel<V extends ManetVertex, E extends ManetEdge> extend
 	
 	public void updateVisualGraph(VisualGraph<V,E> graph) {
 		this.graph = graph;
+        this.scope = this.getScope(graph);
 	}
     
     public static void main(String[] args) {

@@ -1,4 +1,4 @@
-package de.manetgraph.app.treeparser;
+package de.manetmodel.app.treeparser;
 
 public enum ValueType {
 	INT{
