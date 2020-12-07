@@ -1,12 +1,9 @@
 package de.manetmodel.graph;
 
 import java.awt.Color;
-import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.io.Serializable;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -19,10 +16,14 @@ import de.manetmodel.util.Tuple;
 import de.manetmodel.visualization.VisualEdge;
 import de.manetmodel.visualization.VisualGraph;
 import de.manetmodel.visualization.VisualVertex;
+
 import jakarta.xml.bind.JAXBContext;
 import jakarta.xml.bind.JAXBException;
+import jakarta.xml.bind.Marshaller;
+import jakarta.xml.bind.annotation.XmlRootElement;
 
-public class ManetGraph<V extends ManetVertex, E extends ManetEdge> implements Serializable
+@XmlRootElement(name="ManetGraph")
+public class ManetGraph<V extends ManetVertex, E extends ManetEdge>
 {
 
 	private final Supplier<V> vertexSupplier;
@@ -253,7 +254,7 @@ public class ManetGraph<V extends ManetVertex, E extends ManetEdge> implements S
 		Iterator<E> iterator = new Iterator<E>()
 		{
 			private int i = 0;
-
+			
 			@Override
 			public boolean hasNext()
 			{
@@ -315,17 +316,19 @@ public class ManetGraph<V extends ManetVertex, E extends ManetEdge> implements S
 		}
 		
 		public void exportGraph(String filePath) {						
-			/*try {			 
-			    JAXBContext jaxbContent = JAXBContext.newInstance(ManetVerte.class);
-			    Marshaller mar= context.createMarshaller();
-			    mar.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
-			    mar.marshal(book, new File("./book.xml"));
-	 
+			
+			try {			
+				JAXBContext jaxbContent = JAXBContext.newInstance(this.getClass());
+			    Marshaller marshaller= jaxbContent.createMarshaller();
+			    marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);							    
+			    OutputStream outputStream = new FileOutputStream(filePath + "graph.xml");		    
+				marshaller.marshal(this, outputStream);				
+				outputStream.close();
 	        } catch (JAXBException exception) {
 	        	exception.printStackTrace();
 	        } catch (IOException exception) {
-	        	
-	        }*/
+	        	exception.printStackTrace();
+	        } 
 		}
 
 		public ArrayList<ArrayList<Tuple<Integer, Integer>>> exportPrimitiveVertexAdjacencies()

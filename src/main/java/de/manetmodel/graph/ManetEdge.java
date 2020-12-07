@@ -48,7 +48,6 @@ public class ManetEdge implements IManetEdge, Comparable<ManetEdge> {
 		return this.distance = distance;
 	}
 
-	@Override
 	public Set<Integer> getOccupation() {
 		return this.occupation;
 	}

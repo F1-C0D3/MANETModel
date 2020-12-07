@@ -1,12 +1,17 @@
 package de.manetmodel.graph;
 
-import java.io.Serializable;
 import java.util.Objects;
 import java.util.Set;
 
-public class ManetVertex implements IManetVertex, Serializable{
+import jakarta.xml.bind.annotation.XmlElement;
+import jakarta.xml.bind.annotation.XmlRootElement;
 
+@XmlRootElement(name="ManetVertex")
+public class ManetVertex implements IManetVertex {
+	
+	@XmlElement(required=true)
 	private int ID;
+	@XmlElement(required=true)
 	private Coordinate coordinate;
 	
 	public ManetVertex() {}	
