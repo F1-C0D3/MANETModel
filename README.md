@@ -1,4 +1,4 @@
-# ManetGraph
+# ManetModel
 
 ## Klement:
 - [ ] Flow implementation
