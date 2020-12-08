@@ -11,11 +11,11 @@ import org.junit.Test;
 
 import de.manetmodel.graph.ManetGraph;
 import de.manetmodel.graph.ManetPath;
-import de.manetmodel.network.IdealRadioWavePropagation;
 import de.manetmodel.network.Link;
 import de.manetmodel.network.Manet;
 import de.manetmodel.network.ManetSupplier;
 import de.manetmodel.network.Node;
+import de.manetmodel.network.radio.IdealRadioOccupation;
 import de.manetmodel.util.Topology;
 import de.manetmodel.util.Tuple;
 
@@ -27,14 +27,13 @@ public class DijkstraShortestPathTest
 	public void RandomPathTest()
 	{
 
-		IdealRadioWavePropagation propagationModel = new IdealRadioWavePropagation(100d);
-		Manet<Node, Link, IdealRadioWavePropagation> manet = new Manet<Node, Link, IdealRadioWavePropagation>(
-				new ManetSupplier.ManetNodeSupplier(), new ManetSupplier.ManetLinkSupplier());
+		Manet<Node, Link> manet = new Manet<Node, Link>(new ManetSupplier.ManetNodeSupplier(),
+				new ManetSupplier.ManetLinkSupplier());
 
-		manet.createManet(Topology.TRAPEZIUM, new IdealRadioWavePropagation(100d));
+		manet.createManet(Topology.TRAPEZIUM, new IdealRadioOccupation(100d, 125d, 2d));
 
-		Function<Link, Double> metric = (Link l) -> {
-			return (double) l.getInterferenceNodes().size();
+		Function<Node, Double> metric = (Node n) -> {
+			return (double) n.getInterferedLinks().size();
 		};
 
 		DijkstraShortestPath<Node, Link> dijkstra = new DijkstraShortestPath<Node, Link>(manet.getGraph());
@@ -52,7 +51,6 @@ public class DijkstraShortestPathTest
 		{
 			spComputed.add(it.next().getSecond().getID());
 		}
-		spComputed.add(sp.getTarget().getID());
 
 		assertTrue(spCompare.equals(spComputed));
 
