@@ -1,20 +1,21 @@
 # ManetGraph
 
-Klement:
+## Klement:
 - [ ] Flow implementation
 - [ ] Complete WaveFormPropagationModel 
 - [ ] IdealPropagationModel
 - [ ] Propagation model using Free-space path loss and Shannon–Hartley theorem for bitrate computation
  
+ 
+## Eike: 
+- [ ] ConsoleApp
+- [ ] Adjust/Fix Generators (
+- [ ] Add multiple colored paths to VisualGraph (paint colored lines under edges with different sizes to enable overlapping paths)
 
 
-
-Eike: 
-- [ ] Console App
-- [ ] Anpassung/Überarbeitung der Generatoren
-
-Ideen:
+## Ideas:
 - Plo technique 
-- Idee 2
-- Idee 3
+- JFrame with GUI Features (Buttons?)
+
+
 
