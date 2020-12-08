@@ -21,7 +21,7 @@ public class DijkstraShortestPath<V extends ManetVertex, E extends ManetEdge>
 		this.manetGraph = manetGraph;
 	}
 
-	public ManetPath<V, E> compute(V source, V target, Function<E, Double> metric)
+	public ManetPath<V, E> compute(V source, V target, Function<V, Double> metric)
 	{
 		/* Initializaton */
 		V current = source;
@@ -57,7 +57,7 @@ public class DijkstraShortestPath<V extends ManetVertex, E extends ManetEdge>
 
 			for (V neig : manetGraph.getNextHopsOf(current))
 			{
-				double edgeDist = metric.apply(manetGraph.getEdge(current, neig));
+				double edgeDist = metric.apply(neig);
 				double oldPahtDist = predDist.get(neig.getID()).getSecond();
 
 				double altPathDist = edgeDist + predDist.get(current.getID()).getSecond();
@@ -81,7 +81,7 @@ public class DijkstraShortestPath<V extends ManetVertex, E extends ManetEdge>
 		do
 		{
 			V pred = predDist.get(t.getID()).getFirst();
-			copy.add(0, new Tuple<E, V>(manetGraph.getEdge(t, pred), pred));
+			copy.add(0, new Tuple<E, V>(manetGraph.getEdge(t, pred), t));
 			t = pred;
 		} while (t.getID() != sp.getSource().getID());
 
