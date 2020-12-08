@@ -14,7 +14,7 @@
 - [ ] Add multiple colored paths to VisualGraph (paint colored lines under edges with different sizes to enable overlapping paths)
 
 
-###### Ideas:
+## Ideas:
 - Plo technique 
 - JFrame with GUI Features (Buttons?)
 
