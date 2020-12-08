@@ -2,7 +2,11 @@
 
 Klement:
 - [ ] Flow implementation
-- [ ] Complete Occupation model
+- [ ] Complete WaveFormPropagationModel 
+- [ ] IdealPropagationModel
+- [ ] Propagation model using Free-space path loss and Shannon–Hartley theorem for bitrate computation
+ 
+
 
 
 Eike: 
@@ -10,7 +14,7 @@ Eike:
 - [ ] Anpassung/Überarbeitung der Generatoren
 
 Ideen:
-- Idee 1
+- Plo technique 
 - Idee 2
 - Idee 3
 
