@@ -1,5 +1,6 @@
 package de.manetmodel.app.treeparser;
 
+import java.util.Iterator;
 import java.util.Scanner;
 
 import de.manetmodel.util.Tuple;
@@ -20,8 +21,8 @@ class State {
 
 public class TreeParser {
 		
-	RootOption options;
-	State state;
+	private RootOption options;
+	private State state;
 	
 	static String delimiter = " ";
 	
@@ -35,6 +36,16 @@ public class TreeParser {
 	
 	public Option getOptions() {
 		return this.options;
+	}
+	
+	public Option findKeyOption(Option options, Key key) {			
+		for(Option option : options.getOptions()) {
+			if(key.equals(option.getKey())) 
+				return option;
+			else 
+				findKeyOption(option, key);
+		}	
+		return null;	
 	}
 	
 	private void setState(Option option, Input input) {
@@ -60,7 +71,7 @@ public class TreeParser {
 		
 		if(string.isEmpty()) {
 			if(option.requiresOption()) {
-				System.out.format("%s\n", option.getOptions().toString());
+				System.out.println(option.getOptions().toString());
 				this.setState(option, input);
 				return;		
 			}
@@ -68,8 +79,8 @@ public class TreeParser {
 		}
 									
 		for(KeyOption keyOption : option.getKeyOptions()) 					
-			if(string.startsWith(keyOption.getFlag().toString() + keyOption.getCommand().toString())) 
-				consume(string.substring(keyOption.getFlag().toString().length() + keyOption.getCommand().toString().length()), keyOption, input);
+			if(string.startsWith(keyOption.getFlag().toString() + keyOption.getKey().toString())) 
+				consume(string.substring(keyOption.getFlag().toString().length() + keyOption.getKey().toString().length()), keyOption, input);
 								
 		for(ValueOption valueOption : option.getValueOptions()) {			
 			Scanner scanner = new Scanner(string);
@@ -81,6 +92,8 @@ public class TreeParser {
 						consume(string.substring(input.INT.toString().length()), valueOption, input);
 						break;
 					case STRING: 
+						input.STRING = string;
+						consume("", valueOption, input);
 						break;
 					case DOUBLE:
 						input.DOUBLE = scanner.nextDouble();
@@ -96,7 +109,8 @@ public class TreeParser {
 						break; 						
 				}  			
 			}
-			catch(Exception e) {}		
+			catch(Exception e) {}	
+			scanner.close();
 		}		
 	}		
 }

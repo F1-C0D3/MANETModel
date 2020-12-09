@@ -5,8 +5,8 @@ public class Playground
 
 	public IntRange width;
 	public IntRange height;
-	public IntRange edgeCount;
 	public IntRange vertexCount;
+	public IntRange edgeCount;
 	public DoubleRange edgeDistance;
 
 	public Playground()

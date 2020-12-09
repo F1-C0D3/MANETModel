@@ -42,13 +42,15 @@ public abstract class Option
 			optionManager.add(option);
 		return optionManager.getKeyOptions();
 	}
-	
+		
 	public ArrayList<ValueOption> getValueOptions(){
         OptionManager optionManager = new OptionManager();        
 		for(Option option : this.options) 
 			optionManager.add(option);
 		return optionManager.getValueOptions();
 	}
+
+	public abstract Key getKey();
 	
 	public Info getInfo() {
 		return this.info;
@@ -75,7 +77,7 @@ public abstract class Option
 	@Override
 	public String toString() {
 		 StringBuilder stringBuilder = new StringBuilder();
-	     this.print(stringBuilder, " ", " ");
+	     this.print(stringBuilder, "", "");
 	     return stringBuilder.toString();
 	}
 	
@@ -86,18 +88,14 @@ public abstract class Option
 	private void print(StringBuilder stringBuilder, String prefix, String childrenPrefix) {
 		stringBuilder.append(prefix);
 		stringBuilder.append(this.buildString());
-		stringBuilder.append('\n');
-        
-        Iterator<Option> iterator = options.iterator(); 
-        
+		stringBuilder.append('\n');  
+        Iterator<Option> iterator = options.iterator();    
         while (iterator.hasNext()) {
         	Option next = iterator.next();   
-        	
-        	if (iterator.hasNext()) {
+        	if (iterator.hasNext()) 
                 next.print(stringBuilder, childrenPrefix + "├── ", childrenPrefix + "│   ");
-            } else {
-                next.print(stringBuilder, childrenPrefix + "└── ", childrenPrefix + "    ");
-            }          
+            else 
+                next.print(stringBuilder, childrenPrefix + "└── ", childrenPrefix + "    ");       
         }
     }
 }

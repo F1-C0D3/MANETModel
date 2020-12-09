@@ -1,43 +1,65 @@
 package de.manetmodel.graph;
 
 import java.awt.Color;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
 import java.util.function.Supplier;
 
+import de.manetmodel.graph.viz.VisualEdge;
+import de.manetmodel.graph.viz.VisualGraph;
+import de.manetmodel.graph.viz.VisualVertex;
 import de.manetmodel.util.RandomNumbers;
 import de.manetmodel.util.Topology;
 import de.manetmodel.util.Tuple;
-import de.manetmodel.visualization.VisualEdge;
-import de.manetmodel.visualization.VisualGraph;
-import de.manetmodel.visualization.VisualVertex;
-
-import jakarta.xml.bind.JAXBContext;
-import jakarta.xml.bind.JAXBException;
-import jakarta.xml.bind.Marshaller;
+import jakarta.xml.bind.annotation.XmlAccessorType;
+import jakarta.xml.bind.annotation.XmlElement;
+import jakarta.xml.bind.annotation.XmlElementWrapper;
+import jakarta.xml.bind.annotation.XmlAccessType;
 import jakarta.xml.bind.annotation.XmlRootElement;
+import jakarta.xml.bind.annotation.XmlTransient;
 
-@XmlRootElement(name="ManetGraph")
+@XmlRootElement
+@XmlAccessorType(XmlAccessType.FIELD)
 public class ManetGraph<V extends ManetVertex, E extends ManetEdge>
 {
-
+	@XmlTransient
 	private final Supplier<V> vertexSupplier;
+	@XmlTransient
 	private final Supplier<E> edgeSupplier;
 
+	@XmlElement(name="VertexCount")
 	private int vertexCount;
+	@XmlElement(name="EdgeCount")
 	private int edgeCount;
-
+	
+	@XmlElementWrapper(name="Vertices")
+	@XmlElement(name="Vertex")
 	private ArrayList<V> vertices;
+	@XmlElementWrapper(name="Edges")
+	@XmlElement(name="Edge")
 	private ArrayList<E> edges;
-
-	private ArrayList<ArrayList<Tuple<Integer, Integer>>> vertexAdjacencies;
-	private ArrayList<Tuple<Integer, Integer>> edgeAdjacencies;
-
+	
+	@XmlElementWrapper(name="VertexAdjacencies")
+	@XmlElement(name="VertexAdjacency")
+	private ArrayList<VertexAdjacency> vertexAdjacencies;
+	@XmlElementWrapper(name="EdgeAdjacencies")
+	@XmlElement(name="EdgeAdjacency")
+	private ArrayList<EdgeAdjacency> edgeAdjacencies;
+	
+	public ManetGraph() 
+	{
+		this.vertexSupplier = null;
+		this.edgeSupplier = null;
+		this.vertexCount = 0;
+		this.edgeCount = 0;
+		this.vertices = new ArrayList<V>();
+		this.edges = new ArrayList<E>();
+		this.vertexAdjacencies = new ArrayList<VertexAdjacency>();
+		this.edgeAdjacencies = new ArrayList<EdgeAdjacency>();
+	}	
+	
 	public ManetGraph(Supplier<V> vertexSupplier, Supplier<E> edgeSupplier)
 	{
 		this.vertexSupplier = vertexSupplier;
@@ -46,8 +68,8 @@ public class ManetGraph<V extends ManetVertex, E extends ManetEdge>
 		this.edgeCount = 0;
 		this.vertices = new ArrayList<V>();
 		this.edges = new ArrayList<E>();
-		this.vertexAdjacencies = new ArrayList<ArrayList<Tuple<Integer, Integer>>>();
-		this.edgeAdjacencies = new ArrayList<Tuple<Integer, Integer>>();
+		this.vertexAdjacencies = new ArrayList<VertexAdjacency>();
+		this.edgeAdjacencies = new ArrayList<EdgeAdjacency>();
 	}
 
 	public V addVertex(double x, double y)
@@ -56,20 +78,23 @@ public class ManetGraph<V extends ManetVertex, E extends ManetEdge>
 		vertex.setID(vertexCount++);
 		vertex.setPosition(x, y);
 		this.vertices.add(vertex);
-		this.vertexAdjacencies.add(new ArrayList<Tuple<Integer, Integer>>());
+		this.vertexAdjacencies.add(new VertexAdjacency());
 		return vertex;
 	}
 
 	public boolean addVertex(V vertex)
 	{
+		if(this.vertexSupplier == null)
+			return false;
 		if (vertex.getPostion() == null)
 			return false;
+		
 		vertex.setID(vertexCount++);
 		this.vertices.add(vertex);
-		this.vertexAdjacencies.add(new ArrayList<Tuple<Integer, Integer>>());
+		this.vertexAdjacencies.add(new VertexAdjacency());
 		return true;
 	}
-
+	
 	public V getVertex(int ID)
 	{
 		return this.vertices.get(ID);
@@ -77,52 +102,58 @@ public class ManetGraph<V extends ManetVertex, E extends ManetEdge>
 
 	public Tuple<V, V> getVerticesOf(E edge)
 	{
-		Tuple<Integer, Integer> vertexIDs = this.edgeAdjacencies.get(edge.getID());
+		Tuple<Integer, Integer> vertexIDs = this.edgeAdjacencies.get(edge.getID()).getVertexIDs();
 		return new Tuple<V, V>(this.vertices.get(vertexIDs.getFirst()), this.vertices.get(vertexIDs.getSecond()));
 	}
 
 	public E getEdge(V source, V target)
 	{
-		for (Tuple<Integer, Integer> adjacency : vertexAdjacencies.get(source.getID()))
-			if (adjacency.getSecond() == target.getID())
-				return this.edges.get(adjacency.getFirst());
+		for (EdgeVertexMapping edgeVertexMapping : vertexAdjacencies.get(source.getID()).getEdgeVertexMappings())
+			if (edgeVertexMapping.getVertexID().equals(target.getID()))
+				return this.edges.get(edgeVertexMapping.getEdgeID());
+		
 		return null;
 	}
 
 	public boolean containsEdge(V source, V target)
 	{
-		for (Tuple<Integer, Integer> adjacency : vertexAdjacencies.get(source.getID()))
-			if (adjacency.getSecond() == target.getID())
+		for (EdgeVertexMapping edgeVertexMapping : vertexAdjacencies.get(source.getID()).getEdgeVertexMappings())
+			if (edgeVertexMapping.getVertexID().equals(target.getID()))
 				return true;
+		
 		return false;
 	}
 
 	public E addEdge(V source, V target)
 	{
-		if (containsEdge(source, target))
+		if(this.edgeSupplier == null) 
 			return null;
+		if (containsEdge(source, target)) 
+			return null;
+		
 		E edge = this.edgeSupplier.get();
 		edge.setID(edgeCount++);
-		edge.setDistance(this.getDistance(source, target));
+		edge.setDistance(getDistance(source, target));
 		edge.setVertexIDs(source.getID(), target.getID());
 		this.edges.add(edge);
-		this.vertexAdjacencies.get(source.getID()).add(new Tuple<Integer, Integer>(edge.getID(), target.getID()));
-		this.vertexAdjacencies.get(target.getID()).add(new Tuple<Integer, Integer>(edge.getID(), source.getID()));
-		this.edgeAdjacencies.add(new Tuple<Integer, Integer>(source.getID(), target.getID()));
+		this.vertexAdjacencies.get(source.getID()).add(new EdgeVertexMapping(edge.getID(), target.getID()));
+		this.vertexAdjacencies.get(target.getID()).add(new EdgeVertexMapping(edge.getID(), source.getID()));
+		this.edgeAdjacencies.add(new EdgeAdjacency(source.getID(), target.getID()));
 		return edge;
 	}
 
 	public List<E> getEdgesOf(V vertex)
 	{
 		List<E> edges = new ArrayList<E>();
-		for (Tuple<Integer, Integer> adjacency : vertexAdjacencies.get(vertex.getID()))
-			edges.add(this.edges.get(adjacency.getFirst()));
+		for (EdgeVertexMapping edgeVertexMapping : vertexAdjacencies.get(vertex.getID()).getEdgeVertexMappings())
+			edges.add(this.edges.get(edgeVertexMapping.getEdgeID()));
+		
 		return edges;
 	}
 
 	public V getTargetOf(V vertex, E edge)
 	{
-		Tuple<Integer, Integer> vertexIDs = this.edgeAdjacencies.get(edge.getID());
+		Tuple<Integer, Integer> vertexIDs = this.edgeAdjacencies.get(edge.getID()).getVertexIDs();
 		if (vertex.getID() == vertexIDs.getFirst())
 			return this.vertices.get(vertexIDs.getSecond());
 		else if (vertex.getID() == vertexIDs.getSecond())
@@ -161,7 +192,7 @@ public class ManetGraph<V extends ManetVertex, E extends ManetEdge>
 
 	public List<V> getVerticesInRadius(V source, double radius)
 	{
-		List<V> vertices = new ArrayList<>();
+		List<V> vertices = new ArrayList<V>();
 		for (V vertex : this.vertices)
 			if (!vertex.equals(source) && this.getDistance(source.getPostion(), vertex.getPostion()) <= radius)
 				vertices.add(vertex);
@@ -181,8 +212,8 @@ public class ManetGraph<V extends ManetVertex, E extends ManetEdge>
 	public List<V> getNextHopsOf(V vertex)
 	{
 		List<V> nextHops = new ArrayList<V>();
-		for (Tuple<Integer, Integer> adjacency : vertexAdjacencies.get(vertex.getID()))
-			nextHops.add(this.vertices.get(adjacency.getSecond()));
+		for (EdgeVertexMapping edgeVertexMapping : vertexAdjacencies.get(vertex.getID()).getEdgeVertexMappings())
+			nextHops.add(this.vertices.get(edgeVertexMapping.getVertexID()));
 		return nextHops;
 	}
 
@@ -218,14 +249,14 @@ public class ManetGraph<V extends ManetVertex, E extends ManetEdge>
 
 	public Tuple<IManetVertex, IManetVertex> getVerticesOf(IManetEdge edge)
 	{
-		Tuple<Integer, Integer> vertexIDs = this.edgeAdjacencies.get(edge.getID());
+		Tuple<Integer, Integer> vertexIDs = this.edgeAdjacencies.get(edge.getID()).getVertexIDs();
 		return new Tuple<IManetVertex, IManetVertex>(this.vertices.get(vertexIDs.getFirst()),
 				this.vertices.get(vertexIDs.getSecond()));
 	}
 
-	private ArrayList<ArrayList<Tuple<Integer, Integer>>> getVertexAdjacencies()
+	private ArrayList<VertexAdjacency> getVertexAdjacencies()
 	{
-		return vertexAdjacencies;
+		return this.vertexAdjacencies;
 	}
 
 	public Iterator<V> vertexIterator()
@@ -285,13 +316,13 @@ public class ManetGraph<V extends ManetVertex, E extends ManetEdge>
 						edge.getID(), 
 						vertices.getFirst().getID(), 
 						vertices.getSecond().getID(), 
-						String.format("%d / %.2f", edge.getOccupation().size(), edge.getDistance()),
+						String.format("%d / %.2f", /*edge.getOccupation().size()*/0, edge.getDistance()),
 						Color.BLACK));
 		}
 
 		return graph;
 	}	
-	
+		
 	@Override
 	public String toString()
 	{
@@ -311,30 +342,10 @@ public class ManetGraph<V extends ManetVertex, E extends ManetEdge>
 
 	public class IO
 	{
-		public void importGraph(String filePath){
-		
-		}
-		
-		public void exportGraph(String filePath) {						
-			
-			try {			
-				JAXBContext jaxbContent = JAXBContext.newInstance(this.getClass());
-			    Marshaller marshaller= jaxbContent.createMarshaller();
-			    marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);							    
-			    OutputStream outputStream = new FileOutputStream(filePath + "graph.xml");		    
-				marshaller.marshal(this, outputStream);				
-				outputStream.close();
-	        } catch (JAXBException exception) {
-	        	exception.printStackTrace();
-	        } catch (IOException exception) {
-	        	exception.printStackTrace();
-	        } 
-		}
-
-		public ArrayList<ArrayList<Tuple<Integer, Integer>>> exportPrimitiveVertexAdjacencies()
+		public ArrayList<VertexAdjacency> exportPrimitiveVertexAdjacencies()
 		{
 			return getVertexAdjacencies();
-		}
+		}		
 	}
 
 	public class Generator

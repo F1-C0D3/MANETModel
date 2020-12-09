@@ -1,25 +1,28 @@
 package de.manetmodel.graph;
 
-import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 import de.manetmodel.util.Tuple;
 
-import jakarta.xml.bind.annotation.*;
+import jakarta.xml.bind.annotation.XmlAccessorType;
+import jakarta.xml.bind.annotation.XmlElement;
+import jakarta.xml.bind.annotation.XmlAccessType;
+import jakarta.xml.bind.annotation.XmlRootElement;
 
-@XmlRootElement(name="ManetEdge")
+@XmlRootElement
+@XmlAccessorType(XmlAccessType.FIELD)
 public class ManetEdge implements IManetEdge, Comparable<ManetEdge> {
 
-	@XmlElement(required=true)
+	@XmlElement
 	int ID;
-	@XmlElement(required=true)
+	@XmlElement
 	int vertexID1;
-	@XmlElement(required=true)
+	@XmlElement
 	int vertexID2;
-	@XmlElement(required=false)
+	@XmlElement
 	double distance;
-	@XmlElement(required=false)
+	@XmlElement
 	Set<Integer> occupation;
 	
 	public void setID(int ID) {

@@ -5,10 +5,10 @@ import static org.junit.Assert.assertNotNull;
 import org.junit.Test;
 
 import de.manetmodel.graph.ManetGraph;
+import de.manetmodel.graph.viz.VisualGraph;
 import de.manetmodel.network.Link;
 import de.manetmodel.network.ManetSupplier;
 import de.manetmodel.network.Node;
-import de.manetmodel.visualization.VisualGraph;
 
 public class RandomPathTest
 {

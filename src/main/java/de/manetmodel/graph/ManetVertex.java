@@ -3,15 +3,18 @@ package de.manetmodel.graph;
 import java.util.Objects;
 import java.util.Set;
 
+import jakarta.xml.bind.annotation.XmlAccessorType;
 import jakarta.xml.bind.annotation.XmlElement;
+import jakarta.xml.bind.annotation.XmlAccessType;
 import jakarta.xml.bind.annotation.XmlRootElement;
 
-@XmlRootElement(name="ManetVertex")
+@XmlRootElement
+@XmlAccessorType(XmlAccessType.FIELD)
 public class ManetVertex implements IManetVertex {
 	
-	@XmlElement(required=true)
+	@XmlElement
 	private int ID;
-	@XmlElement(required=true)
+	@XmlElement
 	private Coordinate coordinate;
 	
 	public ManetVertex() {}	

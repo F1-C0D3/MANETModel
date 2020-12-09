@@ -1,4 +1,4 @@
-package de.manetmodel.visualization;
+package de.manetmodel.app.gui;
 
 import java.awt.BasicStroke;
 import java.awt.Color;
@@ -30,12 +30,15 @@ import de.manetmodel.graph.ManetGraph;
 import de.manetmodel.graph.ManetGraphSupplier;
 import de.manetmodel.graph.ManetPath;
 import de.manetmodel.graph.ManetVertex;
+import de.manetmodel.graph.viz.VisualEdge;
+import de.manetmodel.graph.viz.VisualGraph;
+import de.manetmodel.graph.viz.VisualVertex;
 import de.manetmodel.util.Tuple;
 
 public class VisualGraphPanel<V extends ManetVertex, E extends ManetEdge> extends JPanel {
 		
-	VisualGraph<V,E> graph;	
-	Scope scope;	
+	private VisualGraph<V,E> graph;	
+	private Scope scope;	
     private int vertexWidth = 50; 
     private int padding = vertexWidth;
     private static final Stroke EDGE_STROKE = new BasicStroke(2);  
@@ -55,10 +58,10 @@ public class VisualGraphPanel<V extends ManetVertex, E extends ManetEdge> extend
     }
         
     public void paintEdge(Graphics2D g2, VisualEdge edge) {
-    	int x1 = (int) ((graph.vertices.get(edge.getSource()).x()) * xScale + padding);	
-    	int y1 = (int) ((scope.y.max - graph.vertices.get(edge.getSource()).y()) * yScale + padding); 
-    	int x2 = (int) ((graph.vertices.get(edge.getTarget()).x()) * xScale + padding);	
-    	int y2 = (int) ((scope.y.max - graph.vertices.get(edge.getTarget()).y()) * yScale + padding); 
+    	int x1 = (int) ((graph.getVertices().get(edge.getSource()).x()) * xScale + padding);	
+    	int y1 = (int) ((scope.y.max - graph.getVertices().get(edge.getSource()).y()) * yScale + padding); 
+    	int x2 = (int) ((graph.getVertices().get(edge.getTarget()).x()) * xScale + padding);	
+    	int y2 = (int) ((scope.y.max - graph.getVertices().get(edge.getTarget()).y()) * yScale + padding); 
     	
     	g2.setStroke(EDGE_PATH_STROKE);
         g2.setColor(Color.LIGHT_GRAY);   
