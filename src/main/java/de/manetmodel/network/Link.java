@@ -1,43 +1,22 @@
 package de.manetmodel.network;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
 import de.manetmodel.graph.IManetElement;
 import de.manetmodel.graph.ManetEdge;
 
-public class Link<N extends Node, Q> extends ManetEdge implements IManetElement
+public class Link extends ManetEdge implements IManetElement
 {
-	private Q linkQuality;
-	/*
-	 * Links that are occupied due to transmission
-	 */
-	private Set<N> interferredNodes;
+	private double receptionPower;
+	private double transmissionBitrate;
 
-	public Link()
+	public void setReceptionPower(double receptionPower)
 	{
-		interferredNodes = new HashSet<N>();
+		this.receptionPower = receptionPower;
+
 	}
 
-	public void setInterferredNodes(List<N> list)
+	public void setTransmissionRate(double transmissionBitrate)
 	{
-		interferredNodes.addAll(list);
-	}
+		this.transmissionBitrate = transmissionBitrate;
 
-	public Set<N> getInterferenceNodes()
-	{
-		return this.interferredNodes;
 	}
-
-	public Q getLinkQuality()
-	{
-		return this.linkQuality;
-	}
-
-	public void setLinkQuality(Q linkQuality)
-	{
-		this.linkQuality = linkQuality;
-	}
-
 }

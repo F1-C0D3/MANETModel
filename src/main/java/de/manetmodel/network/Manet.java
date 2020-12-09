@@ -1,19 +1,23 @@
 package de.manetmodel.network;
 
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Set;
 import java.util.function.Supplier;
 
 import de.manetmodel.graph.ManetGraph;
+import de.manetmodel.graph.Playground;
+import de.manetmodel.network.radio.RadioOccupationModel;
 import de.manetmodel.util.Topology;
-import de.manetmodel.util.Tuple;
 
-public class Manet<N extends Node, L extends Link, W extends RadioWavePropagation<?>>
+public class Manet<N extends Node, L extends Link>
 {
 
 	private ManetGraph<N, L> graph;
 	private ArrayList<Flow<N, L>> flows;
 
-	private W radioWavePropagation;
+	private RadioOccupationModel<N, L> occupationModel;
 
 	public Manet(Supplier<N> vertexSupplier, Supplier<L> edgeSupplier)
 	{
@@ -30,25 +34,58 @@ public class Manet<N extends Node, L extends Link, W extends RadioWavePropagatio
 		this.flows.add(flow);
 	}
 
-	public void createManet(Topology type, W wavepropagation)
+	public void createManet(Topology type, RadioOccupationModel<N, L> occupationModel)
 	{
-		radioWavePropagation = wavepropagation;
-		graph.createManetGraph(type, wavepropagation.transmissionRange());
+		this.occupationModel = occupationModel;
+		createGraph(type);
 		networkConnectionSetup();
+	}
+
+	public void createGraph(Topology type)
+	{
+		switch (type)
+		{
+		case GRID:
+			graph.generateGridGraph(new Playground());
+			break;
+		case SIMPLE:
+			graph.generateSimpleGraph();
+			break;
+		case RANDOM:
+			graph.generateRandomGraph(new Playground());
+			break;
+		case DEADEND:
+			graph.generateAlmostDeadEndGraph();
+			break;
+		case TRAPEZIUM:
+			graph.generateTrapeziumGraph();
+			break;
+
+		default:
+			break;
+		}
+
 	}
 
 	private void networkConnectionSetup()
 	{
-		for (L l : graph.getEdges())
+		Set<L> iLinks = new HashSet<L>();
+		for (N v : graph.getVertices())
 		{
-			Tuple<N, N> nt = graph.getVerticesOf(l);
-			N source = nt.getFirst();
-			N target = nt.getSecond();
+			Iterator<L> iterator = graph.getEdges().iterator();
 
-			l.setLinkQuality(radioWavePropagation.getTransmissionQuality(l, graph.getDistance(source, target)));
+			while (iterator.hasNext())
+			{
+				L e = iterator.next();
 
-			l.setInterferredNodes(graph.getVerticesInRadius(source, radioWavePropagation.interferenceRange()));
-			l.setInterferredNodes(graph.getVerticesInRadius(target, radioWavePropagation.interferenceRange()));
+				if (occupationModel.interferencePresent(graph.getDistance(v, graph.getVerticesOf(e).getFirst()))
+						&& occupationModel
+								.interferencePresent(graph.getDistance(v, graph.getVerticesOf(e).getSecond())))
+				{
+					v.setInterferedLink(e);
+				}
+
+			}
 
 		}
 	}
