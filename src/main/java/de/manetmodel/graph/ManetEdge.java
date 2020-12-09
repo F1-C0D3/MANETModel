@@ -10,7 +10,7 @@ import jakarta.xml.bind.annotation.XmlElement;
 import jakarta.xml.bind.annotation.XmlAccessType;
 import jakarta.xml.bind.annotation.XmlRootElement;
 
-@XmlRootElement
+@XmlRootElement(name="ManetEdge")
 @XmlAccessorType(XmlAccessType.FIELD)
 public class ManetEdge implements IManetEdge, Comparable<ManetEdge> {
 

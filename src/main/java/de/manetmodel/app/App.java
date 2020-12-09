@@ -50,7 +50,7 @@ public class App {
 		KeyOption create = new KeyOption(new Key("create"), new Info("create empty, random or grid graph"));	
 		
 		// create empty 	
-		KeyOption empty = new KeyOption(new Key("empty"), new Info("create an empty graph"), new Requirement(true));
+		KeyOption empty = new KeyOption(new Key("empty"), new Info("create an empty graph"), new Function(App::createEmpty), new Requirement(true));
 		create.add(empty);	
 		
 		// create random 100	

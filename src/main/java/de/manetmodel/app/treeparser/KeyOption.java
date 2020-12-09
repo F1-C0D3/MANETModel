@@ -62,7 +62,7 @@ public class KeyOption extends Option {
 	@Override
 	protected String buildString() {
 		return String.format("KeyOption(Key(\"%s%s\"), Info(\"%s\"), Requirement(%s))", 
-				this.getKey().toString(),
+				this.getFlag().toString(),
 				this.getKey().toString(), 
 				this.getInfo().toString(),
 				this.getRequirement().toString());

@@ -20,7 +20,7 @@ import jakarta.xml.bind.annotation.XmlAccessType;
 import jakarta.xml.bind.annotation.XmlRootElement;
 import jakarta.xml.bind.annotation.XmlTransient;
 
-@XmlRootElement
+@XmlRootElement(name="ManetGraph")
 @XmlAccessorType(XmlAccessType.FIELD)
 public class ManetGraph<V extends ManetVertex, E extends ManetEdge>
 {
@@ -74,6 +74,7 @@ public class ManetGraph<V extends ManetVertex, E extends ManetEdge>
 
 	public V addVertex(double x, double y)
 	{
+		if(this.vertexSupplier == null) return null;
 		V vertex = this.vertexSupplier.get();
 		vertex.setID(vertexCount++);
 		vertex.setPosition(x, y);
@@ -84,11 +85,7 @@ public class ManetGraph<V extends ManetVertex, E extends ManetEdge>
 
 	public boolean addVertex(V vertex)
 	{
-		if(this.vertexSupplier == null)
-			return false;
-		if (vertex.getPostion() == null)
-			return false;
-		
+		if (vertex.getPostion() == null) return false;
 		vertex.setID(vertexCount++);
 		this.vertices.add(vertex);
 		this.vertexAdjacencies.add(new VertexAdjacency());

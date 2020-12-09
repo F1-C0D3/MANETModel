@@ -8,13 +8,13 @@ import jakarta.xml.bind.annotation.XmlElement;
 import jakarta.xml.bind.annotation.XmlAccessType;
 import jakarta.xml.bind.annotation.XmlRootElement;
 
-@XmlRootElement
+@XmlRootElement(name="ManetVertex")
 @XmlAccessorType(XmlAccessType.FIELD)
 public class ManetVertex implements IManetVertex {
 	
-	@XmlElement
+	@XmlElement(name="ID")
 	private int ID;
-	@XmlElement
+	@XmlElement(name="Coordinate")
 	private Coordinate coordinate;
 	
 	public ManetVertex() {}	
