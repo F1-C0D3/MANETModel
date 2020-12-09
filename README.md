@@ -10,6 +10,8 @@
 ## Eike: 
 - [x] ConsoleApp
   - [x] TreeParser (builds tree based command set)
+    - [x] XML export/import graphs
+    - [x] export graph as an image
 - [ ] Adjust/Fix Generators (limit number of connections based on given playground)
 - [ ] Add multiple colored paths to VisualGraph (paint colored lines under edges with different sizes to enable overlapping paths)
 
