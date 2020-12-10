@@ -6,23 +6,20 @@ import java.util.Set;
 import de.manetmodel.graph.IManetElement;
 import de.manetmodel.graph.ManetVertex;
 
-public class Node<L extends Link> extends ManetVertex implements IManetElement
-{
-	private double receptionSensitivity;
-	private Set<L> interferredLinks;
+public class Node<L extends Link> extends ManetVertex implements IManetElement {
+    private double receptionSensitivity;
+    private Set<L> interferredLinks;
 
-	public Node()
-	{
-		interferredLinks = new HashSet<L>();
-	}
+    public Node() {
+	interferredLinks = new HashSet<L>();
+    }
 
-	public void setInterferedLink(L l)
-	{
-		interferredLinks.add(l);
-	}
+    public void setInterferedLink(L l) {
+	interferredLinks.add(l);
+    }
 
-	public Set<L> getInterferedLinks()
-	{
-		return interferredLinks;
-	}
+    public Set<L> getInterferedLinks() {
+	return interferredLinks;
+    }
+
 }
