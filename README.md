@@ -3,7 +3,7 @@
 ## Klement:
 - [ ] Flow implementation
 - [ ] Complete WaveFormPropagationModel 
-- [ ] IdealPropagationModel
+- [x] IdealPropagationModel
 - [ ] Propagation model using Free-space path loss and Shannon–Hartley theorem for bitrate computation
  
  
@@ -17,7 +17,8 @@
 
 
 ## Ideas:
-- Plo technique 
+- Results as Plots in JFrame
+- Units representing flow bitrate (mbit...)
 - JFrame with GUI Features (Buttons?)
   - Adjust playground from text input fields for graph generation
 
