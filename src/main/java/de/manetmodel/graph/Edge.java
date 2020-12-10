@@ -1,8 +1,6 @@
 package de.manetmodel.graph;
 
-import java.util.HashSet;
 import java.util.Objects;
-import java.util.Set;
 import de.manetmodel.util.Tuple;
 
 import jakarta.xml.bind.annotation.XmlAccessorType;
@@ -10,9 +8,9 @@ import jakarta.xml.bind.annotation.XmlElement;
 import jakarta.xml.bind.annotation.XmlAccessType;
 import jakarta.xml.bind.annotation.XmlRootElement;
 
-@XmlRootElement(name="ManetEdge")
+@XmlRootElement(name="Edge")
 @XmlAccessorType(XmlAccessType.FIELD)
-public class ManetEdge implements IManetEdge, Comparable<ManetEdge> {
+public class Edge implements IEdge, Comparable<Edge> {
 
 	@XmlElement
 	int ID;
@@ -22,12 +20,9 @@ public class ManetEdge implements IManetEdge, Comparable<ManetEdge> {
 	int vertexID2;
 	@XmlElement
 	double distance;
-	@XmlElement
-	Set<Integer> occupation;
 	
 	public void setID(int ID) {
 		this.ID = ID;
-		this.occupation = new HashSet<Integer>();
 	}
 	
 	public int getID() {
@@ -50,29 +45,9 @@ public class ManetEdge implements IManetEdge, Comparable<ManetEdge> {
 	public double setDistance(double distance) {
 		return this.distance = distance;
 	}
-
-	public Set<Integer> getOccupation() {
-		return this.occupation;
-	}
-	
-	public void setOccupation(Set<Integer> occupation) {
-		this.occupation = occupation;
-	}
-	
-	public void addOccupation(int edgeID) {	
-		this.occupation.add(edgeID);
-	}
-	
-	public int compareTo(ManetEdge edge) {	
+		
+	public int compareTo(Edge edge) {	
 		return Double.compare(edge.getDistance(), this.getDistance());
-	}
-	
-	public int compareDistanceTo(ManetEdge edge) {
-		return Double.compare(edge.getDistance(), this.getDistance());
-	}
-	
-	public int compareOccupationTo(ManetEdge edge) {
-		return Integer.compare(edge.getOccupation().size(), this.occupation.size());
 	}
 
 	@Override
@@ -80,7 +55,7 @@ public class ManetEdge implements IManetEdge, Comparable<ManetEdge> {
 	    if (this == o) return true;
 	    if (o == null) return false;
 	    if (getClass() != o.getClass()) return false;   
-	    ManetEdge node = (ManetEdge) o;  
+	    Edge node = (Edge) o;  
 	    return Objects.equals(this.ID, node.ID);
 	}
 	

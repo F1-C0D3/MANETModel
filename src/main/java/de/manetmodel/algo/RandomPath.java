@@ -4,31 +4,30 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import de.manetmodel.graph.ManetEdge;
-import de.manetmodel.graph.ManetGraph;
-import de.manetmodel.graph.ManetPath;
-import de.manetmodel.graph.ManetVertex;
+import de.manetmodel.graph.Edge;
+import de.manetmodel.graph.Path;
+import de.manetmodel.graph.Vertex;
+import de.manetmodel.graph.WeightedUndirectedGraph;
 import de.manetmodel.util.RandomNumbers;
 import de.manetmodel.util.Tuple;
 
-public class RandomPath<V extends ManetVertex, E extends ManetEdge>
+public class RandomPath<V extends Vertex, E extends Edge>
 {
+	private WeightedUndirectedGraph<V, E> graph;
 
-	private ManetGraph<V, E> manetGraph;
-
-	public RandomPath(ManetGraph<V, E> manetGraph)
+	public RandomPath(WeightedUndirectedGraph<V, E> graph)
 	{
-		this.manetGraph = manetGraph;
+		this.graph = graph;
 	}
 
-	public ManetPath<V, E> compute(V source, V target)
+	public Path<V, E> compute(V source, V target)
 	{
-		ManetPath<V, E> randomPath = new ManetPath<V, E>();
+		Path<V, E> randomPath = new Path<V, E>();
 		Set<E> visited = new HashSet<E>();
 
 		while (source.getID() != target.getID())
 		{
-			List<E> edges = manetGraph.getEdgesOf(source);
+			List<E> edges = graph.getEdgesOf(source);
 			edges.removeIf(e -> visited.contains(e));
 
 			if (!edges.isEmpty())
@@ -36,8 +35,9 @@ public class RandomPath<V extends ManetVertex, E extends ManetEdge>
 				E edge = edges.get(RandomNumbers.getRandom(0, edges.size()));
 				visited.add(edge);
 				randomPath.add(new Tuple<E, V>(edge, source));
-				source = manetGraph.getTargetOf(source, edge);
-			} else
+				source = graph.getTargetOf(source, edge);
+			} 
+			else
 			{
 				randomPath.clear();
 				return randomPath;

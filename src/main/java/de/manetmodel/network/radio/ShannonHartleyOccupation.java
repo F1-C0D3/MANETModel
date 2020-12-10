@@ -1,9 +1,6 @@
 package de.manetmodel.network.radio;
 
-import de.manetmodel.network.Link;
-import de.manetmodel.network.Node;
-
-public class ShannonHartleyOccupation extends RadioOccupationModel<Node, Link>
+public class ShannonHartleyOccupation extends RadioOccupationModel
 {
 
 	/*

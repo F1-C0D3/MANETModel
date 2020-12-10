@@ -1,10 +1,9 @@
 package de.manetmodel.network;
 
-import de.manetmodel.graph.ManetPath;
+import de.manetmodel.graph.Path;
 
-public class Flow<N extends Node, L extends Link> extends ManetPath<N, L>
+public class Flow<N extends Node<L>, L extends Link> extends Path<N, L>
 {
-
 	private double bitrate;
 
 	public Flow(N source, N target)
@@ -17,5 +16,4 @@ public class Flow<N extends Node, L extends Link> extends ManetPath<N, L>
 		super(source, target);
 		this.bitrate = bitrate;
 	}
-
 }

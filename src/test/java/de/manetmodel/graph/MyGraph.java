@@ -2,9 +2,7 @@ package de.manetmodel.graph;
 
 import java.util.function.Supplier;
 
-import de.manetmodel.graph.ManetGraph;
-
-public class MyGraph extends ManetGraph<MyVertex, MyEdge>{
+public class MyGraph extends WeightedUndirectedGraph<MyVertex, MyEdge>{
 
 	public MyGraph() {	
 		super(new MyVertexSupplier(), new MyEdgeSupplier());			

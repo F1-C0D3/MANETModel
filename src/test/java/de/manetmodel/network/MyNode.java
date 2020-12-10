@@ -1,7 +1,7 @@
 package de.manetmodel.network;
 
-import de.manetmodel.graph.ManetVertex;
+import de.manetmodel.graph.Vertex;
 
-public class MyNode extends ManetVertex{
+public class MyNode extends Vertex{
 	
 }

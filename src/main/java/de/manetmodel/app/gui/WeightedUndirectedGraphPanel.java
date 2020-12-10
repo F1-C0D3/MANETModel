@@ -11,31 +11,23 @@ import java.awt.Point;
 import java.awt.RenderingHints;
 import java.awt.Stroke;
 import java.awt.Toolkit;
-import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.stream.Collectors;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 
-import de.manetmodel.graph.Coordinate;
-import de.manetmodel.graph.IManetEdge;
-import de.manetmodel.graph.IManetVertex;
-import de.manetmodel.graph.ManetEdge;
-import de.manetmodel.graph.ManetGraph;
-import de.manetmodel.graph.ManetGraphSupplier;
-import de.manetmodel.graph.ManetPath;
-import de.manetmodel.graph.ManetVertex;
+import de.manetmodel.graph.Edge;
+import de.manetmodel.graph.Path;
+import de.manetmodel.graph.Vertex;
+import de.manetmodel.graph.WeightedUndirectedGraph;
+import de.manetmodel.graph.WeightedUndirectedGraphSupplier;
 import de.manetmodel.graph.viz.VisualEdge;
 import de.manetmodel.graph.viz.VisualGraph;
 import de.manetmodel.graph.viz.VisualVertex;
 import de.manetmodel.util.Tuple;
 
-public class VisualGraphPanel<V extends ManetVertex, E extends ManetEdge> extends JPanel {
+public class WeightedUndirectedGraphPanel<V extends Vertex, E extends Edge> extends JPanel {
 		
 	private VisualGraph<V,E> graph;	
 	private Scope scope;	
@@ -47,7 +39,7 @@ public class VisualGraphPanel<V extends ManetVertex, E extends ManetEdge> extend
     double xScale;   
     double yScale; 
 
-    public VisualGraphPanel(VisualGraph<V,E> graph) {
+    public WeightedUndirectedGraphPanel(VisualGraph<V,E> graph) {
         this.graph = graph;      
         this.scope = this.getScope(graph);
     }
@@ -177,25 +169,29 @@ public class VisualGraphPanel<V extends ManetVertex, E extends ManetEdge> extend
     	SwingUtilities.invokeLater(new Runnable() {
     		public void run() {        	    		
     			
-    			ManetGraph<ManetVertex, ManetEdge> graph = new ManetGraph<ManetVertex, ManetEdge>(new ManetGraphSupplier.ManetVertexSupplier(), new ManetGraphSupplier.ManetEdgeSupplier());	
-    			ManetVertex source = graph.addVertex(0d, 0d);
-    			ManetVertex a = graph.addVertex(41.21, 56.24);
-    			ManetVertex b = graph.addVertex(76.51, 8.77);
-    			ManetVertex c = graph.addVertex(92.88, 38.26);
-    			ManetVertex target = graph.addVertex(147.49, 99.35);
-    			ManetEdge sourceToA = graph.addEdge(source, a);
-    			ManetEdge sourceToB = graph.addEdge(source, b);
-    			ManetEdge aToB = graph.addEdge(a, b);
-    			ManetEdge aToC = graph.addEdge(a, c);
-    			ManetEdge bToC = graph.addEdge(b, c);
-    			ManetEdge cToTarget = graph.addEdge(c, target);
-    			 		
-    			ManetPath<ManetVertex, ManetEdge> path = new ManetPath<ManetVertex, ManetEdge>(source);
-    			path.add(new Tuple<ManetEdge, ManetVertex>(sourceToB, b));
-    			path.add(new Tuple<ManetEdge, ManetVertex>(bToC, c));
-    			path.add(new Tuple<ManetEdge, ManetVertex>(cToTarget, target));
+    			WeightedUndirectedGraph<Vertex, Edge> graph = 
+    					new WeightedUndirectedGraph<Vertex, Edge>(
+    							new WeightedUndirectedGraphSupplier.VertexSupplier(), 
+    							new WeightedUndirectedGraphSupplier.EdgeSupplier());	
     			
-    			VisualGraphPanel<ManetVertex, ManetEdge> panel = new VisualGraphPanel<ManetVertex, ManetEdge>(graph.toVisualGraph());
+    			Vertex source = graph.addVertex(0d, 0d);
+    			Vertex a = graph.addVertex(41.21, 56.24);
+    			Vertex b = graph.addVertex(76.51, 8.77);
+    			Vertex c = graph.addVertex(92.88, 38.26);
+    			Vertex target = graph.addVertex(147.49, 99.35);
+    			Edge sourceToA = graph.addEdge(source, a);
+    			Edge sourceToB = graph.addEdge(source, b);
+    			Edge aToB = graph.addEdge(a, b);
+    			Edge aToC = graph.addEdge(a, c);
+    			Edge bToC = graph.addEdge(b, c);
+    			Edge cToTarget = graph.addEdge(c, target);
+    			 		
+    			Path<Vertex, Edge> path = new Path<Vertex, Edge>(source);
+    			path.add(new Tuple<Edge, Vertex>(sourceToB, b));
+    			path.add(new Tuple<Edge, Vertex>(bToC, c));
+    			path.add(new Tuple<Edge, Vertex>(cToTarget, target));
+    			
+    			WeightedUndirectedGraphPanel<Vertex, Edge> panel = new WeightedUndirectedGraphPanel<Vertex, Edge>(graph.toVisualGraph());
     			panel.getVisualGraph().addPath(path, Color.RED);
 	       			       			
 	       		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();

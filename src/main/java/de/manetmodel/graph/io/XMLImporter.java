@@ -4,25 +4,30 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 
-import de.manetmodel.graph.ManetEdge;
-import de.manetmodel.graph.ManetGraph;
-import de.manetmodel.graph.ManetVertex;
+import de.manetmodel.graph.Edge;
+import de.manetmodel.graph.Vertex;
+import de.manetmodel.graph.WeightedUndirectedGraph;
 import jakarta.xml.bind.JAXBContext;
 import jakarta.xml.bind.JAXBException;
 import jakarta.xml.bind.Unmarshaller;
 
-public class XMLImporter {
+public class XMLImporter<V extends Vertex, E extends Edge>{
 	
-	public XMLImporter() {}
+	WeightedUndirectedGraph<V, E> graph;
 	
-	public ManetGraph<ManetVertex,ManetEdge> importGraph(String filePath) {
+	public XMLImporter(WeightedUndirectedGraph<V,E> graph) {
+		this.graph = graph;
+	}
+	
+	public boolean importGraph(String filePath)
+	{
 		try
 		{						
-			JAXBContext jaxbContext = JAXBContext.newInstance(ManetGraph.class);               
-		    Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller(); 
-		    InputStream inputStream = new FileInputStream(filePath);
-		    ManetGraph<ManetVertex,ManetEdge> graph = (ManetGraph<ManetVertex, ManetEdge>) jaxbUnmarshaller.unmarshal(inputStream);		   
-		    return graph;
+			JAXBContext jaxbContext = JAXBContext.newInstance(graph.getClass());  			
+		    Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller(); 	    
+		    InputStream inputStream = new FileInputStream(filePath);		    
+		    graph = (WeightedUndirectedGraph<V, E>) jaxbUnmarshaller.unmarshal(inputStream);    
+		    return true;
 		}
 		catch (FileNotFoundException e) {
 			e.printStackTrace();
@@ -31,6 +36,7 @@ public class XMLImporter {
 		{
 		    e.printStackTrace();
 		}
-		return null;
+		
+		return false;
 	}
 }

@@ -4,24 +4,24 @@ import java.util.LinkedList;
 
 import de.manetmodel.util.Tuple;
 
-public class ManetPath<N extends ManetVertex, L extends ManetEdge> extends LinkedList<Tuple<L, N>> implements Comparable<ManetPath<N, L>>
+public class Path<N extends Vertex, L extends Edge> extends LinkedList<Tuple<L, N>> implements Comparable<Path<N, L>>
 {
 	double distance;
 	private N source;
 	private N target;
 
-	public ManetPath(){
+	public Path(){
 		this.source = null;
 		this.target = null;
 	}
 	
-	public ManetPath(N source){
+	public Path(N source){
 		this.source = source;
 		super.add(new Tuple<L, N>(null, source));
 		this.target = null;
 	}
 	
-	public ManetPath(N source, N target){
+	public Path(N source, N target){
 		this.source = source;
 		super.add(new Tuple<L, N>(null, source));
 		this.target = target;
@@ -37,7 +37,7 @@ public class ManetPath<N extends ManetVertex, L extends ManetEdge> extends Linke
 		return this.target;
 	}
 
-	public boolean isShorter(ManetPath<N, L> path)
+	public boolean isShorter(Path<N, L> path)
 	{
 		if (path != null)
 			return this.distance < path.getDistance();
@@ -70,13 +70,13 @@ public class ManetPath<N extends ManetVertex, L extends ManetEdge> extends Linke
 		return str;
 	}
 
-	public int compareDistanceTo(ManetPath<N, L> path)
+	public int compareDistanceTo(Path<N, L> path)
 	{
 		return Double.compare(this.distance, path.getDistance());
 	}
 
 	@Override
-	public int compareTo(ManetPath<N, L> path)
+	public int compareTo(Path<N, L> path)
 	{
 		return Double.compare(this.distance, path.getDistance());
 	}

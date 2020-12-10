@@ -1,9 +1,8 @@
 package de.manetmodel.network;
 
-import de.manetmodel.graph.IManetElement;
-import de.manetmodel.graph.ManetEdge;
+import de.manetmodel.graph.Edge;
 
-public class Link extends ManetEdge implements IManetElement
+public class Link extends Edge
 {
 	private double receptionPower;
 	private double transmissionBitrate;
