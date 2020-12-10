@@ -21,6 +21,9 @@
 - Units representing flow bitrate (mbit...)
 - JFrame with GUI Features (Buttons?)
   - Adjust playground from text input fields for graph generation
+  
+## Discussion:
+- Utilization as property of Links 
 
 
 
