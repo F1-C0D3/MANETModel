@@ -25,6 +25,6 @@
 ## Discussion:
 - Utilization as property of Links
 - Getter/setter for RadioOccupationModel
-- Access to vertexAdjacencies in WeightedUndirectedGraph
+- Interface to grant access to vertexAdjacencies in WeightedUndirectedGraph
 
 
