@@ -4,27 +4,32 @@ import static org.junit.Assert.assertNotNull;
 
 import org.junit.Test;
 
-import de.manetmodel.graph.ManetGraph;
+import de.manetmodel.graph.WeightedUndirectedGraph;
 import de.manetmodel.network.Link;
 import de.manetmodel.network.ManetSupplier;
 import de.manetmodel.network.Node;
-import de.manetmodel.visualization.VisualGraph;
 
 public class RandomPathTest
 {
-	private ManetGraph<Node, Link> graph;
-
 	@Test
 	public void RandomPathTest()
 	{
-
-		ManetGraph<Node, Link> graph = new ManetGraph<Node, Link>(new ManetSupplier.ManetNodeSupplier(),
+		WeightedUndirectedGraph<Node<Link>, Link> graph = new WeightedUndirectedGraph<Node<Link>, Link>(
+				new ManetSupplier.ManetNodeSupplier(),
 				new ManetSupplier.ManetLinkSupplier());
-		graph.generateTrapeziumGraph();
-		VisualGraph gV = graph.toVisualGraph();
+			
+		Node<Link> source = graph.addVertex(0, 0);
+		Node<Link> a = graph.addVertex(7, 4);
+		Node<Link> b = graph.addVertex(2, 7);
+		Node<Link> target = graph.addVertex(10, 10);
 
-		RandomPath randomPath = new RandomPath(graph);
-		assertNotNull(randomPath.compute(graph.getFirstVertex(), graph.getLastVertex()));
+		graph.addEdge(source, a);
+		graph.addEdge(source, b);
+		graph.addEdge(a, b);
+		graph.addEdge(a, target);
+		graph.addEdge(b, target);		
+		
+		RandomPath<Node<Link>,Link> randomPath = new RandomPath<Node<Link>,Link>(graph);
+		assertNotNull(randomPath.compute(graph.getFirstVertex(), graph.getLastVertex()));	
 	}
-
 }

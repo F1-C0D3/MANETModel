@@ -2,17 +2,13 @@ package de.manetmodel.graph;
 
 public class Playground
 {
-
 	public IntRange width;
 	public IntRange height;
-	public IntRange edgeCount;
 	public IntRange vertexCount;
+	public IntRange edgeCount;
 	public DoubleRange edgeDistance;
 
-	public Playground()
-	{
-
-	}
+	public Playground(){}
 
 	public boolean isInside(double x, double y)
 	{

@@ -29,9 +29,17 @@ public class OptionManager {
     
     public void add(ValueOption valueOption) {
     	valueOptions.add(valueOption);
+    }    
+    
+    public boolean isKeyOption(KeyOption keyOption) {
+    	return true;
     }
-
-    public ArrayList<KeyOption> getKeyOptions() {
+    
+    public boolean isKeyOption(ValueOption valueOption) {
+    	return false;
+    }
+    
+    ArrayList<KeyOption> getKeyOptions() {
     	return this.keyOptions;
     }
     

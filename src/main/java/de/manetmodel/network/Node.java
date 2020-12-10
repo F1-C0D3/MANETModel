@@ -3,10 +3,9 @@ package de.manetmodel.network;
 import java.util.HashSet;
 import java.util.Set;
 
-import de.manetmodel.graph.IManetElement;
-import de.manetmodel.graph.ManetVertex;
+import de.manetmodel.graph.Vertex;
 
-public class Node<L extends Link> extends ManetVertex implements IManetElement {
+public class Node<L extends Link> extends Vertex {
     private double receptionSensitivity;
     private Set<L> interferredLinks;
 

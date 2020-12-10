@@ -3,20 +3,23 @@ package de.manetmodel.graph;
 import java.util.Objects;
 import java.util.Set;
 
+import jakarta.xml.bind.annotation.XmlAccessorType;
 import jakarta.xml.bind.annotation.XmlElement;
+import jakarta.xml.bind.annotation.XmlAccessType;
 import jakarta.xml.bind.annotation.XmlRootElement;
 
-@XmlRootElement(name="ManetVertex")
-public class ManetVertex implements IManetVertex {
+@XmlRootElement(name="Vertex")
+@XmlAccessorType(XmlAccessType.FIELD)
+public class Vertex implements IVertex {
 	
-	@XmlElement(required=true)
+	@XmlElement(name="ID")
 	private int ID;
-	@XmlElement(required=true)
+	@XmlElement(name="Coordinate")
 	private Coordinate coordinate;
 	
-	public ManetVertex() {}	
+	public Vertex() {}	
 	
-	public ManetVertex(double x, double y) {
+	public Vertex(double x, double y) {
 		this.coordinate = new Coordinate(x,y);
 	}
 	
@@ -46,18 +49,14 @@ public class ManetVertex implements IManetVertex {
 	
 	public double getDistance() {
 		return 0;
-	}
-	
-	public Set<Integer> getOccupation() {
-		return null;
-	}
+	}	
 
 	@Override
 	public boolean equals(Object o) {
 	    if (this == o)  return true;
 	    if (o == null) return false;
 	    if (getClass() != o.getClass()) return false;    
-	    ManetVertex node = (ManetVertex) o;
+	    Vertex node = (Vertex) o;
 	    return Objects.equals(this.ID, node.ID);
 	}
 	

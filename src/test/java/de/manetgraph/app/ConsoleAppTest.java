@@ -37,8 +37,7 @@ public class ConsoleAppTest {
 	        }
 	    }
 	}
-	
-	
+		
 	public static void main(String[] args) {
 		
 		

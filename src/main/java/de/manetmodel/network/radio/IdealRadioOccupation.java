@@ -1,9 +1,6 @@
 package de.manetmodel.network.radio;
 
-import de.manetmodel.network.Link;
-import de.manetmodel.network.Node;
-
-public class IdealRadioOccupation extends RadioOccupationModel<Node, Link> {
+public class IdealRadioOccupation extends RadioOccupationModel {
     private double transmissionRange;
     private double interferenceRange;
     private double transmissionBitrate;
@@ -36,5 +33,4 @@ public class IdealRadioOccupation extends RadioOccupationModel<Node, Link> {
 	    return true;
 	return false;
     }
-
 }

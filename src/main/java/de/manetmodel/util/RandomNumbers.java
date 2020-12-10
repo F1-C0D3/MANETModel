@@ -1,5 +1,7 @@
 package de.manetmodel.util;
 
+import java.util.Collections;
+import java.util.List;
 import java.util.Random;
 
 public class RandomNumbers
@@ -9,7 +11,9 @@ public class RandomNumbers
 	{
 		if (min == max)
 			return min;
+		
 		Random random = new Random();
+		
 		return random.nextInt(max - min) + min;
 	}
 
@@ -17,7 +21,21 @@ public class RandomNumbers
 	{
 		if (min == max)
 			return min;
+		
 		Random random = new Random();
+		
 		return min + (max - min) * random.nextDouble();
 	}
+	
+	public static <E> List<E> selectNrandomOfM(List<E> list, int n, Random r) 
+	{
+	    int length = list.size();
+
+	    if (length < n) return null;
+	    
+	    for (int i = length - 1; i >= length - n; --i)
+	        Collections.swap(list, i , r.nextInt(i + 1));
+	    
+	    return list.subList(length - n, length);
+	}	
 }

@@ -3,10 +3,9 @@ package de.manetmodel.network;
 import java.util.HashSet;
 import java.util.Set;
 
-import de.manetmodel.graph.IManetElement;
-import de.manetmodel.graph.ManetEdge;
+import de.manetmodel.graph.Edge;
 
-public class Link<L extends Link> extends ManetEdge implements IManetElement, Cloneable {
+public class Link<L extends Link> extends Edge {
 
     private double receptionPower;
     private double transmissionBitrate;
@@ -37,7 +36,6 @@ public class Link<L extends Link> extends ManetEdge implements IManetElement, Cl
 
     public double increaseUtilizationBy(double u) {
 
-	utilization += u;
 	return transmissionBitrate - utilization;
     }
 

@@ -6,31 +6,31 @@ import java.util.ListIterator;
 import java.util.Random;
 import java.util.function.Function;
 
-import de.manetmodel.graph.ManetEdge;
-import de.manetmodel.graph.ManetGraph;
-import de.manetmodel.graph.ManetPath;
-import de.manetmodel.graph.ManetVertex;
+import de.manetmodel.graph.Edge;
+import de.manetmodel.graph.Path;
+import de.manetmodel.graph.Vertex;
+import de.manetmodel.graph.WeightedUndirectedGraph;
 import de.manetmodel.util.Tuple;
 
-public class DijkstraShortestPath<V extends ManetVertex, E extends ManetEdge>
+public class DijkstraShortestPath<V extends Vertex, E extends Edge>
 {
-	private ManetGraph<V, E> manetGraph;
+	private WeightedUndirectedGraph<V, E> graph;
 
-	public DijkstraShortestPath(ManetGraph<V, E> manetGraph)
+	public DijkstraShortestPath(WeightedUndirectedGraph<V, E> graph)
 	{
-		this.manetGraph = manetGraph;
+		this.graph = graph;
 	}
 
-	public ManetPath<V, E> compute(V source, V target, Function<V, Double> metric)
+	public Path<V, E> compute(V source, V target, Function<V, Double> metric)
 	{
 		/* Initializaton */
 		V current = source;
 		Random random = new Random();
-		ManetPath<V, E> sp = new ManetPath<V, E>(source, target);
+		Path<V, E> sp = new Path<V, E>(source, target);
 		List<Integer> vertices = new ArrayList<Integer>();
 		List<Tuple<V, Double>> predDist = new ArrayList<Tuple<V, Double>>();
 
-		for (V n : manetGraph.getVertices())
+		for (V n : graph.getVertices())
 		{
 			vertices.add(n.getID());
 
@@ -48,14 +48,14 @@ public class DijkstraShortestPath<V extends ManetVertex, E extends ManetEdge>
 		{
 			Integer nId = minDistance(predDist, vertices);
 			vertices.remove(nId);
-			current = manetGraph.getVertex(nId);
+			current = graph.getVertex(nId);
 
 			if (current.getID() == target.getID())
 			{
 				return generateSP(predDist, sp);
 			}
 
-			for (V neig : manetGraph.getNextHopsOf(current))
+			for (V neig : graph.getNextHopsOf(current))
 			{
 				double edgeDist = metric.apply(neig);
 				double oldPahtDist = predDist.get(neig.getID()).getSecond();
@@ -73,7 +73,7 @@ public class DijkstraShortestPath<V extends ManetVertex, E extends ManetEdge>
 		return sp;
 	}
 
-	private ManetPath<V, E> generateSP(List<Tuple<V, Double>> predDist, ManetPath<V, E> sp)
+	private Path<V, E> generateSP(List<Tuple<V, Double>> predDist, Path<V, E> sp)
 	{
 		V t = sp.getTarget();
 		List<Tuple<E, V>> copy = new ArrayList<Tuple<E, V>>();
@@ -81,7 +81,7 @@ public class DijkstraShortestPath<V extends ManetVertex, E extends ManetEdge>
 		do
 		{
 			V pred = predDist.get(t.getID()).getFirst();
-			copy.add(0, new Tuple<E, V>(manetGraph.getEdge(t, pred), t));
+			copy.add(0, new Tuple<E, V>(graph.getEdge(t, pred), t));
 			t = pred;
 		} while (t.getID() != sp.getSource().getID());
 
