@@ -24,7 +24,6 @@
   
 ## Discussion:
 - Utilization as property of Links
-- Path algorithms with flows instead of Path
 
 
 
