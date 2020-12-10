@@ -23,7 +23,8 @@
   - Adjust playground from text input fields for graph generation
   
 ## Discussion:
-- Utilization as property of Links 
+- Utilization as property of Links
+- Path algorithms with flows instead of Path
 
 
 
