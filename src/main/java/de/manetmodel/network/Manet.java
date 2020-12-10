@@ -39,7 +39,18 @@ public class Manet<N extends Node<L>, L extends Link> {
     }
 
     private void networkConnectionSetup() {
-	Set<L> iLinks = new HashSet<L>();
+	for (L l : graph.getEdges()) {
+
+	    Tuple<N, N> nt = graph.getVerticesOf(l);
+	    N s = nt.getFirst();
+	    N t = nt.getSecond();
+	    l.setTransmissionRate(radioOccupationModel.computeTransmissionBitrate());
+	    l.setReceptionPower(radioOccupationModel.computeReception(graph.getDistance(s, t)));
+
+	    l.setInReceptionRange(new HashSet<L>(graph.getEdgesOf(s)));
+	    l.setInReceptionRange(new HashSet<L>(graph.getEdgesOf(t)));
+
+	}
 
 	for (N v : graph.getVertices()) {
 	    Iterator<L> iterator = graph.getEdges().iterator();
@@ -52,7 +63,9 @@ public class Manet<N extends Node<L>, L extends Link> {
 				.interferencePresent(graph.getDistance(v, graph.getVerticesOf(e).getSecond()))) {
 		    v.setInterferedLink(e);
 		}
+
 	    }
+
 	}
     }
 
