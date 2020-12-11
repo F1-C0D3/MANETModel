@@ -1,8 +1,9 @@
 # ManetModel
 
 ## Klement:
-- [ ] Flow implementation
-- [ ] Complete WaveFormPropagationModel 
+- [ ] WaveFormPropagationModel 
+  - [x] AffectedLinks
+  - [ ] Link capacity 
 - [x] IdealPropagationModel
 - [ ] Propagation model using Free-space path loss and Shannon–Hartley theorem for bitrate computation
  
