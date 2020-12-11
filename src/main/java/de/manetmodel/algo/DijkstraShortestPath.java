@@ -12,99 +12,84 @@ import de.manetmodel.graph.Vertex;
 import de.manetmodel.graph.WeightedUndirectedGraph;
 import de.manetmodel.util.Tuple;
 
-public class DijkstraShortestPath<V extends Vertex, E extends Edge>
-{
-	private WeightedUndirectedGraph<V, E> graph;
+public class DijkstraShortestPath<V extends Vertex, E extends Edge> {
+    private WeightedUndirectedGraph<V, E> graph;
 
-	public DijkstraShortestPath(WeightedUndirectedGraph<V, E> graph)
-	{
-		this.graph = graph;
+    public DijkstraShortestPath(WeightedUndirectedGraph<V, E> graph) {
+	this.graph = graph;
+    }
+
+    public Path<V, E> compute(V source, V target, Function<Tuple<E, V>, Double> metric) {
+	/* Initializaton */
+	V current = source;
+	Random random = new Random();
+	Path<V, E> sp = new Path<V, E>(source, target);
+	List<Integer> vertices = new ArrayList<Integer>();
+	List<Tuple<V, Double>> predDist = new ArrayList<Tuple<V, Double>>();
+
+	for (V n : graph.getVertices()) {
+	    vertices.add(n.getID());
+
+	    if (n.getID() == current.getID()) {
+		predDist.add(new Tuple<V, Double>(null, 0d));
+	    } else {
+		predDist.add(new Tuple<V, Double>(null, Double.POSITIVE_INFINITY));
+	    }
+
 	}
 
-	public Path<V, E> compute(V source, V target, Function<V, Double> metric)
-	{
-		/* Initializaton */
-		V current = source;
-		Random random = new Random();
-		Path<V, E> sp = new Path<V, E>(source, target);
-		List<Integer> vertices = new ArrayList<Integer>();
-		List<Tuple<V, Double>> predDist = new ArrayList<Tuple<V, Double>>();
+	while (!vertices.isEmpty()) {
+	    Integer nId = minDistance(predDist, vertices);
+	    vertices.remove(nId);
+	    current = graph.getVertex(nId);
 
-		for (V n : graph.getVertices())
-		{
-			vertices.add(n.getID());
+	    if (current.getID() == target.getID()) {
+		return generateSP(predDist, sp);
+	    }
 
-			if (n.getID() == current.getID())
-			{
-				predDist.add(new Tuple<V, Double>(null, 0d));
-			} else
-			{
-				predDist.add(new Tuple<V, Double>(null, Double.POSITIVE_INFINITY));
-			}
+	    for (V neig : graph.getNextHopsOf(current)) {
+		double edgeDist = metric.apply(new Tuple(graph.getEdge(current, neig), neig));
+		double oldPahtDist = predDist.get(neig.getID()).getSecond();
 
+		double altPathDist = edgeDist + predDist.get(current.getID()).getSecond();
+
+		if (altPathDist < oldPahtDist) {
+		    predDist.get(neig.getID()).setFirst(current);
+		    predDist.get(neig.getID()).setSecond(altPathDist);
 		}
-
-		while (!vertices.isEmpty())
-		{
-			Integer nId = minDistance(predDist, vertices);
-			vertices.remove(nId);
-			current = graph.getVertex(nId);
-
-			if (current.getID() == target.getID())
-			{
-				return generateSP(predDist, sp);
-			}
-
-			for (V neig : graph.getNextHopsOf(current))
-			{
-				double edgeDist = metric.apply(neig);
-				double oldPahtDist = predDist.get(neig.getID()).getSecond();
-
-				double altPathDist = edgeDist + predDist.get(current.getID()).getSecond();
-
-				if (altPathDist < oldPahtDist)
-				{
-					predDist.get(neig.getID()).setFirst(current);
-					predDist.get(neig.getID()).setSecond(altPathDist);
-				}
-			}
-		}
-		sp.clear();
-		return sp;
+	    }
 	}
+	sp.clear();
+	return sp;
+    }
 
-	private Path<V, E> generateSP(List<Tuple<V, Double>> predDist, Path<V, E> sp)
-	{
-		V t = sp.getTarget();
-		List<Tuple<E, V>> copy = new ArrayList<Tuple<E, V>>();
+    private Path<V, E> generateSP(List<Tuple<V, Double>> predDist, Path<V, E> sp) {
+	V t = sp.getTarget();
+	List<Tuple<E, V>> copy = new ArrayList<Tuple<E, V>>();
 
-		do
-		{
-			V pred = predDist.get(t.getID()).getFirst();
-			copy.add(0, new Tuple<E, V>(graph.getEdge(t, pred), t));
-			t = pred;
-		} while (t.getID() != sp.getSource().getID());
+	do {
+	    V pred = predDist.get(t.getID()).getFirst();
+	    copy.add(0, new Tuple<E, V>(graph.getEdge(t, pred), t));
+	    t = pred;
+	} while (t.getID() != sp.getSource().getID());
 
-		sp.addAll(copy);
-		return sp;
+	sp.addAll(copy);
+	return sp;
+    }
+
+    private Integer minDistance(List<Tuple<V, Double>> predT, List<Integer> v) {
+	int id = -1;
+	double result = Double.POSITIVE_INFINITY;
+	ListIterator<Tuple<V, Double>> it = predT.listIterator();
+
+	while (it.hasNext()) {
+	    Tuple<V, Double> pred = it.next();
+
+	    if (v.contains(it.previousIndex()) && pred.getSecond() < result) {
+		result = pred.getSecond();
+		id = it.previousIndex();
+	    }
 	}
-
-	private Integer minDistance(List<Tuple<V, Double>> predT, List<Integer> v)
-	{
-		int id = -1;
-		double result = Double.POSITIVE_INFINITY;
-		ListIterator<Tuple<V, Double>> it = predT.listIterator();
-
-		while (it.hasNext())
-		{
-			Tuple<V, Double> pred = it.next();
-
-			if (v.contains(it.previousIndex()) && pred.getSecond() < result)
-			{
-				result = pred.getSecond();
-				id = it.previousIndex();
-			}
-		}
-		return id;
-	}
+	return id;
+    }
 }

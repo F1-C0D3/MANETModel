@@ -16,11 +16,12 @@ import de.manetmodel.network.Manet;
 import de.manetmodel.network.ManetSupplier;
 import de.manetmodel.network.Node;
 import de.manetmodel.network.radio.IdealRadioOccupation;
+import de.manetmodel.util.Tuple;
 
 public class DijkstraShortestPathTest {
     @Test
     public void DijkstraShortestPathTest() {
-	Manet<Node<Link>, Link> manet = new Manet<Node<Link>, Link>(new ManetSupplier.ManetNodeSupplier(),
+	Manet<Node, Link> manet = new Manet<Node, Link>(new ManetSupplier.ManetNodeSupplier(),
 		new ManetSupplier.ManetLinkSupplier());
 
 	/*
@@ -32,7 +33,7 @@ public class DijkstraShortestPathTest {
 	 * manet.getGraph().addEdge(a, target); manet.getGraph().addEdge(b, target);
 	 */
 
-	GraphGenerator<Node<Link>, Link> generator = new GraphGenerator<Node<Link>, Link>(manet.getGraph());
+	GraphGenerator<Node, Link> generator = new GraphGenerator<Node, Link>(manet.getGraph());
 	Playground pg = new Playground();
 	pg.height = new IntRange(0, 10000);
 	pg.width = new IntRange(0, 10000);
@@ -44,14 +45,14 @@ public class DijkstraShortestPathTest {
 	manet.setRadioOccupationModel(new IdealRadioOccupation(100d, 125d, 2d));
 	manet.initialize();
 
-	Function<Node<Link>, Double> metric = (Node<Link> n) -> {
-	    return (double) n.getInterferedLinks().size();
+	Function<Tuple<Link, Node>, Double> metric = (Tuple<Link, Node> t) -> {
+	    return 1d;
 	};
 
-	DijkstraShortestPath<Node<Link>, Link> dijkstra = new DijkstraShortestPath<Node<Link>, Link>(manet.getGraph());
-	Path<Node<Link>, Link> shortestPath = dijkstra.compute(manet.getGraph().getFirstVertex(),
+	DijkstraShortestPath<Node, Link> dijkstra = new DijkstraShortestPath<Node, Link>(manet.getGraph());
+	Path<Node, Link> shortestPath = dijkstra.compute(manet.getGraph().getFirstVertex(),
 		manet.getGraph().getLastVertex(), metric);
-	ManetModelApp<Node<Link>, Link> app = new ManetModelApp<Node<Link>, Link>(manet.getGraph());
+	ManetModelApp<Node, Link> app = new ManetModelApp<Node, Link>(manet.getGraph());
 	app.getPanel().getVisualGraph().addPath(shortestPath, Color.RED);
 	app.run();
 

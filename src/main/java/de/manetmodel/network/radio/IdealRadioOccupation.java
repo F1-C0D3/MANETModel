@@ -29,7 +29,7 @@ public class IdealRadioOccupation extends RadioOccupationModel {
 
     @Override
     public boolean interferencePresent(double distance) {
-	if (distance < interferenceRange)
+	if (distance <= interferenceRange)
 	    return true;
 	return false;
     }
