@@ -10,7 +10,7 @@ import de.manetmodel.graph.WeightedUndirectedGraph;
 import de.manetmodel.network.radio.RadioOccupationModel;
 import de.manetmodel.util.Tuple;
 
-public class Manet<N extends Node<L>, L extends Link> {
+public class Manet<N extends Node, L extends Link> {
     private WeightedUndirectedGraph<N, L> graph;
     private RadioOccupationModel radioOccupationModel;
 
@@ -40,15 +40,23 @@ public class Manet<N extends Node<L>, L extends Link> {
 
     private void networkConnectionSetup() {
 	for (L l : graph.getEdges()) {
+	    Tuple<N, N> lt = graph.getVerticesOf(l);
+	    N se = lt.getFirst();
+	    N sk = lt.getSecond();
 
-	    Tuple<N, N> nt = graph.getVerticesOf(l);
-	    N s = nt.getFirst();
-	    N t = nt.getSecond();
 	    l.setTransmissionRate(radioOccupationModel.computeTransmissionBitrate());
-	    l.setReceptionPower(radioOccupationModel.computeReception(graph.getDistance(s, t)));
+	    l.setReceptionPower(radioOccupationModel.computeReception(graph.getDistance(se, sk)));
 
-	    l.setInReceptionRange(new HashSet<L>(graph.getEdgesOf(s)));
-	    l.setInReceptionRange(new HashSet<L>(graph.getEdgesOf(t)));
+	    List<N> lListOfse = graph.getNextHopsOf(se);
+	    List<N> lListOfsk = graph.getNextHopsOf(sk);
+
+	    for (N n : lListOfse) {
+		l.setInReceptionRange(new HashSet<L>(graph.getEdgesOf(n)));
+	    }
+
+	    for (N n : lListOfsk) {
+		l.setInReceptionRange(new HashSet<L>(graph.getEdgesOf(n)));
+	    }
 
 	}
 
@@ -56,12 +64,13 @@ public class Manet<N extends Node<L>, L extends Link> {
 	    Iterator<L> iterator = graph.getEdges().iterator();
 
 	    while (iterator.hasNext()) {
-		L e = iterator.next();
+		L le = iterator.next();
+		N se = graph.getVerticesOf(le).getFirst();
+		N sk = graph.getVerticesOf(le).getSecond();
 
-		if (radioOccupationModel.interferencePresent(graph.getDistance(v, graph.getVerticesOf(e).getFirst()))
-			&& radioOccupationModel
-				.interferencePresent(graph.getDistance(v, graph.getVerticesOf(e).getSecond()))) {
-		    v.setInterferedLink(e);
+		if (radioOccupationModel.interferencePresent(graph.getDistance(v, se))
+			&& radioOccupationModel.interferencePresent(graph.getDistance(v, sk))) {
+		    v.setInterferedLink(le);
 		}
 
 	    }
@@ -76,24 +85,23 @@ public class Manet<N extends Node<L>, L extends Link> {
      * 
      * @Todo: graph copy
      */
-    public double manetUtilization(List<Flow<N, L>> flows) {
+    public double utilization(List<Flow<N, L>> flows) {
 	Iterator<Flow<N, L>> flowsIter = flows.iterator();
+
+	/* utilization */
 	double u = 0d;
 
 	while (flowsIter.hasNext()) {
 	    Flow<N, L> f = flowsIter.next();
 	    Iterator<Tuple<L, N>> fIter = f.listIterator(1);
-	    while (fIter.hasNext()) {
-		Tuple<L, N> t = fIter.next();
-		L l = t.getFirst();
-		Tuple<N, N> nt = graph.getVerticesOf(l);
-		N source = nt.getFirst();
-		Set<L> pathCopy = new HashSet<L>(source.getInterferedLinks());
 
-		if (l != null) {
-		    pathCopy.addAll(l.inReceptionRange());
-		}
-		Iterator<L> pIter = pathCopy.iterator();
+	    while (fIter.hasNext()) {
+		Tuple<L, N> ln = fIter.next();
+		L l = ln.getFirst();
+		Set<L> uLinks = new HashSet<L>(l.inReceptionRange());
+		N se = graph.getTargetOf(ln.getSecond(), l);
+		uLinks.addAll(se.getInterferedLinks());
+		Iterator<L> pIter = uLinks.iterator();
 
 		while (pIter.hasNext()) {
 		    pIter.next();
