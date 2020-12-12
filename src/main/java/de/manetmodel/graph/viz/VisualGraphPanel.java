@@ -52,7 +52,7 @@ public class VisualGraphPanel<V extends Vertex, E extends Edge> extends JPanel {
     private static final Stroke VERTEX_STROKE = new BasicStroke(2);
 
     BasicStroke dashStroke = new BasicStroke(4.0f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_BEVEL, 0.0f,
-	    new float[] { 8.0f, 4.0f }, 0);
+	    new float[] { 10.0f, 2.0f }, 0);
 
     double xScale;
     double yScale;
@@ -105,7 +105,7 @@ public class VisualGraphPanel<V extends Vertex, E extends Edge> extends JPanel {
 		    pathTargetPosition = targetPositionLine.getPointInDistance(-offset);
 		}
 
-		g2.setStroke(VISUALPATH_STROKE);
+		g2.setStroke(dashStroke);
 		g2.setColor(visualPath.getColor());
 		g2.drawLine(pathStartPosition.x().intValue(), pathStartPosition.y().intValue(),
 			pathTargetPosition.x().intValue(), pathTargetPosition.y().intValue());
