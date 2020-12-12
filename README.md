@@ -15,6 +15,8 @@
     - [x] export graph as an image
 - [x] Adjust/Fix Generators (limit number of connections based on given playground)
 - [x] Add multiple colored paths to VisualGraph (paint colored lines under edges with different sizes to enable overlapping paths)
+  - [ ] Paint VisualPaths to vertices to emphasize VisualPaths
+- [ ] Adjust scaling for different screen resolutions
 
 
 ## Ideas:
