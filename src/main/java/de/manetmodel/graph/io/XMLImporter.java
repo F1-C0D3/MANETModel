@@ -11,32 +11,27 @@ import jakarta.xml.bind.JAXBContext;
 import jakarta.xml.bind.JAXBException;
 import jakarta.xml.bind.Unmarshaller;
 
-public class XMLImporter<V extends Vertex, E extends Edge>{
-	
-	WeightedUndirectedGraph<V, E> graph;
-	
-	public XMLImporter(WeightedUndirectedGraph<V,E> graph) {
-		this.graph = graph;
+public class XMLImporter<V extends Vertex, E extends Edge> {
+
+    WeightedUndirectedGraph<V, E> graph;
+
+    public XMLImporter(WeightedUndirectedGraph<V, E> graph) {
+	this.graph = graph;
+    }
+
+    public boolean importGraph(String filePath) {
+	try {
+	    JAXBContext jaxbContext = JAXBContext.newInstance(graph.getClass());
+	    Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
+	    InputStream inputStream = new FileInputStream(filePath);
+	    graph = (WeightedUndirectedGraph<V, E>) jaxbUnmarshaller.unmarshal(inputStream);
+	    return true;
+	} catch (FileNotFoundException e) {
+	    e.printStackTrace();
+	} catch (JAXBException e) {
+	    e.printStackTrace();
 	}
-	
-	public boolean importGraph(String filePath)
-	{
-		try
-		{						
-			JAXBContext jaxbContext = JAXBContext.newInstance(graph.getClass());  			
-		    Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller(); 	    
-		    InputStream inputStream = new FileInputStream(filePath);		    
-		    graph = (WeightedUndirectedGraph<V, E>) jaxbUnmarshaller.unmarshal(inputStream);    
-		    return true;
-		}
-		catch (FileNotFoundException e) {
-			e.printStackTrace();
-		}
-		catch (JAXBException e) 
-		{
-		    e.printStackTrace();
-		}
-		
-		return false;
-	}
+
+	return false;
+    }
 }

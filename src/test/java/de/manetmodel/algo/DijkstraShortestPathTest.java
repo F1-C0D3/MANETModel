@@ -39,6 +39,7 @@ public class DijkstraShortestPathTest {
 	pg.width = new IntRange(0, 10000);
 	pg.edgeCount = new IntRange(2, 4);
 	pg.vertexCount = new IntRange(100, 100);
+	pg.vertexDistance = new DoubleRange(50d,100d);
 	pg.edgeDistance = new DoubleRange(50d, 100d);
 	generator.generateRandomGraph(pg);
 

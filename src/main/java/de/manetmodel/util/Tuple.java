@@ -8,32 +8,33 @@ import jakarta.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.FIELD)
 public class Tuple<F, S> {
-	
-	@XmlElement
-    private F first;
-	@XmlElement
-    private S second; 
 
-	public Tuple() {}
-	
+    @XmlElement
+    private F first;
+    @XmlElement
+    private S second;
+
+    public Tuple() {
+    }
+
     public Tuple(F first, S second) {
-        this.first = first;
-        this.second = second;
+	this.first = first;
+	this.second = second;
     }
 
     public void setFirst(F first) {
-        this.first = first;
+	this.first = first;
     }
 
     public void setSecond(S second) {
-        this.second = second;
+	this.second = second;
     }
 
     public F getFirst() {
-        return first;
+	return first;
     }
 
     public S getSecond() {
-        return second;
+	return second;
     }
 }

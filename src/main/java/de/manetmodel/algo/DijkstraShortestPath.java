@@ -13,6 +13,7 @@ import de.manetmodel.graph.WeightedUndirectedGraph;
 import de.manetmodel.util.Tuple;
 
 public class DijkstraShortestPath<V extends Vertex, E extends Edge> {
+    
     private WeightedUndirectedGraph<V, E> graph;
 
     public DijkstraShortestPath(WeightedUndirectedGraph<V, E> graph) {
