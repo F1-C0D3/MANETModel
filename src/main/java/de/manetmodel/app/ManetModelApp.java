@@ -13,6 +13,8 @@ import java.util.Scanner;
 import javax.imageio.ImageIO;
 import javax.swing.JFrame;
 
+import de.manetmodel.algo.DijkstraShortestPath;
+import de.manetmodel.algo.RandomPath;
 import de.manetmodel.app.treeparser.Function;
 import de.manetmodel.app.treeparser.Info;
 import de.manetmodel.app.treeparser.Input;
@@ -25,19 +27,22 @@ import de.manetmodel.app.treeparser.Value;
 import de.manetmodel.app.treeparser.ValueOption;
 import de.manetmodel.app.treeparser.ValueType;
 import de.manetmodel.graph.Edge;
+import de.manetmodel.graph.Path;
 import de.manetmodel.graph.Playground;
 import de.manetmodel.graph.Vertex;
 import de.manetmodel.graph.WeightedUndirectedGraph;
 import de.manetmodel.graph.WeightedUndirectedGraphSupplier;
-import de.manetmodel.graph.WeightedUndirectedGraphSupplier.EdgeSupplier;
 import de.manetmodel.graph.generator.GraphGenerator;
 import de.manetmodel.graph.Playground.DoubleRange;
 import de.manetmodel.graph.Playground.IntRange;
 import de.manetmodel.graph.io.XMLExporter;
 import de.manetmodel.graph.io.XMLImporter;
+import de.manetmodel.graph.viz.VisualEdgeDistanceTextBuilder;
 import de.manetmodel.graph.viz.VisualGraph;
+import de.manetmodel.graph.viz.VisualGraphMarkUp;
 import de.manetmodel.graph.viz.VisualGraphPanel;
 import de.manetmodel.util.RandomNumbers;
+import de.manetmodel.util.Tuple;
 
 public class ManetModelApp<V extends Vertex, E extends Edge> {
 
@@ -100,14 +105,23 @@ public class ManetModelApp<V extends Vertex, E extends Edge> {
 	// add vertex
 	KeyOption vertex = new KeyOption(new Key("vertex"), new Info("add a new vertex to graph"),
 		new Requirement(true));
-	vertex.add(new ValueOption(new Value(ValueType.DOUBLE_TUPLE), new Info("coordinate"),
-		new Function(this::addVertex), new Requirement(true)));
+	vertex.add(new ValueOption(new Value(ValueType.DOUBLE), new Info("x"), new Requirement(true), new ValueOption(
+		new Value(ValueType.DOUBLE), new Info("y"), new Function(this::addVertex), new Requirement(true))));
 	add.add(vertex);
 	// add edge
 	KeyOption edge = new KeyOption(new Key("edge"), new Info("add a new edge to graph"), new Requirement(true));
-	edge.add(new ValueOption(new Value(ValueType.INT_TUPLE), new Info("IDs of source and target vertices"),
-		new Function(this::addEdge), new Requirement(true)));
+	edge.add(new ValueOption(new Value(ValueType.INT), new Info("source ID"), new Requirement(true),
+		new ValueOption(new Value(ValueType.INT), new Info("target ID"), new Function(this::addEdge),
+			new Requirement(true))));
 	add.add(edge);
+
+	// add path
+	KeyOption path = new KeyOption(new Key("path"), new Info("add a path to graph"));
+	path.add(new ValueOption(new Value(ValueType.INT), new Info("ID of source vertex"), new Requirement(true),
+		new ValueOption(new Value(ValueType.INT), new Info("ID of target vertex"),
+			new Function(this::addShortestPath), new Requirement(true))));
+
+	add.add(path);
 
 	parser.addOption(add);
 
@@ -170,6 +184,7 @@ public class ManetModelApp<V extends Vertex, E extends Edge> {
     }
 
     public void initialize() {
+
 	Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 	int windowWidth = (int) screenSize.getWidth() * 3 / 4;
 	int windowHeight = (int) screenSize.getHeight() * 3 / 4;
@@ -178,17 +193,21 @@ public class ManetModelApp<V extends Vertex, E extends Edge> {
 	// this.graph = (WeightedUndirectedGraph<V, E>)
 	// xmlImporter.importGraph("graph.xml");
 
-	Playground pg = new Playground();
-	pg.height = new IntRange(0, 10000);
-	pg.width = new IntRange(0, 10000);
-	pg.edgeCount = new IntRange(2, 4);
-	pg.vertexCount = new IntRange(100, 100);
-	pg.edgeDistance = new DoubleRange(50d, 100d);
+	GraphGenerator<V, E> generator = new GraphGenerator<V, E>(graph);
+	Playground playground = new Playground(1024, 768, new IntRange(50, 100), new DoubleRange(50d, 100d),
+		new IntRange(2, 4), new DoubleRange(50d, 100d));
+	generator.generateRandomGraph(playground);
 
-	// GraphGenerator<V,E> generator = new GraphGenerator<V,E>(graph);
-	// generator.generateRandomGraph(pg);
+	VisualGraph<V, E> visualGraph = new VisualGraph<V, E>(graph,
+		new VisualGraphMarkUp<E>(new VisualEdgeDistanceTextBuilder<E>()));
 
-	panel = new VisualGraphPanel<V, E>(new VisualGraph(graph));
+	RandomPath<V, E> randomPath = new RandomPath<V, E>(graph);
+
+	for (int i = 1; i <= 20; i++)
+	    visualGraph.addPath(
+		    randomPath.compute(graph.getVertex(RandomNumbers.getRandom(0, graph.getVertices().size())), 5));
+
+	panel = new VisualGraphPanel<V, E>(visualGraph);
 	panel.setPreferredSize(new Dimension(windowWidth, windowHeight));
 	panel.setFont(new Font("Consolas", Font.PLAIN, 16));
 	panel.setLayout(null);
@@ -215,44 +234,54 @@ public class ManetModelApp<V extends Vertex, E extends Edge> {
 
     private void createEmpty(Input input) {
 	graph.clear();
-	panel.updateVisualGraph(new VisualGraph<V, E>(graph));
+	panel.updateVisualGraph(
+		new VisualGraph<V, E>(graph, new VisualGraphMarkUp<E>(new VisualEdgeDistanceTextBuilder<E>())));
 	panel.repaint();
     }
 
     private void createRandom(Input input) {
-	System.out.println("test");
-
-	Playground pg = new Playground();
-	pg.height = new IntRange(0, 10000);
-	pg.width = new IntRange(0, 10000);
-	pg.edgeCount = new IntRange(4, 4);
-	pg.vertexCount = new IntRange(input.INT, input.INT);
-	pg.edgeDistance = new DoubleRange(50d, 100d);
 
 	this.graph.clear();
 
+	Playground playground = new Playground(1024, 768, 
+		new IntRange(input.INT.get(0), input.INT.get(0)), new DoubleRange(50d, 100d), 
+		new IntRange(2, 4), new DoubleRange(50d, 100d));
 	GraphGenerator<V, E> generator = new GraphGenerator<V, E>(this.graph);
-	generator.generateRandomGraph(pg);
-	panel.updateVisualGraph(new VisualGraph<V, E>(graph));
+	generator.generateRandomGraph(playground);
+
+	panel.updateVisualGraph(
+		new VisualGraph<V, E>(graph, new VisualGraphMarkUp<E>(new VisualEdgeDistanceTextBuilder<E>())));
 	panel.repaint();
     }
 
     private void createGrid(Input input) {
 	GraphGenerator<V, E> generator = new GraphGenerator<V, E>(graph);
 	generator.generateGridGraph(1000, 1000, 50, 200);
-	panel.updateVisualGraph(new VisualGraph<V, E>(graph));
+	panel.updateVisualGraph(
+		new VisualGraph<V, E>(graph, new VisualGraphMarkUp<E>(new VisualEdgeDistanceTextBuilder<E>())));
 	panel.repaint();
     }
 
     private void addVertex(Input input) {
-	graph.addVertex(input.DOUBLE_TUPLE.getFirst(), input.DOUBLE_TUPLE.getSecond());
-	panel.updateVisualGraph(new VisualGraph<V, E>(graph));
-	panel.repaint();
+
     }
 
     private void addEdge(Input input) {
-	graph.addEdge(graph.getVertex(input.INT_TUPLE.getFirst()), graph.getVertex(input.INT_TUPLE.getSecond()));
-	panel.updateVisualGraph(new VisualGraph<V, E>(graph));
+
+    }
+
+    private void addShortestPath(Input input) {
+
+	DijkstraShortestPath<V, E> dijkstraShortestPath = new DijkstraShortestPath<V, E>(graph);
+
+	java.util.function.Function<Tuple<E, V>, Double> metric = (Tuple<E, V> t) -> {
+	    return 1d;
+	};
+
+	Path<V, E> shortestPath = dijkstraShortestPath.compute(graph.getVertex(input.INT.get(0)), graph.getVertex(input.INT.get(1)), metric);
+	
+	panel.getVisualGraph().addPath(shortestPath);
+	
 	panel.repaint();
     }
 
@@ -270,14 +299,15 @@ public class ManetModelApp<V extends Vertex, E extends Edge> {
 
     private void importGraph(Input input) {
 	XMLImporter<V, E> xmlImporter = new XMLImporter<V, E>(this.graph);
-	xmlImporter.importGraph(input.STRING);
-	panel.updateVisualGraph(new VisualGraph<V,E>(graph));
+	xmlImporter.importGraph(input.STRING.get(0));
+	panel.updateVisualGraph(
+		new VisualGraph<V, E>(graph, new VisualGraphMarkUp<E>(new VisualEdgeDistanceTextBuilder<E>())));
 	panel.repaint();
     }
 
     private void exportGraph(Input input) {
 	XMLExporter<V, E> xmlExporter = new XMLExporter<V, E>(this.graph);
-	xmlExporter.exportGraph(input.STRING);
+	xmlExporter.exportGraph(input.STRING.get(0));
     }
 
     private void toImage(Input input) {
@@ -297,7 +327,7 @@ public class ManetModelApp<V extends Vertex, E extends Edge> {
     }
 
     private void helpCommand(Input input) {
-	Option option = treeParser.findKeyOption(treeParser.getOptions(), new Key(input.STRING));
+	Option option = treeParser.findKeyOption(treeParser.getOptions(), new Key(input.STRING.get(0)));
 	if (option != null)
 	    System.out.println(option.toString());
     }

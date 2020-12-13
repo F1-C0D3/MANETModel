@@ -176,7 +176,7 @@ public class WeightedUndirectedGraph<V extends Vertex, E extends Edge> {
 		vertices.add(vertex);
 	return vertices;
     }
-    
+
     public Boolean hasVertexInRadius(Coordinate coordinate, double radius) {
 	for (V vertex : this.vertices)
 	    if (this.getDistance(coordinate, vertex.getPostion()) <= radius)
@@ -198,6 +198,14 @@ public class WeightedUndirectedGraph<V extends Vertex, E extends Edge> {
 	    nextHops.add(this.vertices.get(edgeVertexMapping.getVertexID()));
 	return nextHops;
     }
+
+    public List<Tuple<E, V>> getNextPathsOf(V vertex) {
+	List<Tuple<E, V>> nextPaths = new ArrayList<Tuple<E, V>>();
+	for (EdgeVertexMapping edgeVertexMapping : vertexAdjacencies.get(vertex.getID()).getEdgeVertexMappings())
+	    nextPaths.add(new Tuple<E, V>(this.edges.get(edgeVertexMapping.getEdgeID()),
+		    this.vertices.get(edgeVertexMapping.getVertexID())));
+	return nextPaths;
+    }    
 
     public Iterator<V> vertexIterator() {
 	Iterator<V> iterator = new Iterator<V>() {

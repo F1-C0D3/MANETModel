@@ -3,19 +3,41 @@ package de.manetmodel.graph;
 import java.text.DecimalFormat;
 
 public class Playground {
-    public IntRange width;
-    public IntRange height;
-    public IntRange vertexCount;
-    public DoubleRange vertexDistance;
-    public IntRange edgeCount;
-    public DoubleRange edgeDistance;
+    private final IntRange width;
+    private final IntRange height;
+    private final IntRange vertexCount;
+    private final DoubleRange vertexDistance;
+    private final IntRange edgeCount;
+    private final DoubleRange edgeDistance;
 
-    public Playground() {
+    public Playground(int width, int height, IntRange vertexCount, DoubleRange vertexDistance, IntRange edgeCount, DoubleRange edgeDistance) {  
+	this.width = new IntRange(0, width);
+	this.height = new IntRange(0, width); 
+	this.vertexCount = vertexCount;
+	this.vertexDistance = vertexDistance;
+	this.edgeCount = edgeCount;
+	this.edgeDistance = edgeDistance;	
     }
 
     public boolean isInside(double x, double y) {
 	return (x >= width.min && x <= width.max) && (y >= height.min && y <= height.max);
     }
+    
+    public IntRange getVertexCount() {
+	return vertexCount;
+    }
+    
+    public DoubleRange getVertexDistance() {
+	return vertexDistance;
+    }
+
+    public IntRange getEdgeCount() {
+	return edgeCount;
+    }
+
+    public DoubleRange getEdgeDistance() {
+	return edgeDistance;
+    }  
 
     public static class IntRange {
 	public int min;
@@ -56,14 +78,14 @@ public class Playground {
 
     @Override
     public String toString() {
-	StringBuilder stringBuilder = new StringBuilder();
+	/*StringBuilder stringBuilder = new StringBuilder();
 	stringBuilder.append("width: ").append(this.width.toString());
 	stringBuilder.append(", height: ").append(this.height.toString());
-	stringBuilder.append(", vertexCount: ").append(this.vertexCount);
+	stringBuilder.append(", vertexCount: ").append(this.vertexCount.toString());
 	stringBuilder.append(", vertexDistance: ").append(this.vertexDistance.toString());
 	stringBuilder.append(", edgeCount: ").append(this.edgeCount);
 	stringBuilder.append(", edgeDistance: ").append(this.edgeDistance.toString());
-	return stringBuilder.toString();
-
+	return stringBuilder.toString();*/
+	return "";
     }
 }

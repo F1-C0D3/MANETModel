@@ -1,116 +1,113 @@
 package de.manetmodel.app.treeparser;
 
-import java.util.Iterator;
 import java.util.Scanner;
 
 import de.manetmodel.util.Tuple;
 
 class State {
-	Option option;
-	Input input;
-	
-	public State(Option option, Input input) {
-		this.option = option;
-		this.input = input;
-	}
-	
-	public Option getOption() {
-		return this.option;
-	}
+    Option option;
+    Input input;
+
+    public State(Option option, Input input) {
+	this.option = option;
+	this.input = input;
+    }
+
+    public Option getOption() {
+	return this.option;
+    }
 }
 
 public class TreeParser {
-		
-	private RootOption options;
-	private State state;
-	
-	static String delimiter = " ";
-	
-	public TreeParser() {
-		options = new RootOption();
+
+    private RootOption options;
+    private State state;
+
+    static String delimiter = " ";
+
+    public TreeParser() {
+	options = new RootOption();
+    }
+
+    public void addOption(Option option) {
+	this.options.add(option);
+    }
+
+    public Option getOptions() {
+	return this.options;
+    }
+
+    public Option findKeyOption(Option options, Key key) {
+	for (Option option : options.getOptions()) {
+	    if (key.equals(option.getKey()))
+		return option;
+	    else
+		findKeyOption(option, key);
 	}
-	
-	public void addOption(Option option) {
-		this.options.add(option);
+	return null;
+    }
+
+    private void setState(Option option, Input input) {
+	this.state = new State(option, input);
+    }
+
+    private State getState() {
+	State state = this.state;
+	this.state = null;
+	return state;
+    }
+
+    private Boolean hasState() {
+	return state != null;
+    }
+
+    public void consume(String string, Option option, Input input) {
+
+	string = string.trim();
+
+	if (this.hasState())
+	    option = this.getState().getOption();
+
+	if (string.isEmpty()) {
+	    if (option.requiresOption()) {
+		System.out.println(option.getOptions().toString());
+		this.setState(option, input);
+		return;
+	    } else
+		option.getFunction().getConsumer().accept(input);
 	}
-	
-	public Option getOptions() {
-		return this.options;
-	}
-	
-	public Option findKeyOption(Option options, Key key) {			
-		for(Option option : options.getOptions()) {
-			if(key.equals(option.getKey())) 
-				return option;
-			else 
-				findKeyOption(option, key);
-		}	
-		return null;	
-	}
-	
-	private void setState(Option option, Input input) {
-		this.state = new State(option, input);
-	}
-	
-	private State getState() {
-		State state = this.state;
-		this.state = null;
-		return state;
-	}
-	
-	private Boolean hasState() {
-		return state != null;
-	}
-	
-	public void consume(String string, Option option, Input input) {
-		
-		string = string.trim();
-		
-		if(this.hasState()) 
-			option = this.getState().getOption();
-		
-		if(string.isEmpty()) {
-			if(option.requiresOption()) {
-				System.out.println(option.getOptions().toString());
-				this.setState(option, input);
-				return;		
-			}
-			else option.getFunction().getConsumer().accept(input);
+
+	for (KeyOption keyOption : option.getKeyOptions())
+	    if (string.startsWith(keyOption.getFlag().toString() + keyOption.getKey().toString()))
+		consume(string
+			.substring(keyOption.getFlag().toString().length() + keyOption.getKey().toString().length()),
+			keyOption, input);
+
+	for (ValueOption valueOption : option.getValueOptions()) {
+	    Scanner scanner = new Scanner(string);
+	    scanner.skip("[^0-9]*");
+	    String subString;
+	    try {
+		switch (valueOption.getValue().getType()) {
+		case INT:
+		    Integer intValue = scanner.nextInt();
+		    input.INT.add(intValue);
+		    consume(string.substring(intValue.toString().length()), valueOption, input);
+		    break;
+		case DOUBLE:
+		    Double doubleValue = scanner.nextDouble();
+		    input.DOUBLE.add(doubleValue);
+		    consume(string.substring(doubleValue.toString().length()), valueOption, input);
+		    break;
+		case STRING:
+		    subString = string.substring(0, string.indexOf(delimiter));
+		    input.STRING.add(subString);
+		    consume(string.substring(subString.length()), valueOption, input);
+		    break;
 		}
-									
-		for(KeyOption keyOption : option.getKeyOptions()) 					
-			if(string.startsWith(keyOption.getFlag().toString() + keyOption.getKey().toString())) 
-				consume(string.substring(keyOption.getFlag().toString().length() + keyOption.getKey().toString().length()), keyOption, input);
-								
-		for(ValueOption valueOption : option.getValueOptions()) {			
-			Scanner scanner = new Scanner(string);
-			scanner.skip("[^0-9]*");		
-			try {
-				switch(valueOption.getValue().getType()) {  					
-					case INT: 
-						input.INT = scanner.nextInt();
-						consume(string.substring(input.INT.toString().length()), valueOption, input);
-						break;
-					case STRING: 
-						input.STRING = string;
-						consume("", valueOption, input);
-						break;
-					case DOUBLE:
-						input.DOUBLE = scanner.nextDouble();
-						consume(string.substring(input.DOUBLE.toString().length()), valueOption, input);
-						break;					
-					case INT_TUPLE:  					
-						String[] intParts = string.split(delimiter);
-						input.INT_TUPLE = new Tuple<Integer,Integer>(Integer.parseInt(intParts[0].trim()), Integer.parseInt(intParts[1].trim()));
-						break; 			
-					case DOUBLE_TUPLE:     					
-						String[] doubleParts = string.split(delimiter);
-						input.DOUBLE_TUPLE = new Tuple<Double,Double>(Double.parseDouble(doubleParts[0].trim()), Double.parseDouble(doubleParts[1].trim()));
-						break; 						
-				}  			
-			}
-			catch(Exception e) {}	
-			scanner.close();
-		}		
-	}		
+	    } catch (Exception e) {
+	    }
+	    scanner.close();
+	}
+    }
 }
