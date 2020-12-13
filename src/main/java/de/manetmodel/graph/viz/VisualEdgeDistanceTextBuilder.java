@@ -4,7 +4,7 @@ import java.text.DecimalFormat;
 
 import de.manetmodel.graph.Edge;
 
-public class VisualEdgeDistanceText<E extends Edge> extends VisualEdgeText<E> {
+public class VisualEdgeDistanceTextBuilder<E extends Edge> extends VisualEdgeTextBuilder<E> {
 
     private static DecimalFormat decimalFormat = new DecimalFormat("0.00");
     

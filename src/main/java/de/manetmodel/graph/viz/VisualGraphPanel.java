@@ -44,18 +44,14 @@ public class VisualGraphPanel<V extends Vertex, E extends Edge> extends JPanel {
 
     private VisualGraph<V, E> graph;
     private Scope scope;
+    private double xScale;
+    private double yScale;
     private int vertexWidth = 50;
     private int padding = vertexWidth;
     private static final Stroke EDGE_STROKE = new BasicStroke(2);
-    private static final Stroke VISUALPATH_STROKE = new BasicStroke(6);
-
     private static final Stroke VERTEX_STROKE = new BasicStroke(2);
-
     BasicStroke dashStroke = new BasicStroke(4.0f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_BEVEL, 0.0f,
 	    new float[] { 10.0f, 2.0f }, 0);
-
-    double xScale;
-    double yScale;
 
     public VisualGraphPanel(VisualGraph<V, E> graph) {
 	this.graph = graph;
@@ -233,29 +229,20 @@ public class VisualGraphPanel<V extends Vertex, E extends Edge> extends JPanel {
 			new WeightedUndirectedGraphSupplier.EdgeSupplier());
 
 		GraphGenerator<Vertex, Edge> generator = new GraphGenerator<Vertex, Edge>(graph);
+		Playground playground = new Playground(1024, 768, new IntRange(50, 100), new DoubleRange(50d, 100d),
+			new IntRange(2, 4), new DoubleRange(50d, 100d));
+		generator.generateRandomGraph(playground);
 
-		Playground pg = new Playground();
-		pg.height = new IntRange(0, 10000);
-		pg.width = new IntRange(0, 10000);
-		pg.edgeCount = new IntRange(2, 4);
-		pg.vertexCount = new IntRange(100, 100);
-		pg.vertexDistance = new DoubleRange(50d, 100d);
-		pg.edgeDistance = new DoubleRange(50d, 100d);
-		generator.generateRandomGraph(pg);
-
-		VisualGraph<Vertex, Edge> visualGraph = new VisualGraph<Vertex, Edge>(graph);
-
-		Function<Tuple<Edge, Vertex>, Double> metric = (Tuple<Edge, Vertex> t) -> {
-		    return 1d;
-		};
+		VisualGraph<Vertex, Edge> visualGraph = new VisualGraph<Vertex, Edge>(graph,
+			new VisualGraphMarkUp<Edge>(new VisualEdgeDistanceTextBuilder<Edge>()));
 
 		RandomPath<Vertex, Edge> randomPath = new RandomPath<Vertex, Edge>(graph);
 
-		for (int i = 1; i <= 10; i++)
-		    visualGraph.addPath(randomPath.compute(graph.getVertex(RandomNumbers.getRandom(0, graph.getVertices().size())), 5));
+		for (int i = 1; i <= 20; i++)
+		    visualGraph.addPath(randomPath
+			    .compute(graph.getVertex(RandomNumbers.getRandom(0, graph.getVertices().size())), 5));
 
 		VisualGraphPanel<Vertex, Edge> panel = new VisualGraphPanel<Vertex, Edge>(visualGraph);
-
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 		int width = (int) screenSize.getWidth() * 3 / 4;
 		int height = (int) screenSize.getHeight() * 3 / 4;
