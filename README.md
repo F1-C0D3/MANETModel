@@ -30,5 +30,6 @@
 - Utilization as property of Links
 - Getter/setter for RadioOccupationModel
 - Interface to grant access to vertexAdjacencies in WeightedUndirectedGraph
+- CSMA/CA Simulator (Occupation modal)
 
 
