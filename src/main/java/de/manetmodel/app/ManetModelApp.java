@@ -252,6 +252,7 @@ public class ManetModelApp<V extends Vertex, E extends Edge> {
 	panel.updateVisualGraph(
 		new VisualGraph<V, E>(graph, new VisualGraphMarkUp<E>(new VisualEdgeDistanceTextBuilder<E>())));
 	panel.repaint();
+	frame.toFront();
     }
 
     private void createGrid(Input input) {
@@ -260,6 +261,7 @@ public class ManetModelApp<V extends Vertex, E extends Edge> {
 	panel.updateVisualGraph(
 		new VisualGraph<V, E>(graph, new VisualGraphMarkUp<E>(new VisualEdgeDistanceTextBuilder<E>())));
 	panel.repaint();
+	frame.toFront();
     }
 
     private void addVertex(Input input) {
@@ -283,6 +285,7 @@ public class ManetModelApp<V extends Vertex, E extends Edge> {
 	panel.getVisualGraph().addPath(shortestPath);
 	
 	panel.repaint();
+	frame.toFront();
     }
 
     private void removeVertex(Input input) {
@@ -303,6 +306,7 @@ public class ManetModelApp<V extends Vertex, E extends Edge> {
 	panel.updateVisualGraph(
 		new VisualGraph<V, E>(graph, new VisualGraphMarkUp<E>(new VisualEdgeDistanceTextBuilder<E>())));
 	panel.repaint();
+	frame.toFront();
     }
 
     private void exportGraph(Input input) {

@@ -1,4 +1,4 @@
-package de.manetmodel.graph.viz;
+package de.manetmodel.graph.gui;
 
 import org.junit.Test;
 

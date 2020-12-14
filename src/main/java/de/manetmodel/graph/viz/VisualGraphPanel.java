@@ -12,19 +12,16 @@ import java.awt.RenderingHints;
 import java.awt.Stroke;
 import java.awt.Toolkit;
 import java.awt.geom.Rectangle2D;
-import java.util.function.Function;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 
-import de.manetmodel.algo.DijkstraShortestPath;
 import de.manetmodel.algo.RandomPath;
 import de.manetmodel.app.gui.math.Line2D;
 import de.manetmodel.app.gui.math.Point2D;
 import de.manetmodel.app.gui.math.VectorLine2D;
 import de.manetmodel.graph.Edge;
-import de.manetmodel.graph.Path;
 import de.manetmodel.graph.Playground;
 import de.manetmodel.graph.Vertex;
 import de.manetmodel.graph.WeightedUndirectedGraph;
@@ -35,10 +32,7 @@ import de.manetmodel.graph.generator.GraphGenerator;
 import de.manetmodel.graph.viz.VisualEdge;
 import de.manetmodel.graph.viz.VisualGraph;
 import de.manetmodel.graph.viz.VisualVertex;
-import de.manetmodel.network.Link;
-import de.manetmodel.network.Node;
 import de.manetmodel.util.RandomNumbers;
-import de.manetmodel.util.Tuple;
 
 public class VisualGraphPanel<V extends Vertex, E extends Edge> extends JPanel {
 
@@ -48,10 +42,12 @@ public class VisualGraphPanel<V extends Vertex, E extends Edge> extends JPanel {
     private double yScale;
     private int vertexWidth = 50;
     private int padding = vertexWidth;
-    private static final Stroke EDGE_STROKE = new BasicStroke(2);
-    private static final Stroke VERTEX_STROKE = new BasicStroke(2);
-    BasicStroke dashStroke = new BasicStroke(4.0f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_BEVEL, 0.0f,
+    private static Stroke EDGE_STROKE = new BasicStroke(1);
+    private static BasicStroke EDGE_PATH_STROKE = new BasicStroke(4.0f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_BEVEL, 0.0f,
 	    new float[] { 10.0f, 2.0f }, 0);
+    private static Stroke VERTEX_STROKE = new BasicStroke(1);
+    private static Stroke VERTEX_PATH_STROKE = new BasicStroke(3);
+
 
     public VisualGraphPanel(VisualGraph<V, E> graph) {
 	this.graph = graph;
@@ -83,8 +79,8 @@ public class VisualGraphPanel<V extends Vertex, E extends Edge> extends JPanel {
 		    (scope.y.max - edge.getTargetPosition().y()) * yScale + padding, edgeLine.getPerpendicularSlope());
 
 	    int i = 0;
-	    double offset = 0;
-	    double offsetSteps = 6;
+	    int offset = 0;
+	    int offsetSteps = 5;
 
 	    for (VisualPath visualPath : edge.getVisualPaths()) {
 
@@ -101,7 +97,7 @@ public class VisualGraphPanel<V extends Vertex, E extends Edge> extends JPanel {
 		    pathTargetPosition = targetPositionLine.getPointInDistance(-offset);
 		}
 
-		g2.setStroke(dashStroke);
+		g2.setStroke(EDGE_PATH_STROKE);
 		g2.setColor(visualPath.getColor());
 		g2.drawLine(pathStartPosition.x().intValue(), pathStartPosition.y().intValue(),
 			pathTargetPosition.x().intValue(), pathTargetPosition.y().intValue());
@@ -132,22 +128,39 @@ public class VisualGraphPanel<V extends Vertex, E extends Edge> extends JPanel {
 	g2.setColor(vertex.getBackgroundColor());
 	g2.fillOval(x, y, vertexWidth, vertexWidth);
 
-	g2.setStroke(VERTEX_STROKE);
-	g2.setColor(vertex.getBorderColor());
-	g2.drawOval(x, y, vertexWidth, vertexWidth);
+	int offset = 0;
+	int offsetSteps = 6;
+
+	if (!vertex.getVisualPaths().isEmpty()) {
+	    for (VisualPath visualPath : vertex.getVisualPaths()) {
+		g2.setStroke(VERTEX_PATH_STROKE);
+		g2.setColor(visualPath.getColor());
+		g2.drawOval(x - offset/2, y - offset/2, vertexWidth + offset, vertexWidth + offset);
+		offset += offsetSteps;
+	    }
+	} else {
+	    g2.setStroke(VERTEX_STROKE);
+	    g2.setColor(vertex.getBorderColor());
+	    g2.drawOval(x, y, vertexWidth, vertexWidth);
+	}
 
 	FontMetrics fm = g2.getFontMetrics();
 	Rectangle2D stringBounds = fm.getStringBounds(vertex.getText(), g2);
 	Point vertexCenter = new Point(x + (vertexWidth / 2), y + (vertexWidth / 2));
+	g2.setColor(Color.BLACK);
 	g2.drawString(vertex.getText(), vertexCenter.x - (int) stringBounds.getCenterX(),
 		vertexCenter.y - (int) stringBounds.getCenterY());
+
     }
 
     @Override
     protected void paintComponent(Graphics g) {
 	super.paintComponent(g);
 	Graphics2D g2 = (Graphics2D) g;
+	g2.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
 	g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+	g2.setRenderingHint(RenderingHints.KEY_ALPHA_INTERPOLATION, RenderingHints.VALUE_ALPHA_INTERPOLATION_QUALITY);
+	g2.setRenderingHint(RenderingHints.KEY_STROKE_CONTROL, RenderingHints.VALUE_STROKE_NORMALIZE);
 
 	if (graph.getVertices().isEmpty())
 	    return;
