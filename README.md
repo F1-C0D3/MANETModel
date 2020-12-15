@@ -8,8 +8,16 @@
 - [ ] Propagation model using Free-space path loss and Shannon–Hartley theorem for bitrate computation
  
 ## Eike: 
+
+###### Graph:
+- [ ] Generic edge weight
+
+###### GraphGenerator:
+- [ ] ManetNetwok mode (vertexDistance=edgeDistance, edgeCount determined by vertex positions)
+
 ###### Panel:
 - [ ] Adjust scaling for different screen resolutions
+- [ ] Show temp. results 
 
 ## Ideas:
 - Results as Plots in JFrame
