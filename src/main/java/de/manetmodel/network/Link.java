@@ -8,8 +8,8 @@ import de.manetmodel.graph.Edge;
 public class Link<L extends Link> extends Edge {
 
     private double receptionPower;
-    private double transmissionBitrate;
-    private double utilization;
+    private long transmissionBitrate;
+    private long transmissionUtilization;
     private Set<L> interferedLinks;
 
     public Link() {
@@ -21,9 +21,13 @@ public class Link<L extends Link> extends Edge {
 
     }
 
-    public void setTransmissionRate(double transmissionBitrate) {
+    public void setTransmissionRate(long transmissionBitrate) {
 	this.transmissionBitrate = transmissionBitrate;
 
+    }
+
+    public long getTransmissionRate() {
+	return this.transmissionBitrate;
     }
 
     public Set<L> inReceptionRange() {
@@ -34,14 +38,17 @@ public class Link<L extends Link> extends Edge {
 	interferedLinks.addAll(l);
     }
 
-    public double increaseUtilizationBy(double u) {
-
-	return transmissionBitrate - utilization;
+    public long increaseUtilizationBy(long u) {
+	this.transmissionUtilization += u;
+	return transmissionBitrate - transmissionUtilization;
     }
 
-    private double getUtilization() {
+    public double getUtilization() {
+	return this.transmissionUtilization;
+    }
 
-	return utilization;
+    public double setUtilization(long u) {
+	return this.transmissionUtilization = u;
     }
 
     @Override

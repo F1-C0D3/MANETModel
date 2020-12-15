@@ -6,18 +6,14 @@ import de.manetmodel.graph.Path;
 import de.manetmodel.util.Tuple;
 
 public class Flow<N extends Node, L extends Link> extends Path<N, L> {
-    private double bitrate;
+    private long bitrate;
 
-    public Flow(N source, N target) {
-	this(source, target, 0d);
-    }
-
-    public Flow(N source, N target, double bitrate) {
+    public Flow(N source, N target, long bitrate) {
 	super(source, target);
 	this.bitrate = bitrate;
     }
 
-    public double getBitrate() {
+    public long getBitrate() {
 	return this.bitrate;
     }
 

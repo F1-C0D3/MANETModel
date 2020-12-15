@@ -7,12 +7,12 @@ import java.util.Set;
 import java.util.function.Supplier;
 
 import de.manetmodel.graph.WeightedUndirectedGraph;
-import de.manetmodel.network.radio.RadioOccupationModel;
+import de.manetmodel.network.radio.IRadioModel;
 import de.manetmodel.util.Tuple;
 
 public class Manet<N extends Node, L extends Link> {
     private WeightedUndirectedGraph<N, L> graph;
-    private RadioOccupationModel radioOccupationModel;
+    private IRadioModel radioModel;
 
     public Manet(Supplier<N> vertexSupplier, Supplier<L> edgeSupplier) {
 	graph = new WeightedUndirectedGraph<N, L>(vertexSupplier, edgeSupplier);
@@ -30,22 +30,23 @@ public class Manet<N extends Node, L extends Link> {
 	return this.graph;
     }
 
-    public void setRadioOccupationModel(RadioOccupationModel radioOccupationModel) {
-	this.radioOccupationModel = radioOccupationModel;
+    public void setRadioOccupationModel(IRadioModel radioOccupationModel) {
+	this.radioModel = radioOccupationModel;
     }
 
-    public RadioOccupationModel getRadioOccupationModel() {
-	return this.radioOccupationModel;
+    public IRadioModel getRadioOccupationModel() {
+	return this.radioModel;
     }
 
     private void networkConnectionSetup() {
+
 	for (L l : graph.getEdges()) {
 	    Tuple<N, N> lt = graph.getVerticesOf(l);
 	    N se = lt.getFirst();
 	    N sk = lt.getSecond();
-
-	    l.setTransmissionRate(radioOccupationModel.computeTransmissionBitrate());
-	    l.setReceptionPower(radioOccupationModel.computeReception(graph.getDistance(se, sk)));
+	    double distance = graph.getDistance(se, sk);
+	    l.setTransmissionRate(radioModel.computeTransmissionBitrate(distance));
+	    l.setReceptionPower(radioModel.computeReception(distance));
 
 	    List<N> lListOfse = graph.getNextHopsOf(se);
 	    List<N> lListOfsk = graph.getNextHopsOf(sk);
@@ -68,8 +69,8 @@ public class Manet<N extends Node, L extends Link> {
 		N se = graph.getVerticesOf(le).getFirst();
 		N sk = graph.getVerticesOf(le).getSecond();
 
-		if (radioOccupationModel.interferencePresent(graph.getDistance(v, se))
-			&& radioOccupationModel.interferencePresent(graph.getDistance(v, sk))) {
+		if (radioModel.interferencePresent(graph.getDistance(v, se))
+			&& radioModel.interferencePresent(graph.getDistance(v, sk))) {
 		    v.setInterferedLink(le);
 		}
 
@@ -81,15 +82,16 @@ public class Manet<N extends Node, L extends Link> {
     /*
      * return negative value if deployment exceeds link capacities
      * 
-     * @ToDo: Double to mbit unit €
+     * @ToDo: Double to mbit unit
      * 
      * @Todo: graph copy
      */
-    public double utilization(List<Flow<N, L>> flows) {
+    public long utilization(List<Flow<N, L>> flows) {
+	/* set link utilization to initial value (0) */
+	relaxL();
 	Iterator<Flow<N, L>> flowsIter = flows.iterator();
 
-	/* utilization */
-	double u = 0d;
+	long netUtilization = 0L;
 
 	while (flowsIter.hasNext()) {
 	    Flow<N, L> f = flowsIter.next();
@@ -104,13 +106,25 @@ public class Manet<N extends Node, L extends Link> {
 		Iterator<L> pIter = uLinks.iterator();
 
 		while (pIter.hasNext()) {
-		    pIter.next();
-		    u += f.getBitrate();
-		}
+		    L ul = pIter.next();
+		    long result = ul.increaseUtilizationBy(f.getBitrate());
 
+		    /* if capacity of link exceeded */
+		    if (result < 0) {
+			return result;
+		    }
+		    netUtilization += f.getBitrate();
+		}
 	    }
 	}
-	return u;
+	return netUtilization;
+    }
+
+    private void relaxL() {
+
+	for (L l : getGraph().getEdges()) {
+	    l.setUtilization(0L);
+	}
     }
 
 }
