@@ -1,9 +1,10 @@
 package de.manetmodel.network.radio;
 
-public interface IRadioModel
-{
-	double computeTransmissionBitrate();
+public interface IRadioModel {
 
-	double computeReception(double distance);
+    long computeTransmissionBitrate(double distance);
 
+    double computeReception(double distance);
+
+    boolean interferencePresent(double distance);
 }

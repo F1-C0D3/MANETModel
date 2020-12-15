@@ -1,24 +1,18 @@
 package de.manetmodel.network.radio;
 
-public class IdealRadioOccupation extends RadioOccupationModel {
+public class IdealRadioModel implements IRadioModel {
     private double transmissionRange;
     private double interferenceRange;
-    private double transmissionBitrate;
+    private long transmissionBitrate;
 
-    public IdealRadioOccupation(double transmissionRange, double interferenceRange, double transmissionBitrate) {
+    public IdealRadioModel(double transmissionRange, double interferenceRange, long transmissionBitrate) {
 	this.transmissionRange = transmissionRange;
 	this.interferenceRange = interferenceRange;
 	this.transmissionBitrate = transmissionBitrate;
     }
 
-    public IdealRadioOccupation(double transmissionRange, double transmissionBitrate) {
+    public IdealRadioModel(double transmissionRange, long transmissionBitrate) {
 	this(transmissionRange, transmissionRange, transmissionBitrate);
-    }
-
-    @Override
-    public double computeTransmissionBitrate() {
-	// TODO Auto-generated method stub
-	return transmissionBitrate;
     }
 
     @Override
@@ -32,5 +26,10 @@ public class IdealRadioOccupation extends RadioOccupationModel {
 	if (distance <= interferenceRange)
 	    return true;
 	return false;
+    }
+
+    @Override
+    public long computeTransmissionBitrate(double distance) {
+	return transmissionBitrate;
     }
 }
