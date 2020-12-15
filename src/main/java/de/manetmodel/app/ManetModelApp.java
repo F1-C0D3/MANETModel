@@ -194,7 +194,7 @@ public class ManetModelApp<V extends Vertex, E extends Edge> {
 	// xmlImporter.importGraph("graph.xml");
 
 	GraphGenerator<V, E> generator = new GraphGenerator<V, E>(graph);
-	Playground playground = new Playground(1024, 768, new IntRange(50, 100), new DoubleRange(50d, 100d),
+	Playground playground = new Playground(1024, 768, new IntRange(200, 300), new DoubleRange(50d, 100d),
 		new IntRange(2, 4), new DoubleRange(50d, 100d));
 	generator.generateRandomGraph(playground);
 
@@ -243,9 +243,14 @@ public class ManetModelApp<V extends Vertex, E extends Edge> {
 
 	this.graph.clear();
 
-	Playground playground = new Playground(1024, 768, 
+	/*Playground playground = new Playground(1024, 768, 
 		new IntRange(input.INT.get(0), input.INT.get(0)), new DoubleRange(50d, 100d), 
-		new IntRange(2, 4), new DoubleRange(50d, 100d));
+		new IntRange(2, 4), new DoubleRange(50d, 100d));*/
+	
+	Playground playground = new Playground(100000, 100000, 
+	new IntRange(input.INT.get(0), input.INT.get(0)), new DoubleRange(50d, 100d), 
+	new IntRange(2, 4), new DoubleRange(50d, 100d));
+	
 	GraphGenerator<V, E> generator = new GraphGenerator<V, E>(this.graph);
 	generator.generateRandomGraph(playground);
 

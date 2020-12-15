@@ -46,7 +46,7 @@ public class VisualGraphPanel<V extends Vertex, E extends Edge> extends JPanel {
     private static BasicStroke EDGE_PATH_STROKE = new BasicStroke(4.0f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_BEVEL, 0.0f,
 	    new float[] { 10.0f, 2.0f }, 0);
     private static Stroke VERTEX_STROKE = new BasicStroke(1);
-    private static Stroke VERTEX_PATH_STROKE = new BasicStroke(3);
+    private static Stroke VERTEX_PATH_STROKE = new BasicStroke(4);
 
 
     public VisualGraphPanel(VisualGraph<V, E> graph) {
@@ -120,6 +120,19 @@ public class VisualGraphPanel<V extends Vertex, E extends Edge> extends JPanel {
 	g2.drawString(edge.getText(), lineCenter.x().intValue() - (int) stringBounds.getCenterX(),
 		lineCenter.y().intValue() - (int) stringBounds.getCenterY());
     }
+    
+    public void paintTrainsmissionRange(Graphics2D g2, VisualVertex vertex) {
+	
+	int x = (int) ((vertex.getPosition().x() * xScale + padding) - vertexWidth / 2);
+	int y = (int) (((scope.y.max - vertex.getPosition().y()) * yScale + padding) - vertexWidth / 2);
+	
+	int transmissionRange = 500;
+	g2.setStroke(EDGE_STROKE);
+	g2.setColor(new Color(155, 155, 155, 75));
+	//g2.fillOval(x - (transmissionRange/2-(vertexWidth /2))  , y - (transmissionRange/2-(vertexWidth/2)), transmissionRange, transmissionRange);
+	g2.drawOval(x - (transmissionRange/2-(vertexWidth /2))  , y - (transmissionRange/2-(vertexWidth/2)), transmissionRange, transmissionRange);
+	
+    }
 
     public void paintVertex(Graphics2D g2, VisualVertex vertex) {
 	int x = (int) ((vertex.getPosition().x() * xScale + padding) - vertexWidth / 2);
@@ -132,11 +145,20 @@ public class VisualGraphPanel<V extends Vertex, E extends Edge> extends JPanel {
 	int offsetSteps = 6;
 
 	if (!vertex.getVisualPaths().isEmpty()) {
+	    
+	    int angle = 360 / vertex.getVisualPaths().size();
+	    int angleOffset = 0;
+	    
 	    for (VisualPath visualPath : vertex.getVisualPaths()) {
-		g2.setStroke(VERTEX_PATH_STROKE);
+		/*g2.setStroke(VERTEX_PATH_STROKE);
 		g2.setColor(visualPath.getColor());
 		g2.drawOval(x - offset/2, y - offset/2, vertexWidth + offset, vertexWidth + offset);
-		offset += offsetSteps;
+		offset += offsetSteps;*/
+		
+		g2.setStroke(new BasicStroke(1 + vertex.getVisualPaths().size()));
+		g2.setColor(visualPath.getColor());
+		g2.drawArc(x, y, vertexWidth, vertexWidth, angleOffset, angle);
+		angleOffset += angle;		
 	    }
 	} else {
 	    g2.setStroke(VERTEX_STROKE);
@@ -150,8 +172,8 @@ public class VisualGraphPanel<V extends Vertex, E extends Edge> extends JPanel {
 	g2.setColor(Color.BLACK);
 	g2.drawString(vertex.getText(), vertexCenter.x - (int) stringBounds.getCenterX(),
 		vertexCenter.y - (int) stringBounds.getCenterY());
-
     }
+    
 
     @Override
     protected void paintComponent(Graphics g) {
@@ -242,8 +264,9 @@ public class VisualGraphPanel<V extends Vertex, E extends Edge> extends JPanel {
 			new WeightedUndirectedGraphSupplier.EdgeSupplier());
 
 		GraphGenerator<Vertex, Edge> generator = new GraphGenerator<Vertex, Edge>(graph);
-		Playground playground = new Playground(1024, 768, new IntRange(50, 100), new DoubleRange(50d, 100d),
-			new IntRange(2, 4), new DoubleRange(50d, 100d));
+		Playground playground = new Playground(1024, 768, new IntRange(100, 200), new DoubleRange(100d, 150d),
+			new IntRange(2, 4), new DoubleRange(100d, 500d));
+				
 		generator.generateRandomGraph(playground);
 
 		VisualGraph<Vertex, Edge> visualGraph = new VisualGraph<Vertex, Edge>(graph,
