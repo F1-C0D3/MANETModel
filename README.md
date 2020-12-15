@@ -13,10 +13,8 @@
 
 ## Ideas:
 - Results as Plots in JFrame
+  - Waht kind of results? How should they look like?
 - Units representing flow bitrate (mbit...)
-- Visualization
-  - Adjust playground from text input fields for graph generation
-  - Add 3D support (Game Engine)
   
 ## Discussion:
 - Utilization as property of Links
