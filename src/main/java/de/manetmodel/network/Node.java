@@ -21,4 +21,10 @@ public class Node<L extends Link> extends Vertex {
 	return interferredLinks;
     }
 
+    @Override
+    public String toString() {
+	return new StringBuffer().append("ID: ").append(this.getID()).append(", #iLinks: ")
+		.append(interferredLinks.size()).toString();
+    }
+
 }
