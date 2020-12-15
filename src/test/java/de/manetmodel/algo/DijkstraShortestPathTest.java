@@ -15,7 +15,7 @@ import de.manetmodel.network.Link;
 import de.manetmodel.network.Manet;
 import de.manetmodel.network.ManetSupplier;
 import de.manetmodel.network.Node;
-import de.manetmodel.network.radio.IdealRadioOccupation;
+import de.manetmodel.network.radio.IdealRadioModel;
 import de.manetmodel.util.Tuple;
 
 public class DijkstraShortestPathTest {
@@ -42,7 +42,7 @@ public class DijkstraShortestPathTest {
 	pg.edgeDistance = new DoubleRange(50d, 100d);
 	generator.generateRandomGraph(pg);
 
-	manet.setRadioOccupationModel(new IdealRadioOccupation(100d, 125d, 2d));
+	manet.setRadioOccupationModel(new IdealRadioModel(100d, 125d, 2L));
 	manet.initialize();
 
 	Function<Tuple<Link, Node>, Double> metric = (Tuple<Link, Node> t) -> {
