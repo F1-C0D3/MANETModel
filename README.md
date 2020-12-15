@@ -8,13 +8,7 @@
 - [ ] Propagation model using Free-space path loss and Shannon–Hartley theorem for bitrate computation
  
 ## Eike: 
-- [x] ConsoleApp
-  - [x] TreeParser (builds tree based command set)
-    - [x] XML export/import graphs
-    - [x] export graph as an image
-- [x] Adjust/Fix Generators (limit number of connections based on given playground)
-- [x] Add multiple colored paths to VisualGraph (paint colored lines under edges with different sizes to enable overlapping paths)
-  - [ ] Paint VisualPaths to vertices to emphasize VisualPaths
+###### Panel:
 - [ ] Adjust scaling for different screen resolutions
 
 ## Ideas:
@@ -28,9 +22,5 @@
 - Utilization as property of Links
 - Getter/setter for RadioOccupationModel
 - Interface to grant access to vertexAdjacencies in WeightedUndirectedGraph
-
-## Off topic:
-- CSMA/CA Simulator (Occupation model) -> Use of OPNET or other existing frameworks?
-- neo4j java graph platform
 
 
