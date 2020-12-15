@@ -3,8 +3,8 @@
   <groupId>de.manetmodel</groupId>
   <artifactId>ManetModel</artifactId>
   <version>0.0.1-SNAPSHOT</version>
+  
   <dependencies>
-	<!-- https://mvnrepository.com/artifact/jakarta.xml.bind/jakarta.xml.bind-api -->
 	<dependency>
     	<groupId>jakarta.xml.bind</groupId>
     	<artifactId>jakarta.xml.bind-api</artifactId>
@@ -17,4 +17,5 @@
 			<scope>runtime</scope>
 	</dependency>
   </dependencies>
+  
 </project>

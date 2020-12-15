@@ -1,39 +1,17 @@
 package de.manetmodel.app.treeparser;
 
-import de.manetmodel.util.Tuple;
+import java.util.ArrayList;
+import java.util.List;
 
-public class Input {	
-	ValueType valueType;
-	
-	public Integer INT;
-	public Double DOUBLE;
-	public String STRING;
-	public Tuple<Integer,Integer> INT_TUPLE;		
-	public Tuple<Double, Double> DOUBLE_TUPLE;
-		
-	public Input() {}	
-	
-	public Input(int INT) {
-		this.INT = INT;
-	}
-	
-	public boolean hasINT() {
-		return INT != null;
-	}
-	
-	public boolean hasDOUBLE() {
-		return DOUBLE != null;
-	}
-	
-	public boolean hasSTRING() {
-		return STRING != null;
-	}
-	
-	public boolean hasINT_TUPLE() {
-		return INT_TUPLE != null;
-	}
-	
-	public boolean hasDOUBLE_TUPLE() {
-		return DOUBLE_TUPLE != null;
-	}
+public class Input {
+
+    public List<Integer> INT;
+    public List<Double> DOUBLE;
+    public List<String> STRING;
+
+    public Input() {
+	this.INT = new ArrayList<Integer>();
+	this.DOUBLE = new ArrayList<Double>();
+	this.STRING = new ArrayList<String>();
+   }
 }

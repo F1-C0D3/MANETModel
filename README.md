@@ -1,27 +1,28 @@
 # ManetModel
 
 ## Klement:
-- [ ] Flow implementation
-- [ ] Complete WaveFormPropagationModel 
+- [ ] WaveFormPropagationModel 
+  - [x] AffectedLinks
+  - [ ] Link capacity 
 - [x] IdealPropagationModel
 - [ ] Propagation model using Free-space path loss and Shannon–Hartley theorem for bitrate computation
  
- 
 ## Eike: 
-- [x] ConsoleApp
-  - [x] TreeParser (builds tree based command set)
-    - [x] XML export/import graphs
-    - [x] export graph as an image
-- [ ] Adjust/Fix Generators (limit number of connections based on given playground)
-- [ ] Add multiple colored paths to VisualGraph (paint colored lines under edges with different sizes to enable overlapping paths)
 
+###### Graph:
+- [ ] Generic edge weight
+
+###### GraphGenerator:
+- [ ] ManetNetwok mode (vertexDistance=edgeDistance, edgeCount determined by vertex positions)
+
+###### Panel:
+- [ ] Adjust scaling for different screen resolutions
+- [ ] Show temp. results 
 
 ## Ideas:
 - Results as Plots in JFrame
+  - Waht kind of results? How should they look like?
 - Units representing flow bitrate (mbit...)
-- Visualization
-  - Adjust playground from text input fields for graph generation
-  - Add 3D support (Game Engine)
   
 ## Discussion:
 - Utilization as property of Links

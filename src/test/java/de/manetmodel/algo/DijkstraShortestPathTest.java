@@ -34,13 +34,9 @@ public class DijkstraShortestPathTest {
 	 */
 
 	GraphGenerator<Node, Link> generator = new GraphGenerator<Node, Link>(manet.getGraph());
-	Playground pg = new Playground();
-	pg.height = new IntRange(0, 10000);
-	pg.width = new IntRange(0, 10000);
-	pg.edgeCount = new IntRange(2, 4);
-	pg.vertexCount = new IntRange(100, 100);
-	pg.edgeDistance = new DoubleRange(50d, 100d);
-	generator.generateRandomGraph(pg);
+	Playground playground = new Playground(1024, 768, new IntRange(100, 200),
+		new DoubleRange(50d, 100d), new IntRange(2, 4), new DoubleRange(50d, 100d));
+	generator.generateRandomGraph(playground);
 
 	manet.setRadioOccupationModel(new IdealRadioModel(100d, 125d, 2L));
 	manet.initialize();
@@ -52,6 +48,7 @@ public class DijkstraShortestPathTest {
 	DijkstraShortestPath<Node, Link> dijkstra = new DijkstraShortestPath<Node, Link>(manet.getGraph());
 	Path<Node, Link> shortestPath = dijkstra.compute(manet.getGraph().getFirstVertex(),
 		manet.getGraph().getLastVertex(), metric);
+	
 	ManetModelApp<Node, Link> app = new ManetModelApp<Node, Link>(manet.getGraph());
 	app.getPanel().getVisualGraph().addPath(shortestPath, Color.RED);
 	app.run();

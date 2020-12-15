@@ -2,53 +2,63 @@ package de.manetmodel.graph.viz;
 
 import java.awt.Color;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
 
 import de.manetmodel.graph.Edge;
 import de.manetmodel.graph.Path;
 import de.manetmodel.graph.Vertex;
+import de.manetmodel.graph.WeightedUndirectedGraph;
 import de.manetmodel.util.Tuple;
 
 public class VisualGraph<V extends Vertex, E extends Edge> {
 
-	Color playgroundColor;
-	Color vertexColor;
-	Color edgeColor;
-	
-	ArrayList<VisualVertex> vertices;
-	ArrayList<VisualEdge> edges;
+    private ArrayList<VisualVertex> vertices;
+    private ArrayList<VisualEdge> edges;
 
-	public VisualGraph(Color playgroundColor, Color vertexColor, Color edgeColor) {
-		this.playgroundColor = playgroundColor;
-		this.vertexColor = vertexColor;
-		this.edgeColor = edgeColor;
-		this.vertices = new ArrayList<VisualVertex>();
-		this.edges = new ArrayList<VisualEdge>();
+    public VisualGraph(WeightedUndirectedGraph<V, E> graph, VisualGraphMarkUp<E> markUp) {
+	this.vertices = new ArrayList<VisualVertex>();
+	this.edges = new ArrayList<VisualEdge>();
+
+	for (V vertex : graph.getVertices())
+	    this.vertices.add(new VisualVertex(vertex.getPostion(), markUp.getVertexBackgroundColor(),
+		    markUp.getVertexBorderColor(), Integer.toString(vertex.getID())));
+
+	for (E edge : graph.getEdges()) {
+	    Tuple<V, V> vertices = graph.getVerticesOf(edge);
+	    this.edges.add(new VisualEdge(vertices.getFirst().getPostion(), vertices.getSecond().getPostion(),
+		    markUp.getEdgeColor(), markUp.getEdgeTextBuilder().get(edge)));
 	}
-	
-	public void addVertex(VisualVertex vertex) {
-		this.vertices.add(vertex);
+    }
+
+    public List<VisualVertex> getVertices() {
+	return this.vertices;
+    }
+
+    public List<VisualEdge> getEdges() {
+	return this.edges;
+    }
+
+    public void addPath(Path<V, E> path) {
+	Random random = new Random();
+	Color visualPathColor = new Color(random.nextFloat(), random.nextFloat(), random.nextFloat());
+	this.addPath(path, visualPathColor);
+    }
+
+    public void addPath(Path<V, E> path, Color color) {
+
+	VisualPath visualPath = new VisualPath(color);
+
+	for (Tuple<E, V> edgeAndVertex : path) {
+
+	    E edge = edgeAndVertex.getFirst();
+	    V vertex = edgeAndVertex.getSecond();
+
+	    if (edge != null)
+		edges.get(edge.getID()).addVisualPath(visualPath);
+
+	    if (vertex != null)
+		vertices.get(vertex.getID()).addVisualPath(visualPath);
 	}
-	
-	public void addEdge(VisualEdge edge) {
-		this.edges.add(edge);
-	}
-	
-	public ArrayList<VisualVertex> getVertices() {
-		return this.vertices;
-	}
-	
-	public ArrayList<VisualEdge> getEdges() {
-		return this.edges;
-	}	
-	
-	public void addPath(Path<V,E> path, Color color) {
-		
-		for (Tuple<E, V> edgeAndVertex : path)
-		{
-			if (edgeAndVertex.getFirst() != null)
-				edges.get(edgeAndVertex.getFirst().getID()).setColor(color);
-			
-			vertices.get(edgeAndVertex.getSecond().getID()).setBackgroundColor(color);
-		}	
-	}
+    }
 }

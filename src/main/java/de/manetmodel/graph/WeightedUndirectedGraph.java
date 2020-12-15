@@ -1,14 +1,10 @@
 package de.manetmodel.graph;
 
-import java.awt.Color;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.function.Supplier;
 
-import de.manetmodel.graph.viz.VisualEdge;
-import de.manetmodel.graph.viz.VisualGraph;
-import de.manetmodel.graph.viz.VisualVertex;
 import de.manetmodel.util.Tuple;
 import jakarta.xml.bind.annotation.XmlAccessType;
 import jakarta.xml.bind.annotation.XmlAccessorType;
@@ -181,6 +177,13 @@ public class WeightedUndirectedGraph<V extends Vertex, E extends Edge> {
 	return vertices;
     }
 
+    public Boolean hasVertexInRadius(Coordinate coordinate, double radius) {
+	for (V vertex : this.vertices)
+	    if (this.getDistance(coordinate, vertex.getPostion()) <= radius)
+		return true;
+	return false;
+    }
+
     public V getFirstVertex() {
 	return this.vertices.get(0);
     }
@@ -195,6 +198,14 @@ public class WeightedUndirectedGraph<V extends Vertex, E extends Edge> {
 	    nextHops.add(this.vertices.get(edgeVertexMapping.getVertexID()));
 	return nextHops;
     }
+
+    public List<Tuple<E, V>> getNextPathsOf(V vertex) {
+	List<Tuple<E, V>> nextPaths = new ArrayList<Tuple<E, V>>();
+	for (EdgeVertexMapping edgeVertexMapping : vertexAdjacencies.get(vertex.getID()).getEdgeVertexMappings())
+	    nextPaths.add(new Tuple<E, V>(this.edges.get(edgeVertexMapping.getEdgeID()),
+		    this.vertices.get(edgeVertexMapping.getVertexID())));
+	return nextPaths;
+    }    
 
     public Iterator<V> vertexIterator() {
 	Iterator<V> iterator = new Iterator<V>() {
@@ -228,21 +239,6 @@ public class WeightedUndirectedGraph<V extends Vertex, E extends Edge> {
 	    }
 	};
 	return iterator;
-    }
-
-    public VisualGraph<V, E> toVisualGraph() {
-	VisualGraph<V, E> graph = new VisualGraph<V, E>(Color.WHITE, Color.LIGHT_GRAY, Color.BLACK);
-
-	for (V vertex : vertices)
-	    graph.addVertex(new VisualVertex(vertex.getID(), vertex.getPostion(), Color.LIGHT_GRAY, Color.BLACK));
-
-	for (E edge : edges) {
-	    Tuple<V, V> vertices = getVerticesOf(edge);
-	    graph.addEdge(new VisualEdge(edge.getID(), vertices.getFirst().getID(), vertices.getSecond().getID(),
-		    String.format("%d / %.2f", /* edge.getOccupation().size() */0, edge.getDistance()), Color.BLACK));
-	}
-
-	return graph;
     }
 
     public void clear() {
