@@ -10,76 +10,74 @@ import de.manetmodel.graph.WeightedUndirectedGraph;
 import de.manetmodel.network.radio.IRadioModel;
 import de.manetmodel.util.Tuple;
 
-public class Manet<N extends Node, L extends Link> {
-    private WeightedUndirectedGraph<N, L> graph;
+public class Manet<N extends Node, L extends Link> extends WeightedUndirectedGraph<N, L> {
     private IRadioModel radioModel;
 
-    public Manet(Supplier<N> vertexSupplier, Supplier<L> edgeSupplier) {
-	graph = new WeightedUndirectedGraph<N, L>(vertexSupplier, edgeSupplier);
+    public Manet(Supplier<N> vertexSupplier, Supplier<L> edgeSupplier, IRadioModel radioModel) {
+	super(vertexSupplier, edgeSupplier);
+	this.radioModel = radioModel;
     }
 
-//    public L addLing(N source, N sink) {
-//	L l = graph.addEdge(source, sink);
-//    }
+    @Override
+    public L addEdge(N source, N target) {
+	L e = super.addEdge(source, target);
 
-    public void initialize() {
-	this.networkConnectionSetup();
-    }
-
-    public void setGraph(WeightedUndirectedGraph<N, L> graph) {
-	this.graph = graph;
-    }
-
-    public WeightedUndirectedGraph<N, L> getGraph() {
-	return this.graph;
-    }
-
-    public void setRadioOccupationModel(IRadioModel radioOccupationModel) {
-	this.radioModel = radioOccupationModel;
-    }
-
-    public IRadioModel getRadioOccupationModel() {
-	return this.radioModel;
-    }
-
-    private void networkConnectionSetup() {
-
-	for (L l : graph.getEdges()) {
-	    Tuple<N, N> lt = graph.getVerticesOf(l);
-	    N se = lt.getFirst();
-	    N sk = lt.getSecond();
-	    double distance = graph.getDistance(se, sk);
+	for (L l : this.getEdges()) {
+	    Tuple<N, N> lt = this.getVerticesOf(l);
+	    N s1 = lt.getFirst();
+	    N s2 = lt.getSecond();
+	    double distance = this.getDistance(s1, s2);
 	    l.setTransmissionRate(radioModel.transmissionBitrate(distance));
 	    l.setReceptionPower(radioModel.receptionPower(distance));
 
-	    List<N> lListOfse = graph.getNextHopsOf(se);
-	    List<N> lListOfsk = graph.getNextHopsOf(sk);
+	    List<N> lListOfs1 = this.getNextHopsOf(s1);
+	    List<N> lListOfs2 = this.getNextHopsOf(s2);
 
-	    for (N n : lListOfse) {
-		l.setInReceptionRange(new HashSet<L>(graph.getEdgesOf(n)));
+	    for (N n : lListOfs1) {
+		l.setInReceptionRange(new HashSet<L>(this.getEdgesOf(n)));
 	    }
 
-	    for (N n : lListOfsk) {
-		l.setInReceptionRange(new HashSet<L>(graph.getEdgesOf(n)));
+	    for (N n : lListOfs2) {
+		l.setInReceptionRange(new HashSet<L>(this.getEdgesOf(n)));
 	    }
 
 	}
+	return e;
+    }
 
-	for (N v : graph.getVertices()) {
-	    Iterator<L> iterator = graph.getEdges().iterator();
+    @Override
+    public boolean addVertex(N vertex) {
+	boolean result = super.addVertex(vertex);
 
-	    while (iterator.hasNext()) {
-		L le = iterator.next();
-		N se = graph.getVerticesOf(le).getFirst();
-		N sk = graph.getVerticesOf(le).getSecond();
+	for (N v : this.getVertices()) {
+	    setLinksInterferedByL(v);
+	}
+	return result;
 
-		if (radioModel.interferencePresent(graph.getDistance(v, se))
-			&& radioModel.interferencePresent(graph.getDistance(v, sk))) {
-		    v.setInterferedLink(le);
-		}
+    }
 
+    @Override
+    public N addVertex(double x, double y) {
+	N n = super.addVertex(x, y);
+
+	for (N v : this.getVertices()) {
+	    setLinksInterferedByL(v);
+	}
+	return n;
+    }
+
+    private void setLinksInterferedByL(N n) {
+	Iterator<L> iterator = this.getEdges().iterator();
+
+	while (iterator.hasNext()) {
+	    L le = iterator.next();
+	    N se = this.getVerticesOf(le).getFirst();
+	    N sk = this.getVerticesOf(le).getSecond();
+
+	    if (radioModel.interferencePresent(this.getDistance(n, se))
+		    && radioModel.interferencePresent(this.getDistance(n, sk))) {
+		n.setInterferedLink(le);
 	    }
-
 	}
     }
 
@@ -105,7 +103,7 @@ public class Manet<N extends Node, L extends Link> {
 		Tuple<L, N> ln = fIter.next();
 		L l = ln.getFirst();
 		Set<L> uLinks = new HashSet<L>(l.inReceptionRange());
-		N se = graph.getTargetOf(ln.getSecond(), l);
+		N se = this.getTargetOf(ln.getSecond(), l);
 		uLinks.addAll(se.getInterferedLinks());
 		Iterator<L> pIter = uLinks.iterator();
 
@@ -126,7 +124,7 @@ public class Manet<N extends Node, L extends Link> {
 
     private void relaxL() {
 
-	for (L l : getGraph().getEdges()) {
+	for (L l : this.getEdges()) {
 	    l.setUtilization(0L);
 	}
     }

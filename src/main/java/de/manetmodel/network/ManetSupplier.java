@@ -5,7 +5,7 @@ import java.util.function.Supplier;
 public class ManetSupplier implements Supplier<Manet<Node, Link>> {
     @Override
     public Manet<Node, Link> get() {
-	return new Manet<Node, Link>(new ManetNodeSupplier(), new ManetLinkSupplier());
+	return new Manet<Node, Link>(new ManetNodeSupplier(), new ManetLinkSupplier(), null);
     }
 
     public static class ManetLinkSupplier implements Supplier<Link> {
