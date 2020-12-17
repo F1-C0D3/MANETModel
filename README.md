@@ -1,6 +1,6 @@
 # ManetModel
 
-![VisualGraph.png](https://github.com/eikeviehmann/ManetModel/blob/main/VisualGraph.png?raw=true)
+![VisualGraph.png](https://github.com/eikeviehmann/ManetModel/VisualGraph.png?raw=true)
 
 ## Klement:
 - [ ] WaveFormPropagationModel 
