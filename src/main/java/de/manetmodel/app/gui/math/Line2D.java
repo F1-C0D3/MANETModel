@@ -59,6 +59,10 @@ public class Line2D {
 	double y = this.m * x + this.b;
 	return new Point2D(x, y);
     }
+    
+    public double getLength() {
+	return Math.sqrt(Math.pow(p2.x() - p1.x(), 2) + Math.pow(p2.y() - p1.y(), 2));
+    }
 
     @Override
     public String toString() {

@@ -12,11 +12,11 @@ public class Point2D {
 	this.y = y;
     }
     
-    public Double x() {
+    public double x() {
 	return this.x;
     }
     
-    public Double y() {
+    public double y() {
 	return this.y;
     }  
     
