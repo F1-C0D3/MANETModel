@@ -18,6 +18,10 @@ public class Manet<N extends Node, L extends Link> {
 	graph = new WeightedUndirectedGraph<N, L>(vertexSupplier, edgeSupplier);
     }
 
+//    public L addLing(N source, N sink) {
+//	L l = graph.addEdge(source, sink);
+//    }
+
     public void initialize() {
 	this.networkConnectionSetup();
     }
@@ -45,8 +49,8 @@ public class Manet<N extends Node, L extends Link> {
 	    N se = lt.getFirst();
 	    N sk = lt.getSecond();
 	    double distance = graph.getDistance(se, sk);
-	    l.setTransmissionRate(radioModel.computeTransmissionBitrate(distance));
-	    l.setReceptionPower(radioModel.computeReception(distance));
+	    l.setTransmissionRate(radioModel.transmissionBitrate(distance));
+	    l.setReceptionPower(radioModel.receptionPower(distance));
 
 	    List<N> lListOfse = graph.getNextHopsOf(se);
 	    List<N> lListOfsk = graph.getNextHopsOf(sk);
