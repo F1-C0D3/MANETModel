@@ -7,7 +7,6 @@ import java.awt.Toolkit;
 import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
 
-import de.manetmodel.graph.WeightedUndirectedGraph;
 import de.manetmodel.graph.generator.GraphGenerator;
 import de.manetmodel.graph.viz.VisualEdgeDistanceTextBuilder;
 import de.manetmodel.graph.viz.VisualGraph;
@@ -17,7 +16,7 @@ import de.manetmodel.network.radio.IdealRadioModel;
 
 public class MyVizualManetGrid {
 
-    public Manet<Node, Link> manet;
+    public Manet<Node<Link>, Link<Link>> manet;
 
     VisualGraphPanel<Node, Link> panel;
 
@@ -30,13 +29,9 @@ public class MyVizualManetGrid {
 
     void createManetGrid(int numNodes) {
 	Manet<Node, Link> manet = new Manet<Node, Link>(new ManetSupplier.ManetNodeSupplier(),
-		new ManetSupplier.ManetLinkSupplier());
-	WeightedUndirectedGraph<Node, Link> graph = manet.getGraph();
-	GraphGenerator<Node, Link> generator = new GraphGenerator<Node, Link>(graph);
-	generator.generateGridGraph(10000, 10000, 100, numNodes);
-
-	manet.setRadioOccupationModel(new IdealRadioModel(100, 2000000L));
-	manet.initialize();
+		new ManetSupplier.ManetLinkSupplier(), new IdealRadioModel(100, 200000000L));
+	GraphGenerator<Node, Link> generator = new GraphGenerator<Node, Link>(manet);
+	generator.generateGridGraph(400, 500, 100, numNodes);
 
 	this.manet = manet;
 
@@ -45,7 +40,7 @@ public class MyVizualManetGrid {
     void toVisual() {
 	SwingUtilities.invokeLater(new Runnable() {
 	    public void run() {
-		VisualGraph<Node, Link> visualGraph = new VisualGraph<Node, Link>(manet.getGraph(),
+		VisualGraph<Node, Link> visualGraph = new VisualGraph<Node, Link>(manet,
 			new VisualGraphMarkUp<Link>(new VisualEdgeDistanceTextBuilder<Link>()));
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 		int windowWidth = (int) screenSize.getWidth() * 3 / 4;
