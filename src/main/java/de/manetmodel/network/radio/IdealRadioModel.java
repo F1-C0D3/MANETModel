@@ -16,7 +16,7 @@ public class IdealRadioModel implements IRadioModel {
     }
 
     @Override
-    public double computeReception(double distance) {
+    public double receptionPower(double distance) {
 	// TODO Auto-generated method stub
 	return 1d;
     }
@@ -29,7 +29,7 @@ public class IdealRadioModel implements IRadioModel {
     }
 
     @Override
-    public long computeTransmissionBitrate(double distance) {
+    public long transmissionBitrate(double distance) {
 	return transmissionBitrate;
     }
 }

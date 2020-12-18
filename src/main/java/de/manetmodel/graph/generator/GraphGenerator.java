@@ -25,15 +25,16 @@ public class GraphGenerator<V extends Vertex, E extends Edge> {
     }
 
     public int generateRandomGraph(Playground pg) {
-	
+
 	this.pg = pg;
 	int numberOfVertices = RandomNumbers.getRandom(pg.getVertexCount().min, pg.getVertexCount().max);
 	int vertexCount = 0;
 	int attemps = 0;
 	this.log.info(String.format("Playground: (%s)", pg.toString()));
-	
-	if(pg.getVertexDistance().min > pg.getEdgeDistance().max)
-	    this.log.warning("Given playground allows no edges because arguments have condition vertexDistance.min > edgeDistance.max");
+
+	if (pg.getVertexDistance().min > pg.getEdgeDistance().max)
+	    this.log.warning(
+		    "Given playground allows no edges because arguments have condition vertexDistance.min > edgeDistance.max");
 
 	// Add first vertex at a random position within playground
 	/*
@@ -71,7 +72,7 @@ public class GraphGenerator<V extends Vertex, E extends Edge> {
 		} else
 		    edgeCount = RandomNumbers.getRandom(pg.getEdgeCount().min, pg.getEdgeCount().max);
 
-		// 
+		//
 		currentVertex = newVertex;
 
 		// Generate edges
@@ -81,7 +82,7 @@ public class GraphGenerator<V extends Vertex, E extends Edge> {
 		// Take a random vertex from graph
 		currentVertex = graph.getVertex(RandomNumbers.getRandom(0, vertexCount));
 	    }
-	    
+
 	    attemps++;
 	}
 
@@ -153,17 +154,14 @@ public class GraphGenerator<V extends Vertex, E extends Edge> {
 
     public void generateGridGraph(int width, int height, double edgeDistance, int numberOfNodes) {
 
-	/*pg = new Playground(width, height, );
-	pg.height = new IntRange(0, height);
-	pg.width = new IntRange(0, width);
-	pg.edgeCount = new IntRange(4, 4);
-	pg.vertexCount = new IntRange(numberOfNodes, numberOfNodes);
-	pg.edgeDistance = new DoubleRange(edgeDistance, edgeDistance);
+	pg = new Playground(width, height, new IntRange(numberOfNodes, numberOfNodes), new DoubleRange(90d, 90d),
+		new IntRange(1, 4), new DoubleRange(100d, 100d));
 
 	V currentVertex = graph.addVertex(0, 0);
 	int vertexCount = 1;
 
-	while ((currentVertex.x() <= pg.width.max - pg.getEdgeDistance().max) && vertexCount < pg.getVertexCount().max) {
+	while ((currentVertex.x() <= pg.getWidth().max - pg.getEdgeDistance().max)
+		&& vertexCount < pg.getVertexCount().max) {
 	    if (vertexCount > 1) {
 		double xOffset = RandomNumbers.getRandom(pg.getEdgeDistance().min, pg.getEdgeDistance().max);
 		V newVertex = graph.addVertex(currentVertex.x() + xOffset, 0);
@@ -172,13 +170,14 @@ public class GraphGenerator<V extends Vertex, E extends Edge> {
 		this.generateEdges(newVertex, 4);
 	    }
 
-	    while (currentVertex.y() <= (pg.height.max - pg.getEdgeDistance().max) && vertexCount < pg.getVertexCount().max) {
+	    while (currentVertex.y() <= (pg.getHeight().max - pg.getEdgeDistance().max)
+		    && vertexCount < pg.getVertexCount().max) {
 		double yOffset = RandomNumbers.getRandom(pg.getEdgeDistance().min, pg.getEdgeDistance().max);
 		V newVertex = graph.addVertex(currentVertex.x(), currentVertex.y() + yOffset);
 		currentVertex = newVertex;
 		vertexCount++;
 		this.generateEdges(newVertex, 4);
 	    }
-	}*/
+	}
     }
 }
