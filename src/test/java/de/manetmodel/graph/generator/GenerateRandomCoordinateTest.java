@@ -3,7 +3,7 @@ package de.manetmodel.graph.generator;
 
 import org.junit.Test;
 
-import de.manetmodel.app.ManetModelApp;
+import de.manetmodel.app.VisualGraphApp;
 import de.manetmodel.graph.Coordinate;
 import de.manetmodel.graph.Edge;
 import de.manetmodel.graph.Playground;
@@ -40,7 +40,7 @@ public class GenerateRandomCoordinateTest {
 	    Vertex vertex = graph.addVertex(coordinate.x(), coordinate.y());	    
 	}
 	
-	ManetModelApp<Vertex, Edge> app = new ManetModelApp<Vertex, Edge>(graph);
+	VisualGraphApp<Vertex, Edge> app = new VisualGraphApp<Vertex, Edge>(graph);
 	app.run();
     }
 }

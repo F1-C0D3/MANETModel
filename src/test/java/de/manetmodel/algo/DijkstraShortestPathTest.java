@@ -5,7 +5,7 @@ import java.util.function.Function;
 
 import org.junit.Test;
 
-import de.manetmodel.app.ManetModelApp;
+import de.manetmodel.app.VisualGraphApp;
 import de.manetmodel.graph.Path;
 import de.manetmodel.graph.Playground;
 import de.manetmodel.graph.Playground.DoubleRange;
@@ -49,7 +49,7 @@ public class DijkstraShortestPathTest {
 	Path<Node, Link> shortestPath = dijkstra.compute(manet.getGraph().getFirstVertex(),
 		manet.getGraph().getLastVertex(), metric);
 	
-	ManetModelApp<Node, Link> app = new ManetModelApp<Node, Link>(manet.getGraph());
+	VisualGraphApp<Node, Link> app = new VisualGraphApp<Node, Link>(manet.getGraph());
 	app.getPanel().getVisualGraph().addPath(shortestPath, Color.RED);
 	app.run();
 
