@@ -30,13 +30,13 @@ import de.manetmodel.app.gui.visualgraph.VisualPath;
 import de.manetmodel.app.gui.visualgraph.VisualVertex;
 import de.manetmodel.graph.Coordinate;
 import de.manetmodel.graph.Edge;
-import de.manetmodel.graph.Playground;
 import de.manetmodel.graph.Vertex;
 import de.manetmodel.graph.WeightedUndirectedGraph;
 import de.manetmodel.graph.WeightedUndirectedGraphSupplier;
-import de.manetmodel.graph.Playground.DoubleRange;
-import de.manetmodel.graph.Playground.IntRange;
 import de.manetmodel.graph.generator.GraphGenerator;
+import de.manetmodel.graph.generator.GraphProperties.DoubleRange;
+import de.manetmodel.graph.generator.GraphProperties.IntRange;
+import de.manetmodel.graph.generator.NetworkGraphProperties;
 import de.manetmodel.util.RandomNumbers;
 
 public class VisualGraphPanel<V extends Vertex, E extends Edge> extends JPanel {
@@ -340,10 +340,8 @@ public class VisualGraphPanel<V extends Vertex, E extends Edge> extends JPanel {
 			new WeightedUndirectedGraphSupplier.EdgeSupplier());
 
 		GraphGenerator<Vertex, Edge> generator = new GraphGenerator<Vertex, Edge>(graph);
-		Playground playground = new Playground(2000, 2000, new IntRange(150, 200), new DoubleRange(100d, 150d),
-			new IntRange(2, 4), new DoubleRange(100d, 150));
-
-		generator.generateRandomGraph(playground);
+		NetworkGraphProperties properties = new NetworkGraphProperties(1024, 768, new IntRange(100, 200), new DoubleRange(50d, 100d), 100);
+		generator.generateNetworkGraph(properties);
 
 		VisualGraph<Vertex, Edge> visualGraph = new VisualGraph<Vertex, Edge>(graph,
 			new VisualGraphMarkUp<Edge>(new VisualEdgeDistanceTextBuilder<Edge>()));

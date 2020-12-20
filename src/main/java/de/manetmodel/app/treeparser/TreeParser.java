@@ -1,10 +1,12 @@
 package de.manetmodel.app.treeparser;
 
 import java.util.Scanner;
+import java.util.function.Consumer;
 
 import de.manetmodel.util.Tuple;
 
 class State {
+    
     Option option;
     Input input;
 
@@ -22,6 +24,7 @@ public class TreeParser {
 
     private RootOption options;
     private State state;
+    Consumer<String> outputListener;
 
     static String delimiter = " ";
 
@@ -60,6 +63,15 @@ public class TreeParser {
     private Boolean hasState() {
 	return state != null;
     }
+    
+    public void addOutputListener(Consumer<String> outputListener) {
+	this.outputListener = outputListener;
+    }
+    
+    public void sendMessage(String string) {
+	if(this.outputListener != null)
+	    outputListener.accept(string);
+    }
 
     public void consume(String string, Option option, Input input) {
 
@@ -70,7 +82,7 @@ public class TreeParser {
 
 	if (string.isEmpty()) {
 	    if (option.requiresOption()) {
-		System.out.println(option.getOptions().toString());
+		sendMessage(option.getOptions().toString());
 		this.setState(option, input);
 		return;
 	    } else

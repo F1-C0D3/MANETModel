@@ -8,7 +8,6 @@ import java.awt.event.WindowEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.util.Scanner;
 
 import javax.imageio.ImageIO;
 import javax.swing.JFrame;
@@ -16,7 +15,6 @@ import javax.swing.JFrame;
 import de.manetmodel.algo.DijkstraShortestPath;
 import de.manetmodel.algo.RandomPath;
 import de.manetmodel.app.gui.VisualGraphFrame;
-import de.manetmodel.app.gui.VisualGraphPanel;
 import de.manetmodel.app.gui.visualgraph.VisualEdgeDistanceTextBuilder;
 import de.manetmodel.app.gui.visualgraph.VisualGraph;
 import de.manetmodel.app.gui.visualgraph.VisualGraphMarkUp;
@@ -33,13 +31,14 @@ import de.manetmodel.app.treeparser.ValueOption;
 import de.manetmodel.app.treeparser.ValueType;
 import de.manetmodel.graph.Edge;
 import de.manetmodel.graph.Path;
-import de.manetmodel.graph.Playground;
 import de.manetmodel.graph.Vertex;
 import de.manetmodel.graph.WeightedUndirectedGraph;
 import de.manetmodel.graph.WeightedUndirectedGraphSupplier;
 import de.manetmodel.graph.generator.GraphGenerator;
-import de.manetmodel.graph.Playground.DoubleRange;
-import de.manetmodel.graph.Playground.IntRange;
+import de.manetmodel.graph.generator.GraphProperties.DoubleRange;
+import de.manetmodel.graph.generator.GraphProperties.IntRange;
+import de.manetmodel.graph.generator.GridGraphProperties;
+import de.manetmodel.graph.generator.NetworkGraphProperties;
 import de.manetmodel.graph.io.XMLExporter;
 import de.manetmodel.graph.io.XMLImporter;
 import de.manetmodel.util.RandomNumbers;
@@ -66,16 +65,22 @@ public class VisualGraphApp<V extends Vertex, E extends Edge> {
 		new Function(this::createEmpty), new Requirement(true));
 	create.add(empty);
 
-	// create random 100
+	// create network 
+	KeyOption network = new KeyOption(new Key("network"), new Info("create a network graph"), new Requirement(true));
+	network.add(new ValueOption(new Value(ValueType.INT), new Info("number of vertices"),
+		new Function(this::createNetworkGraph), new Requirement(true)));
+	create.add(network);
+	
+	// create random 
 	KeyOption random = new KeyOption(new Key("random"), new Info("create a random graph"), new Requirement(true));
 	random.add(new ValueOption(new Value(ValueType.INT), new Info("number of vertices"),
-		new Function(this::createRandom), new Requirement(true)));
+		new Function(this::createRandomGraph), new Requirement(true)));
 	create.add(random);
 
-	// create grid 100
+	// create grid 
 	KeyOption grid = new KeyOption(new Key("grid"), new Info("create a grid graph"), new Requirement(true));
 	grid.add(new ValueOption(new Value(ValueType.INT), new Info("number of vertices"),
-		new Function(this::createGrid), new Requirement(true)));
+		new Function(this::createGridGraph), new Requirement(true)));
 	create.add(grid);
 
 	parser.addOption(create);
@@ -101,6 +106,7 @@ public class VisualGraphApp<V extends Vertex, E extends Edge> {
 	vertex.add(new ValueOption(new Value(ValueType.DOUBLE), new Info("x"), new Requirement(true), new ValueOption(
 		new Value(ValueType.DOUBLE), new Info("y"), new Function(this::addVertex), new Requirement(true))));
 	add.add(vertex);
+
 	// add edge
 	KeyOption edge = new KeyOption(new Key("edge"), new Info("add a new edge to graph"), new Requirement(true));
 	edge.add(new ValueOption(new Value(ValueType.INT), new Info("source ID"), new Requirement(true),
@@ -163,10 +169,29 @@ public class VisualGraphApp<V extends Vertex, E extends Edge> {
 	/* clear */
 	KeyOption clear = new KeyOption(new Key("clear"), new Info("clear terminal"), new Function(this::clear));
 	parser.addOption(clear);
-	
+
 	/* exit */
 	KeyOption exit = new KeyOption(new Key("exit"), new Info("close app"), new Function(this::exit));
 	parser.addOption(exit);
+
+	/* terminal */
+
+	KeyOption terminal = new KeyOption(new Key("terminal"), new Info("change terminal properties"),
+		new Requirement(true));
+
+	KeyOption font = new KeyOption(new Key("font"), new Info("font"), new Requirement(true));
+	KeyOption size = new KeyOption(new Key("size"), new Info("size"), new Requirement(true));
+	size.add(new ValueOption(new Value(ValueType.INT), new Info("value"), new Function(this::setTerminalFontSize)));
+	font.add(size);
+
+	KeyOption color = new KeyOption(new Key("color"), new Info("color"), new Requirement(true));
+	color.add(new ValueOption(new Value(ValueType.STRING), new Info("value"),
+		new Function(this::setTerminalFontColor)));
+	font.add(color);
+
+	terminal.add(font);
+
+	parser.addOption(terminal);
     }
 
     public static void main(String[] args) {
@@ -177,16 +202,28 @@ public class VisualGraphApp<V extends Vertex, E extends Edge> {
 
 	VisualGraphApp<Vertex, Edge> app = new VisualGraphApp<Vertex, Edge>(graph);
     }
+    
+    public void acceptTerminaPanelCommand(String command) {
+	treeParser.consume(command, treeParser.getOptions(), new Input());
+    }
+    
+    public void acceptTreeParserMessage(String message) {
+	frame.getTerminal().appendText(message);
+    }
 
     public void initialize() {
 
-	this.treeParser = new TreeParser();
+	treeParser = new TreeParser();
+	treeParser.addOutputListener(this::acceptTreeParserMessage);
 	buildOptions(treeParser);
 
 	GraphGenerator<V, E> generator = new GraphGenerator<V, E>(graph);
-	Playground playground = new Playground(1024, 768, new IntRange(200, 300), new DoubleRange(50d, 100d),
-		new IntRange(2, 4), new DoubleRange(50d, 100d));
-	generator.generateRandomGraph(playground);
+	NetworkGraphProperties properties = new NetworkGraphProperties(1024, 768, new IntRange(100, 200), new DoubleRange(50d, 100d), 100);
+	generator.generateNetworkGraph(properties);
+
+	// GridGraphProperties properties = new GridGraphProperties(1000, 1000, 100,
+	// 200);
+	// generator.generateGridGraph(properties);
 
 	VisualGraph<V, E> visualGraph = new VisualGraph<V, E>(graph,
 		new VisualGraphMarkUp<E>(new VisualEdgeDistanceTextBuilder<E>()));
@@ -205,15 +242,17 @@ public class VisualGraphApp<V extends Vertex, E extends Edge> {
 	frame.pack();
 	frame.setLocationRelativeTo(null);
 	frame.setVisible(true);
+	frame.getTerminal().addInputListener(this::acceptTerminaPanelCommand);
+	frame.getTerminal().setText("ManetModel v1.0\n\n");
 
-	frame.addTerminalInputListener(this::acceptCommand);
-	
-	frame.getTerminalPanel().addMessage("VisualGraphApp v1.0\n----------------------------------------------\n");
-	frame.getTerminalPanel().addMessage("Press \"F1\" to show/hide terminal, type \"help\" for assistance \n\n");
     }
 
-    public void acceptCommand(String command) {
-	treeParser.consume(command, treeParser.getOptions(), new Input());
+    private void setTerminalFontSize(Input input) {
+	frame.getTerminal().getTextArea().setFont(new Font("Monospaced", Font.PLAIN, input.INT.get(0)));
+    }
+
+    private void setTerminalFontColor(Input input) {
+	frame.getTerminal().getTextArea().setForeground(null);
     }
 
     private void createEmpty(Input input) {
@@ -223,38 +262,55 @@ public class VisualGraphApp<V extends Vertex, E extends Edge> {
 	frame.getVisualGraphPanel().repaint();
     }
 
-    private void createRandom(Input input) {
+    private void createNetworkGraph(Input input) {
+	graph.clear();
+	GraphGenerator<V, E> generator = new GraphGenerator<V, E>(graph);
+	NetworkGraphProperties properties = new NetworkGraphProperties(1024, 768, new IntRange(input.INT.get(0), input.INT.get(0)), new DoubleRange(50d, 100d), 100);
+	generator.generateNetworkGraph(properties);
+	
+	frame.getVisualGraphPanel().updateVisualGraph(
+		new VisualGraph<V, E>(graph, new VisualGraphMarkUp<E>(new VisualEdgeDistanceTextBuilder<E>())));
+	frame.getVisualGraphPanel().repaint();
+    }
 
+    private void createRandomGraph(Input input) {
 	graph.clear();
 
-	Playground playground = new Playground(1024, 768, new IntRange(input.INT.get(0), input.INT.get(0)),
-		new DoubleRange(50d, 100d), new IntRange(2, 4), new DoubleRange(50d, 100d));
+	NetworkGraphProperties properties = new NetworkGraphProperties(1024, 768, new IntRange(input.INT.get(0), input.INT.get(0)),
+		new DoubleRange(50d, 100d), 75);
 
 	GraphGenerator<V, E> generator = new GraphGenerator<V, E>(this.graph);
-	generator.generateRandomGraph(playground);
+	generator.generateNetworkGraph(properties);
 
 	frame.getVisualGraphPanel().updateVisualGraph(
 		new VisualGraph<V, E>(graph, new VisualGraphMarkUp<E>(new VisualEdgeDistanceTextBuilder<E>())));
 	frame.getVisualGraphPanel().repaint();
     }
 
-    private void createGrid(Input input) {
-	GraphGenerator<V, E> generator = new GraphGenerator<V, E>(graph);
-	generator.generateGridGraph(1000, 1000, 50, 200);
-	/*
-	 * panel.updateVisualGraph( new VisualGraph<V, E>(graph, new
-	 * VisualGraphMarkUp<E>(new VisualEdgeDistanceTextBuilder<E>())));
-	 * panel.repaint();
-	 */
-	frame.toFront();
+    private void createGridGraph(Input input) {
+	graph.clear();
+
+	GraphGenerator<V, E> generator = new GraphGenerator<V, E>(this.graph);
+	GridGraphProperties properties = new GridGraphProperties(1000, 1000, 100, 200);
+	generator.generateGridGraph(properties);
+
+	frame.getVisualGraphPanel().updateVisualGraph(
+		new VisualGraph<V, E>(graph, new VisualGraphMarkUp<E>(new VisualEdgeDistanceTextBuilder<E>())));
+	frame.getVisualGraphPanel().repaint();
     }
 
     private void addVertex(Input input) {
-
+	graph.addVertex(input.DOUBLE.get(0), input.DOUBLE.get(1));
+	frame.getVisualGraphPanel().updateVisualGraph(
+		new VisualGraph<V, E>(graph, new VisualGraphMarkUp<E>(new VisualEdgeDistanceTextBuilder<E>())));
+	frame.getVisualGraphPanel().repaint();
     }
 
     private void addEdge(Input input) {
-
+	graph.addEdge(graph.getVertex(input.INT.get(0)), graph.getVertex(input.INT.get(1)));
+	frame.getVisualGraphPanel().updateVisualGraph(
+		new VisualGraph<V, E>(graph, new VisualGraphMarkUp<E>(new VisualEdgeDistanceTextBuilder<E>())));
+	frame.getVisualGraphPanel().repaint();
     }
 
     private void addShortestPath(Input input) {
@@ -312,7 +368,7 @@ public class VisualGraphApp<V extends Vertex, E extends Edge> {
     }
 
     private void help(Input input) {
-	this.frame.getTerminalPanel().addMessage(treeParser.getOptions().toString());
+	this.frame.getTerminal().appendText(treeParser.getOptions().toString());
     }
 
     private void helpCommand(Input input) {
@@ -322,9 +378,9 @@ public class VisualGraphApp<V extends Vertex, E extends Edge> {
     }
 
     private void clear(Input input) {
-	frame.getTerminalPanel().clear();
+	frame.getTerminal().clear();
     }
-    
+
     private void exit(Input input) {
 	frame.dispatchEvent(new WindowEvent(frame, WindowEvent.WINDOW_CLOSING));
     }

@@ -8,16 +8,10 @@ import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
-import java.util.function.Consumer;
 
 import javax.swing.AbstractAction;
-import javax.swing.ActionMap;
-import javax.swing.InputMap;
 import javax.swing.JComponent;
 import javax.swing.JFrame;
-import javax.swing.JPanel;
 import javax.swing.KeyStroke;
 import javax.swing.OverlayLayout;
 import javax.swing.SwingUtilities;
@@ -27,18 +21,18 @@ import de.manetmodel.app.gui.visualgraph.VisualEdgeDistanceTextBuilder;
 import de.manetmodel.app.gui.visualgraph.VisualGraph;
 import de.manetmodel.app.gui.visualgraph.VisualGraphMarkUp;
 import de.manetmodel.graph.Edge;
-import de.manetmodel.graph.Playground;
 import de.manetmodel.graph.Vertex;
 import de.manetmodel.graph.WeightedUndirectedGraph;
 import de.manetmodel.graph.WeightedUndirectedGraphSupplier;
-import de.manetmodel.graph.Playground.DoubleRange;
-import de.manetmodel.graph.Playground.IntRange;
 import de.manetmodel.graph.generator.GraphGenerator;
+import de.manetmodel.graph.generator.GraphProperties.DoubleRange;
+import de.manetmodel.graph.generator.GraphProperties.IntRange;
+import de.manetmodel.graph.generator.NetworkGraphProperties;
 import de.manetmodel.util.RandomNumbers;
 
 public class VisualGraphFrame<V extends Vertex, E extends Edge> extends JFrame {
 
-    TerminalPanel terminalPanel;
+    Terminal terminal;
     VisualGraphPanel<V, E> visualGraphPanel;
 
     public VisualGraphFrame(VisualGraph<V, E> graph) {
@@ -46,75 +40,58 @@ public class VisualGraphFrame<V extends Vertex, E extends Edge> extends JFrame {
 	this.setLayout(new BorderLayout());
 
 	this.visualGraphPanel = new VisualGraphPanel<V, E>(graph);
-	this.visualGraphPanel.setFont(new Font("Consolas", Font.PLAIN, 16));
+	this.visualGraphPanel.setFont(new Font("NotoSans", Font.PLAIN, 16));
 	this.visualGraphPanel.setLayout(new OverlayLayout(this.visualGraphPanel));
-
-	this.terminalPanel = new TerminalPanel();
-	this.terminalPanel.setFont(new Font("Consolas", Font.PLAIN, 16));
-	this.terminalPanel.setOpaque(false);
-	this.terminalPanel.setBackground(new Color(0, 0, 0, 100));
-	this.terminalPanel.setVisible(true);
-	this.terminalPanel.addComponentListener(new ComponentAdapter() {
+	this.terminal = new Terminal(new Font("Monospace", Font.PLAIN, 20), Color.WHITE);
+	this.terminal.setFont(new Font("Consolas", Font.PLAIN, 16));
+	this.terminal.setOpaque(false);
+	this.terminal.setBackground(new Color(0, 0, 0, 100));
+	this.terminal.setVisible(true);
+	this.terminal.addComponentListener(new ComponentAdapter() {
 	    public void componentShown(ComponentEvent e) {
-		terminalPanel.textArea.requestFocus();
+		terminal.textArea.requestFocus();
 		;
 	    }
 	});
 
-	this.visualGraphPanel.add(this.terminalPanel);
-
+	this.visualGraphPanel.add(this.terminal);
 	this.add(visualGraphPanel);
 
 	this.visualGraphPanel.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke("F1"),
-		TerminalActions.TOGGLE);
-	this.visualGraphPanel.getActionMap().put(TerminalActions.TOGGLE, new TerminalAction(TerminalActions.TOGGLE));
-
-	this.visualGraphPanel.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke("UP"),
-		TerminalActions.UP);
-	this.visualGraphPanel.getActionMap().put(TerminalActions.UP, new TerminalAction(TerminalActions.UP));
-
-	this.visualGraphPanel.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke("DOWN"),
-		TerminalActions.DOWN);
-	this.visualGraphPanel.getActionMap().put(TerminalActions.DOWN, new TerminalAction(TerminalActions.DOWN));
+		VisualGraphFrameActions.TOGGLE_TERMINAL);
+	this.visualGraphPanel.getActionMap().put(VisualGraphFrameActions.TOGGLE_TERMINAL,
+		new VisualGraphFrameAction(VisualGraphFrameActions.TOGGLE_TERMINAL));
     }
-    
-    public VisualGraphPanel<V,E> getVisualGraphPanel(){
+
+    public VisualGraphPanel<V, E> getVisualGraphPanel() {
 	return this.visualGraphPanel;
     }
-    
-    public TerminalPanel getTerminalPanel() {
-	return this.terminalPanel;
-    }
-    
-    public void addTerminalInputListener(Consumer<String> terminalInputListener) {
-	this.terminalPanel.addInputListener(terminalInputListener);
+
+    public Terminal getTerminal() {
+	return this.terminal;
     }
 
-    private enum TerminalActions {
-	TOGGLE, UP, DOWN;
+    private enum VisualGraphFrameActions {
+	TOGGLE_TERMINAL;
     }
 
-    private class TerminalAction extends AbstractAction {
+    private class VisualGraphFrameAction extends AbstractAction {
 
-	TerminalActions action;
+	VisualGraphFrameActions action;
 
-	TerminalAction(TerminalActions action) {
+	public VisualGraphFrameAction(VisualGraphFrameActions action) {
 	    this.action = action;
 	}
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
 	    switch (action) {
-	    case TOGGLE:
-		if (terminalPanel.isVisible()) {
-		    terminalPanel.setVisible(false);
+	    case TOGGLE_TERMINAL:
+		if (terminal.isVisible()) {
+		    terminal.setVisible(false);
 		} else {
-		    terminalPanel.setVisible(true);
+		    terminal.setVisible(true);
 		}
-		break;
-	    case UP:
-		break;
-	    case DOWN:
 		break;
 	    default:
 		break;
@@ -131,10 +108,9 @@ public class VisualGraphFrame<V extends Vertex, E extends Edge> extends JFrame {
 			new WeightedUndirectedGraphSupplier.EdgeSupplier());
 
 		GraphGenerator<Vertex, Edge> generator = new GraphGenerator<Vertex, Edge>(graph);
-		Playground playground = new Playground(2000, 2000, new IntRange(150, 200), new DoubleRange(100d, 150d),
-			new IntRange(2, 4), new DoubleRange(100d, 150));
-
-		generator.generateRandomGraph(playground);
+		NetworkGraphProperties properties = new NetworkGraphProperties(1024, 768, new IntRange(100, 200),
+			new DoubleRange(50d, 100d), 100);
+		generator.generateNetworkGraph(properties);
 
 		VisualGraph<Vertex, Edge> visualGraph = new VisualGraph<Vertex, Edge>(graph,
 			new VisualGraphMarkUp<Edge>(new VisualEdgeDistanceTextBuilder<Edge>()));
