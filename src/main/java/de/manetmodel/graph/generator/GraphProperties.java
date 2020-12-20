@@ -1,8 +1,8 @@
-package de.manetmodel.graph;
+package de.manetmodel.graph.generator;
 
 import java.text.DecimalFormat;
 
-public class Playground {
+public class GraphProperties {
     private final IntRange width;
     private final IntRange height;
     private final IntRange vertexCount;
@@ -10,10 +10,9 @@ public class Playground {
     private final IntRange edgeCount;
     private final DoubleRange edgeDistance;
 
-    public Playground(int width, int height, IntRange vertexCount, DoubleRange vertexDistance, IntRange edgeCount,
-	    DoubleRange edgeDistance) {
+    public GraphProperties(int width, int height, IntRange vertexCount, DoubleRange vertexDistance, IntRange edgeCount, DoubleRange edgeDistance) {
 	this.width = new IntRange(0, width);
-	this.height = new IntRange(0, width);
+	this.height = new IntRange(0, height);
 	this.vertexCount = vertexCount;
 	this.vertexDistance = vertexDistance;
 	this.edgeCount = edgeCount;
