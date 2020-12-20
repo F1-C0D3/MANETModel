@@ -15,7 +15,7 @@
 - [ ] Generic edge weight
 
 ###### GraphGenerator:
-- [ ] ManetNetwok mode (vertexDistance=edgeDistance, edgeCount determined by vertex positions)
+- [x] ManetNetwok mode
 
 ###### Panel:
 - [ ] Adjust scaling for different screen resolutions
@@ -23,7 +23,6 @@
 
 ## Ideas:
 - Results as Plots in JFrame
-  - Waht kind of results? How should they look like?
 - Units representing flow bitrate (mbit...)
   
 ## Discussion:
