@@ -5,7 +5,7 @@ import java.util.function.Function;
 
 import org.junit.Test;
 
-import de.manetmodel.app.ManetModelApp;
+import de.manetmodel.app.VisualGraphApp;
 import de.manetmodel.graph.Path;
 import de.manetmodel.graph.Playground;
 import de.manetmodel.graph.Playground.DoubleRange;
@@ -35,10 +35,18 @@ public class DijkstraShortestPathTest {
 	    return 1d;
 	};
 
+<<<<<<< HEAD
 	DijkstraShortestPath<Node, Link> dijkstra = new DijkstraShortestPath<Node, Link>(manet);
 	Path<Node, Link> shortestPath = dijkstra.compute(manet.getFirstVertex(), manet.getLastVertex(), metric);
 
 	ManetModelApp<Node, Link> app = new ManetModelApp<Node, Link>(manet);
+=======
+	DijkstraShortestPath<Node, Link> dijkstra = new DijkstraShortestPath<Node, Link>(manet.getGraph());
+	Path<Node, Link> shortestPath = dijkstra.compute(manet.getGraph().getFirstVertex(),
+		manet.getGraph().getLastVertex(), metric);
+	
+	VisualGraphApp<Node, Link> app = new VisualGraphApp<Node, Link>(manet.getGraph());
+>>>>>>> d9c688037001abd4091369b19994122730eaa6ab
 	app.getPanel().getVisualGraph().addPath(shortestPath, Color.RED);
 	app.run();
 

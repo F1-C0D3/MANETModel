@@ -8,13 +8,16 @@ import java.awt.event.WindowEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.util.Scanner;
 
 import javax.imageio.ImageIO;
 import javax.swing.JFrame;
 
 import de.manetmodel.algo.DijkstraShortestPath;
 import de.manetmodel.algo.RandomPath;
+import de.manetmodel.app.gui.VisualGraphFrame;
+import de.manetmodel.app.gui.visualgraph.VisualEdgeDistanceTextBuilder;
+import de.manetmodel.app.gui.visualgraph.VisualGraph;
+import de.manetmodel.app.gui.visualgraph.VisualGraphMarkUp;
 import de.manetmodel.app.treeparser.Function;
 import de.manetmodel.app.treeparser.Info;
 import de.manetmodel.app.treeparser.Input;
@@ -28,39 +31,28 @@ import de.manetmodel.app.treeparser.ValueOption;
 import de.manetmodel.app.treeparser.ValueType;
 import de.manetmodel.graph.Edge;
 import de.manetmodel.graph.Path;
-import de.manetmodel.graph.Playground;
 import de.manetmodel.graph.Vertex;
 import de.manetmodel.graph.WeightedUndirectedGraph;
 import de.manetmodel.graph.WeightedUndirectedGraphSupplier;
 import de.manetmodel.graph.generator.GraphGenerator;
-import de.manetmodel.graph.Playground.DoubleRange;
-import de.manetmodel.graph.Playground.IntRange;
+import de.manetmodel.graph.generator.GraphProperties.DoubleRange;
+import de.manetmodel.graph.generator.GraphProperties.IntRange;
+import de.manetmodel.graph.generator.GridGraphProperties;
+import de.manetmodel.graph.generator.NetworkGraphProperties;
 import de.manetmodel.graph.io.XMLExporter;
 import de.manetmodel.graph.io.XMLImporter;
-import de.manetmodel.graph.viz.VisualEdgeDistanceTextBuilder;
-import de.manetmodel.graph.viz.VisualGraph;
-import de.manetmodel.graph.viz.VisualGraphMarkUp;
-import de.manetmodel.graph.viz.VisualGraphPanel;
 import de.manetmodel.util.RandomNumbers;
 import de.manetmodel.util.Tuple;
 
-public class ManetModelApp<V extends Vertex, E extends Edge> {
+public class VisualGraphApp<V extends Vertex, E extends Edge> {
 
-    JFrame frame;
-    // ManetModelFrame frame;
-    WeightedUndirectedGraph<V, E> graph;
-    VisualGraphPanel<V, E> panel;
-    TreeParser treeParser;
+    private VisualGraphFrame<V, E> frame;
+    private WeightedUndirectedGraph<V, E> graph;
+    private TreeParser treeParser;
 
-    public ManetModelApp(WeightedUndirectedGraph<V, E> graph) {
+    public VisualGraphApp(WeightedUndirectedGraph<V, E> graph) {
 	this.graph = graph;
 	this.initialize();
-    }
-
-    static boolean EXIT = false;
-
-    public VisualGraphPanel<V, E> getPanel() {
-	return this.panel;
     }
 
     public void buildOptions(TreeParser parser) {
@@ -73,16 +65,22 @@ public class ManetModelApp<V extends Vertex, E extends Edge> {
 		new Function(this::createEmpty), new Requirement(true));
 	create.add(empty);
 
-	// create random 100
+	// create network 
+	KeyOption network = new KeyOption(new Key("network"), new Info("create a network graph"), new Requirement(true));
+	network.add(new ValueOption(new Value(ValueType.INT), new Info("number of vertices"),
+		new Function(this::createNetworkGraph), new Requirement(true)));
+	create.add(network);
+	
+	// create random 
 	KeyOption random = new KeyOption(new Key("random"), new Info("create a random graph"), new Requirement(true));
 	random.add(new ValueOption(new Value(ValueType.INT), new Info("number of vertices"),
-		new Function(this::createRandom), new Requirement(true)));
+		new Function(this::createRandomGraph), new Requirement(true)));
 	create.add(random);
 
-	// create grid 100
+	// create grid 
 	KeyOption grid = new KeyOption(new Key("grid"), new Info("create a grid graph"), new Requirement(true));
 	grid.add(new ValueOption(new Value(ValueType.INT), new Info("number of vertices"),
-		new Function(this::createGrid), new Requirement(true)));
+		new Function(this::createGridGraph), new Requirement(true)));
 	create.add(grid);
 
 	parser.addOption(create);
@@ -108,6 +106,7 @@ public class ManetModelApp<V extends Vertex, E extends Edge> {
 	vertex.add(new ValueOption(new Value(ValueType.DOUBLE), new Info("x"), new Requirement(true), new ValueOption(
 		new Value(ValueType.DOUBLE), new Info("y"), new Function(this::addVertex), new Requirement(true))));
 	add.add(vertex);
+
 	// add edge
 	KeyOption edge = new KeyOption(new Key("edge"), new Info("add a new edge to graph"), new Requirement(true));
 	edge.add(new ValueOption(new Value(ValueType.INT), new Info("source ID"), new Requirement(true),
@@ -167,9 +166,32 @@ public class ManetModelApp<V extends Vertex, E extends Edge> {
 		new Function(this::toImage), new Requirement(true)));
 	parser.addOption(toImage);
 
+	/* clear */
+	KeyOption clear = new KeyOption(new Key("clear"), new Info("clear terminal"), new Function(this::clear));
+	parser.addOption(clear);
+
 	/* exit */
 	KeyOption exit = new KeyOption(new Key("exit"), new Info("close app"), new Function(this::exit));
 	parser.addOption(exit);
+
+	/* terminal */
+
+	KeyOption terminal = new KeyOption(new Key("terminal"), new Info("change terminal properties"),
+		new Requirement(true));
+
+	KeyOption font = new KeyOption(new Key("font"), new Info("font"), new Requirement(true));
+	KeyOption size = new KeyOption(new Key("size"), new Info("size"), new Requirement(true));
+	size.add(new ValueOption(new Value(ValueType.INT), new Info("value"), new Function(this::setTerminalFontSize)));
+	font.add(size);
+
+	KeyOption color = new KeyOption(new Key("color"), new Info("color"), new Requirement(true));
+	color.add(new ValueOption(new Value(ValueType.STRING), new Info("value"),
+		new Function(this::setTerminalFontColor)));
+	font.add(color);
+
+	terminal.add(font);
+
+	parser.addOption(terminal);
     }
 
     public static void main(String[] args) {
@@ -178,25 +200,30 @@ public class ManetModelApp<V extends Vertex, E extends Edge> {
 		new WeightedUndirectedGraphSupplier.VertexSupplier(),
 		new WeightedUndirectedGraphSupplier.EdgeSupplier());
 
-	ManetModelApp<Vertex, Edge> app = new ManetModelApp<Vertex, Edge>(graph);
-
-	app.run();
+	VisualGraphApp<Vertex, Edge> app = new VisualGraphApp<Vertex, Edge>(graph);
+    }
+    
+    public void acceptTerminaPanelCommand(String command) {
+	treeParser.consume(command, treeParser.getOptions(), new Input());
+    }
+    
+    public void acceptTreeParserMessage(String message) {
+	frame.getTerminal().appendText(message);
     }
 
     public void initialize() {
 
-	Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-	int windowWidth = (int) screenSize.getWidth() * 3 / 4;
-	int windowHeight = (int) screenSize.getHeight() * 3 / 4;
-
-	// XMLImporter xmlImporter = new XMLImporter();
-	// this.graph = (WeightedUndirectedGraph<V, E>)
-	// xmlImporter.importGraph("graph.xml");
+	treeParser = new TreeParser();
+	treeParser.addOutputListener(this::acceptTreeParserMessage);
+	buildOptions(treeParser);
 
 	GraphGenerator<V, E> generator = new GraphGenerator<V, E>(graph);
-	Playground playground = new Playground(1024, 768, new IntRange(200, 300), new DoubleRange(50d, 100d),
-		new IntRange(2, 4), new DoubleRange(50d, 100d));
-	generator.generateRandomGraph(playground);
+	NetworkGraphProperties properties = new NetworkGraphProperties(1024, 768, new IntRange(100, 200), new DoubleRange(50d, 100d), 100);
+	generator.generateNetworkGraph(properties);
+
+	// GridGraphProperties properties = new GridGraphProperties(1000, 1000, 100,
+	// 200);
+	// generator.generateGridGraph(properties);
 
 	VisualGraph<V, E> visualGraph = new VisualGraph<V, E>(graph,
 		new VisualGraphMarkUp<E>(new VisualEdgeDistanceTextBuilder<E>()));
@@ -207,74 +234,83 @@ public class ManetModelApp<V extends Vertex, E extends Edge> {
 	    visualGraph.addPath(
 		    randomPath.compute(graph.getVertex(RandomNumbers.getRandom(0, graph.getVertices().size())), 5));
 
-	panel = new VisualGraphPanel<V, E>(visualGraph);
-	panel.setPreferredSize(new Dimension(windowWidth, windowHeight));
-	panel.setFont(new Font("Consolas", Font.PLAIN, 16));
-	panel.setLayout(null);
-
-	frame = new JFrame("VisualGraphPanel");
+	frame = new VisualGraphFrame<V, E>(visualGraph);
+	Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+	frame.setPreferredSize(
+		new Dimension((int) screenSize.getWidth() * 3 / 4, (int) screenSize.getHeight() * 3 / 4));
 	frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-	frame.getContentPane().add(panel);
 	frame.pack();
 	frame.setLocationRelativeTo(null);
 	frame.setVisible(true);
+	frame.getTerminal().addInputListener(this::acceptTerminaPanelCommand);
+	frame.getTerminal().setText("ManetModel v1.0\n\n");
 
-	this.treeParser = new TreeParser();
-	buildOptions(treeParser);
     }
 
-    public void run() {
-	System.out.println("ManetModel v1.0\nType \"help\" for assistance.\n");
-	Scanner scanner = new Scanner(System.in);
-	do
-	    treeParser.consume(scanner.nextLine(), treeParser.getOptions(), new Input());
-	while (!EXIT);
-	scanner.close();
+    private void setTerminalFontSize(Input input) {
+	frame.getTerminal().getTextArea().setFont(new Font("Monospaced", Font.PLAIN, input.INT.get(0)));
+    }
+
+    private void setTerminalFontColor(Input input) {
+	frame.getTerminal().getTextArea().setForeground(null);
     }
 
     private void createEmpty(Input input) {
 	graph.clear();
-	panel.updateVisualGraph(
+	frame.getVisualGraphPanel().updateVisualGraph(
 		new VisualGraph<V, E>(graph, new VisualGraphMarkUp<E>(new VisualEdgeDistanceTextBuilder<E>())));
-	panel.repaint();
+	frame.getVisualGraphPanel().repaint();
     }
 
-    private void createRandom(Input input) {
-
-	this.graph.clear();
-
-	/*Playground playground = new Playground(1024, 768, 
-		new IntRange(input.INT.get(0), input.INT.get(0)), new DoubleRange(50d, 100d), 
-		new IntRange(2, 4), new DoubleRange(50d, 100d));*/
-	
-	Playground playground = new Playground(100000, 100000, 
-	new IntRange(input.INT.get(0), input.INT.get(0)), new DoubleRange(50d, 100d), 
-	new IntRange(2, 4), new DoubleRange(50d, 100d));
-	
-	GraphGenerator<V, E> generator = new GraphGenerator<V, E>(this.graph);
-	generator.generateRandomGraph(playground);
-
-	panel.updateVisualGraph(
-		new VisualGraph<V, E>(graph, new VisualGraphMarkUp<E>(new VisualEdgeDistanceTextBuilder<E>())));
-	panel.repaint();
-	frame.toFront();
-    }
-
-    private void createGrid(Input input) {
+    private void createNetworkGraph(Input input) {
+	graph.clear();
 	GraphGenerator<V, E> generator = new GraphGenerator<V, E>(graph);
-	generator.generateGridGraph(1000, 1000, 50, 200);
-	panel.updateVisualGraph(
+	NetworkGraphProperties properties = new NetworkGraphProperties(1024, 768, new IntRange(input.INT.get(0), input.INT.get(0)), new DoubleRange(50d, 100d), 100);
+	generator.generateNetworkGraph(properties);
+	
+	frame.getVisualGraphPanel().updateVisualGraph(
 		new VisualGraph<V, E>(graph, new VisualGraphMarkUp<E>(new VisualEdgeDistanceTextBuilder<E>())));
-	panel.repaint();
-	frame.toFront();
+	frame.getVisualGraphPanel().repaint();
+    }
+
+    private void createRandomGraph(Input input) {
+	graph.clear();
+
+	NetworkGraphProperties properties = new NetworkGraphProperties(1024, 768, new IntRange(input.INT.get(0), input.INT.get(0)),
+		new DoubleRange(50d, 100d), 75);
+
+	GraphGenerator<V, E> generator = new GraphGenerator<V, E>(this.graph);
+	generator.generateNetworkGraph(properties);
+
+	frame.getVisualGraphPanel().updateVisualGraph(
+		new VisualGraph<V, E>(graph, new VisualGraphMarkUp<E>(new VisualEdgeDistanceTextBuilder<E>())));
+	frame.getVisualGraphPanel().repaint();
+    }
+
+    private void createGridGraph(Input input) {
+	graph.clear();
+
+	GraphGenerator<V, E> generator = new GraphGenerator<V, E>(this.graph);
+	GridGraphProperties properties = new GridGraphProperties(1000, 1000, 100, 200);
+	generator.generateGridGraph(properties);
+
+	frame.getVisualGraphPanel().updateVisualGraph(
+		new VisualGraph<V, E>(graph, new VisualGraphMarkUp<E>(new VisualEdgeDistanceTextBuilder<E>())));
+	frame.getVisualGraphPanel().repaint();
     }
 
     private void addVertex(Input input) {
-
+	graph.addVertex(input.DOUBLE.get(0), input.DOUBLE.get(1));
+	frame.getVisualGraphPanel().updateVisualGraph(
+		new VisualGraph<V, E>(graph, new VisualGraphMarkUp<E>(new VisualEdgeDistanceTextBuilder<E>())));
+	frame.getVisualGraphPanel().repaint();
     }
 
     private void addEdge(Input input) {
-
+	graph.addEdge(graph.getVertex(input.INT.get(0)), graph.getVertex(input.INT.get(1)));
+	frame.getVisualGraphPanel().updateVisualGraph(
+		new VisualGraph<V, E>(graph, new VisualGraphMarkUp<E>(new VisualEdgeDistanceTextBuilder<E>())));
+	frame.getVisualGraphPanel().repaint();
     }
 
     private void addShortestPath(Input input) {
@@ -285,12 +321,11 @@ public class ManetModelApp<V extends Vertex, E extends Edge> {
 	    return 1d;
 	};
 
-	Path<V, E> shortestPath = dijkstraShortestPath.compute(graph.getVertex(input.INT.get(0)), graph.getVertex(input.INT.get(1)), metric);
-	
-	panel.getVisualGraph().addPath(shortestPath);
-	
-	panel.repaint();
-	frame.toFront();
+	Path<V, E> shortestPath = dijkstraShortestPath.compute(graph.getVertex(input.INT.get(0)),
+		graph.getVertex(input.INT.get(1)), metric);
+
+	frame.getVisualGraphPanel().getVisualGraph().addPath(shortestPath);
+	frame.getVisualGraphPanel().repaint();
     }
 
     private void removeVertex(Input input) {
@@ -308,9 +343,10 @@ public class ManetModelApp<V extends Vertex, E extends Edge> {
     private void importGraph(Input input) {
 	XMLImporter<V, E> xmlImporter = new XMLImporter<V, E>(this.graph);
 	xmlImporter.importGraph(input.STRING.get(0));
-	panel.updateVisualGraph(
-		new VisualGraph<V, E>(graph, new VisualGraphMarkUp<E>(new VisualEdgeDistanceTextBuilder<E>())));
-	panel.repaint();
+	// panel.updateVisualGraph(
+	// new VisualGraph<V, E>(graph, new VisualGraphMarkUp<E>(new
+	// VisualEdgeDistanceTextBuilder<E>())));
+	// panel.repaint();
 	frame.toFront();
     }
 
@@ -332,7 +368,7 @@ public class ManetModelApp<V extends Vertex, E extends Edge> {
     }
 
     private void help(Input input) {
-	System.out.println(treeParser.getOptions().toString());
+	this.frame.getTerminal().appendText(treeParser.getOptions().toString());
     }
 
     private void helpCommand(Input input) {
@@ -341,9 +377,11 @@ public class ManetModelApp<V extends Vertex, E extends Edge> {
 	    System.out.println(option.toString());
     }
 
+    private void clear(Input input) {
+	frame.getTerminal().clear();
+    }
+
     private void exit(Input input) {
-	System.out.println("Bye");
 	frame.dispatchEvent(new WindowEvent(frame, WindowEvent.WINDOW_CLOSING));
-	EXIT = true;
     }
 }

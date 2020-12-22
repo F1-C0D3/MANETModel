@@ -1,4 +1,4 @@
-package de.manetmodel.graph.viz;
+package de.manetmodel.app.gui.visualgraph;
 
 import java.awt.Color;
 import java.util.ArrayList;

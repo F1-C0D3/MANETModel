@@ -20,7 +20,7 @@ public class VectorLine2D {
 	    // magnitude = (1^2 + m^2)^(1/2)
 	    double magnitude = Math.sqrt(1 + Math.pow(m, 2));
 	    // N = <1, m> / magnitude = <1 / magnitude, m / magnitude>
-	    this.N = new Vector2D(1/magnitude, m/magnitude);
+	    this.N = new Vector2D(1 / magnitude, m / magnitude);
 	}
 
 	// A

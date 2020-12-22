@@ -1,4 +1,4 @@
-package de.manetmodel.graph.viz;
+package de.manetmodel.app.gui;
 
 import java.awt.BasicStroke;
 import java.awt.Color;
@@ -22,18 +22,21 @@ import de.manetmodel.algo.RandomPath;
 import de.manetmodel.app.gui.math.Line2D;
 import de.manetmodel.app.gui.math.Point2D;
 import de.manetmodel.app.gui.math.VectorLine2D;
+import de.manetmodel.app.gui.visualgraph.VisualEdge;
+import de.manetmodel.app.gui.visualgraph.VisualEdgeDistanceTextBuilder;
+import de.manetmodel.app.gui.visualgraph.VisualGraph;
+import de.manetmodel.app.gui.visualgraph.VisualGraphMarkUp;
+import de.manetmodel.app.gui.visualgraph.VisualPath;
+import de.manetmodel.app.gui.visualgraph.VisualVertex;
 import de.manetmodel.graph.Coordinate;
 import de.manetmodel.graph.Edge;
-import de.manetmodel.graph.Playground;
 import de.manetmodel.graph.Vertex;
 import de.manetmodel.graph.WeightedUndirectedGraph;
 import de.manetmodel.graph.WeightedUndirectedGraphSupplier;
-import de.manetmodel.graph.Playground.DoubleRange;
-import de.manetmodel.graph.Playground.IntRange;
 import de.manetmodel.graph.generator.GraphGenerator;
-import de.manetmodel.graph.viz.VisualEdge;
-import de.manetmodel.graph.viz.VisualGraph;
-import de.manetmodel.graph.viz.VisualVertex;
+import de.manetmodel.graph.generator.GraphProperties.DoubleRange;
+import de.manetmodel.graph.generator.GraphProperties.IntRange;
+import de.manetmodel.graph.generator.NetworkGraphProperties;
 import de.manetmodel.util.RandomNumbers;
 
 public class VisualGraphPanel<V extends Vertex, E extends Edge> extends JPanel {
@@ -50,12 +53,23 @@ public class VisualGraphPanel<V extends Vertex, E extends Edge> extends JPanel {
     private static Stroke VERTEX_STROKE = new BasicStroke(2);
     private static Stroke VERTEX_PATH_STROKE = new BasicStroke(4);
 
+    public VisualGraphPanel() {
+
+    }
+
     public VisualGraphPanel(VisualGraph<V, E> graph) {
 	this.graph = graph;
 	this.scope = this.getScope(graph);
     }
 
     public void paintPlayground(Graphics2D g2) {
+
+	g2.setColor(Color.LIGHT_GRAY);
+	String str = "ManetModel v1.0";
+	FontMetrics fontMetrics = g2.getFontMetrics();
+	Rectangle2D stringBounds = fontMetrics.getStringBounds(str, g2);
+	g2.drawString(str, padding, padding/2 + (int)(stringBounds.getHeight()/2));
+
 	g2.setColor(Color.WHITE);
 	g2.fillRect(padding, padding, getWidth() - (2 * padding), getHeight() - (2 * padding));
 
@@ -80,7 +94,7 @@ public class VisualGraphPanel<V extends Vertex, E extends Edge> extends JPanel {
 	int steps = 20;
 	int xOffset = (int) xAxis.getLength() / steps;
 	int yOffset = (int) yAxis.getLength() / steps;
-	
+
 	Color gridLineColor = new Color(245, 245, 245);
 
 	for (int i = 1; i < steps; i++) {
@@ -96,8 +110,8 @@ public class VisualGraphPanel<V extends Vertex, E extends Edge> extends JPanel {
 		    (int) yAxisPoint.y());
 
 	    String xAxisPointText = decimalFormat.format(i * (scope.x.max / steps));
-	    FontMetrics fontMetrics = g2.getFontMetrics();
-	    Rectangle2D stringBounds = fontMetrics.getStringBounds(xAxisPointText, g2);
+	    fontMetrics = g2.getFontMetrics();
+	    stringBounds = fontMetrics.getStringBounds(xAxisPointText, g2);
 	    g2.drawString(xAxisPointText, (int) xAxisPoint.x() - (int) stringBounds.getCenterX(),
 		    (int) xAxisPoint.y() - (int) stringBounds.getCenterY() + padding / 2);
 
@@ -326,10 +340,8 @@ public class VisualGraphPanel<V extends Vertex, E extends Edge> extends JPanel {
 			new WeightedUndirectedGraphSupplier.EdgeSupplier());
 
 		GraphGenerator<Vertex, Edge> generator = new GraphGenerator<Vertex, Edge>(graph);
-		Playground playground = new Playground(2000, 2000, new IntRange(150, 200), new DoubleRange(100d, 150d),
-			new IntRange(2, 4), new DoubleRange(100d, 150));
-
-		generator.generateRandomGraph(playground);
+		NetworkGraphProperties properties = new NetworkGraphProperties(1024, 768, new IntRange(100, 200), new DoubleRange(50d, 100d), 100);
+		generator.generateNetworkGraph(properties);
 
 		VisualGraph<Vertex, Edge> visualGraph = new VisualGraph<Vertex, Edge>(graph,
 			new VisualGraphMarkUp<Edge>(new VisualEdgeDistanceTextBuilder<Edge>()));
