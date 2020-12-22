@@ -3,11 +3,8 @@
 ![VisualGraph.png](https://github.com/eikeviehmann/ManetModel/blob/master/VisualGraph.png?raw=true)
 
 ## Klement:
-- [ ] WaveFormPropagationModel 
-  - [x] AffectedLinks
-  - [ ] Link capacity 
-- [x] IdealPropagationModel
-- [ ] Propagation model using Free-space path loss and Shannon–Hartley theorem for bitrate computation
+- [x] RadioPropagationModel 
+- [x] Units representing transmission rate
  
 ## Eike: 
 
@@ -20,14 +17,7 @@
 ###### Panel:
 - [ ] Adjust scaling for different screen resolutions
 - [ ] Show temp. results 
-
-## Ideas:
-- Results as Plots in JFrame
-- Units representing flow bitrate (mbit...)
-  
-## Discussion:
-- Utilization as property of Links
-- Getter/setter for RadioOccupationModel
-- Interface to grant access to vertexAdjacencies in WeightedUndirectedGraph
+  - [ ] Show Node/Vertex + Link/Edge property info 
+    - [ ] with terminal -> info vertex 0
 
 
