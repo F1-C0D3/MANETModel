@@ -1,5 +1,3 @@
 package de.manetmodel.graph;
 
-public abstract class EdgeWeight {
-
-}
+public abstract class EdgeWeight {}

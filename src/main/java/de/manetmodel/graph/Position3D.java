@@ -22,5 +22,5 @@ public class Position3D {
 
     public double z() {
 	return this.z;
-    }
+    }   
 }
