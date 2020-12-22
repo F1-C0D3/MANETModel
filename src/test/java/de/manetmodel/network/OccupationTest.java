@@ -3,14 +3,18 @@ package de.manetmodel.network;
 import static org.junit.Assert.assertEquals;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 import java.util.function.Function;
 
 import org.junit.Test;
 
 import de.manetmodel.algo.DijkstraShortestPath;
 import de.manetmodel.graph.Path;
+import de.manetmodel.network.unit.DataRate;
+import de.manetmodel.network.unit.Unit;
 import de.manetmodel.util.Tuple;
 
 public class OccupationTest {
@@ -27,19 +31,19 @@ public class OccupationTest {
 
 	metric = (Tuple<Link, Node> p) -> {
 
-//	    Node n = manet.getGraph().getTargetOf(p.getSecond(), p.getFirst());
-//	    n.getInterferedLinks();
-//	    Set<Link> iLinks = new HashSet<Link>(n.getInterferedLinks());
-//	    iLinks.addAll(p.getFirst().inReceptionRange());
-//	    return (double) iLinks.size();
-	    return 1d;
+	    Node n = manet.getTargetOf(p.getSecond(), p.getFirst());
+	    n.getInterferedLinks();
+	    Set<Link> iLinks = new HashSet<Link>(n.getInterferedLinks());
+	    iLinks.addAll(p.getFirst().inReceptionRange());
+	    return (double) iLinks.size();
+
 	};
     }
 
     @Test
     public void gridNetworkTestOneFlow() {
 	List<Flow<Node, Link>> flows = new ArrayList<Flow<Node, Link>>();
-	Flow f = new Flow<Node, Link>(manet.getVertex(0), manet.getVertex(4), 1l);
+	Flow f = new Flow<Node, Link>(manet.getVertex(0), manet.getVertex(4), new DataRate(2d, Unit.Type.megabit));
 
 	Path<Node, Link> p = sp.compute(manet.getVertex(0), manet.getVertex(4), metric);
 
@@ -49,17 +53,16 @@ public class OccupationTest {
 	    f.add(next);
 	}
 	flows.add(f);
-	long res = manet.utilization(flows);
-	assertEquals((int) res, 46);
-
+	DataRate res = manet.utilization(flows);
+	assertEquals((int) res.get(), 46);
     }
 
     @Test
     public void gridNetworkTestTwoFlow() {
 
 	List<Flow<Node, Link>> flows = new ArrayList<Flow<Node, Link>>();
-	Flow f1 = new Flow<Node, Link>(manet.getVertex(0), manet.getVertex(4), 1l);
-	Flow f2 = new Flow<Node, Link>(manet.getVertex(5), manet.getVertex(9), 1l);
+	Flow f1 = new Flow<Node, Link>(manet.getVertex(0), manet.getVertex(4), new DataRate(0.1, Unit.Type.megabit));
+	Flow f2 = new Flow<Node, Link>(manet.getVertex(5), manet.getVertex(9), new DataRate(0.1, Unit.Type.megabit));
 
 	Path<Node, Link> p1 = sp.compute(manet.getVertex(0), manet.getVertex(4), metric);
 
@@ -78,8 +81,8 @@ public class OccupationTest {
 	}
 	flows.add(f1);
 	flows.add(f2);
-	long res = manet.utilization(flows);
-	assertEquals((int) res, 116);
+	DataRate res = manet.utilization(flows);
+	assertEquals((int) res.get(), 112);
 
     }
 

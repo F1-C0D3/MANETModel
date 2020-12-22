@@ -1,5 +1,7 @@
 package de.manetmodel.network.radio;
 
+import de.manetmodel.network.unit.DataRate;
+
 public class ScalarRadioModel implements IRadioModel {
 
     private final double interferenceThreshold;
@@ -21,9 +23,9 @@ public class ScalarRadioModel implements IRadioModel {
      * Computes bitrate of link based on Shannon-Hartley law
      */
     @Override
-    public long transmissionBitrate(double distance) {
+    public DataRate transmissionBitrate(double distance) {
 	double power = Propagation.pathLoss(distance, Propagation.waveLength(carrierFrequency));
-	return (long) Propagation.upperBoundTransmissionBitrate(power, backgroundNoisePower, bandwidth);
+	return Propagation.upperBoundTransmissionBitrate(power, backgroundNoisePower, bandwidth);
 
     }
 
@@ -39,7 +41,7 @@ public class ScalarRadioModel implements IRadioModel {
     @Override
     public boolean interferencePresent(double distance) {
 	// TODO Auto-generated method stub
-	return receptionPower(distance) <= interferenceThreshold;
+	return receptionPower(distance) >= interferenceThreshold;
     }
 
 }

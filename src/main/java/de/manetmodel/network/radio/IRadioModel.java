@@ -1,8 +1,10 @@
 package de.manetmodel.network.radio;
 
+import de.manetmodel.network.unit.DataRate;
+
 public interface IRadioModel {
 
-    long transmissionBitrate(double distance);
+    DataRate transmissionBitrate(double distance);
 
     double receptionPower(double distance);
 

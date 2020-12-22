@@ -8,6 +8,7 @@ import java.util.function.Supplier;
 
 import de.manetmodel.graph.WeightedUndirectedGraph;
 import de.manetmodel.network.radio.IRadioModel;
+import de.manetmodel.network.unit.DataRate;
 import de.manetmodel.util.Tuple;
 
 public class Manet<N extends Node, L extends Link> extends WeightedUndirectedGraph<N, L> {
@@ -88,12 +89,12 @@ public class Manet<N extends Node, L extends Link> extends WeightedUndirectedGra
      * 
      * @Todo: graph copy
      */
-    public long utilization(List<Flow<N, L>> flows) {
+    public DataRate utilization(List<Flow<N, L>> flows) {
 	/* set link utilization to initial value (0) */
-	relaxL();
+//	relaxL();
 	Iterator<Flow<N, L>> flowsIter = flows.iterator();
 
-	long netUtilization = 0L;
+	long networkUtilization = 0L;
 
 	while (flowsIter.hasNext()) {
 	    Flow<N, L> f = flowsIter.next();
@@ -108,25 +109,21 @@ public class Manet<N extends Node, L extends Link> extends WeightedUndirectedGra
 		Iterator<L> pIter = uLinks.iterator();
 
 		while (pIter.hasNext()) {
-		    L ul = pIter.next();
-		    long result = ul.increaseUtilizationBy(f.getBitrate());
+//		    L ul = pIter.next();
+//		    ul.setTransmissionRate(new DataRate(f.getDataRate().get() + ul.getTransmissionRate().get()));
 
-		    /* if capacity of link exceeded */
-		    if (result < 0) {
-			return result;
-		    }
-		    netUtilization += f.getBitrate();
+		    networkUtilization += f.getDataRate().get();
 		}
 	    }
 	}
-	return netUtilization;
+	return new DataRate(networkUtilization);
     }
 
-    private void relaxL() {
-
-	for (L l : this.getEdges()) {
-	    l.setUtilization(0L);
-	}
-    }
+//    private void relaxL() {
+//
+//	for (L l : this.getEdges()) {
+//	    l.setUtilization(0L);
+//	}
+//    }
 
 }

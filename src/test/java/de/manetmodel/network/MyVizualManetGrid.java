@@ -12,11 +12,12 @@ import de.manetmodel.graph.viz.VisualEdgeDistanceTextBuilder;
 import de.manetmodel.graph.viz.VisualGraph;
 import de.manetmodel.graph.viz.VisualGraphMarkUp;
 import de.manetmodel.graph.viz.VisualGraphPanel;
-import de.manetmodel.network.radio.IdealRadioModel;
+import de.manetmodel.network.radio.Propagation;
+import de.manetmodel.network.radio.ScalarRadioModel;
 
 public class MyVizualManetGrid {
 
-    public Manet<Node<Link>, Link<Link>> manet;
+    public Manet<Node, Link> manet;
 
     VisualGraphPanel<Node, Link> panel;
 
@@ -29,7 +30,9 @@ public class MyVizualManetGrid {
 
     void createManetGrid(int numNodes) {
 	Manet<Node, Link> manet = new Manet<Node, Link>(new ManetSupplier.ManetNodeSupplier(),
-		new ManetSupplier.ManetLinkSupplier(), new IdealRadioModel(100, 200000000L));
+		new ManetSupplier.ManetLinkSupplier(),
+		new ScalarRadioModel(Propagation.pathLoss(125d, Propagation.waveLength(2412000000d)), 0.002d, 1e-11,
+			2000000d, 2412000000d));
 	GraphGenerator<Node, Link> generator = new GraphGenerator<Node, Link>(manet);
 	generator.generateGridGraph(400, 500, 100, numNodes);
 

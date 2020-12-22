@@ -3,18 +3,19 @@ package de.manetmodel.network;
 import java.util.Iterator;
 
 import de.manetmodel.graph.Path;
+import de.manetmodel.network.unit.DataRate;
 import de.manetmodel.util.Tuple;
 
 public class Flow<N extends Node, L extends Link> extends Path<N, L> {
-    private long bitrate;
+    private DataRate rate;
 
-    public Flow(N source, N target, long bitrate) {
+    public Flow(N source, N target, DataRate bitrate) {
 	super(source, target);
-	this.bitrate = bitrate;
+	this.rate = bitrate;
     }
 
-    public long getBitrate() {
-	return this.bitrate;
+    public DataRate getDataRate() {
+	return this.rate;
     }
 
     @Override

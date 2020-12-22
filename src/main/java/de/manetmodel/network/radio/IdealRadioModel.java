@@ -1,17 +1,19 @@
 package de.manetmodel.network.radio;
 
+import de.manetmodel.network.unit.DataRate;
+
 public class IdealRadioModel implements IRadioModel {
     private double transmissionRange;
     private double interferenceRange;
-    private long transmissionBitrate;
+    private DataRate transmissionBitrate;
 
-    public IdealRadioModel(double transmissionRange, double interferenceRange, long transmissionBitrate) {
+    public IdealRadioModel(double transmissionRange, double interferenceRange, DataRate transmissionBitrate) {
 	this.transmissionRange = transmissionRange;
 	this.interferenceRange = interferenceRange;
 	this.transmissionBitrate = transmissionBitrate;
     }
 
-    public IdealRadioModel(double transmissionRange, long transmissionBitrate) {
+    public IdealRadioModel(double transmissionRange, DataRate transmissionBitrate) {
 	this(transmissionRange, transmissionRange, transmissionBitrate);
     }
 
@@ -29,7 +31,7 @@ public class IdealRadioModel implements IRadioModel {
     }
 
     @Override
-    public long transmissionBitrate(double distance) {
+    public DataRate transmissionBitrate(double distance) {
 	return transmissionBitrate;
     }
 }
