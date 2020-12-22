@@ -17,7 +17,8 @@
 ###### Panel:
 - [ ] Adjust scaling for different screen resolutions
 - [ ] Show temp. results 
-  - [ ] Show Node/Vertex + Link/Edge property info 
-    - [ ] with terminal -> info vertex 0
+  - Show Node/Vertex + Link/Edge property info 
+    - with terminal -> info vertex 0
+    - on click listener for visualVertex/visualEdge
 
 
