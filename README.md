@@ -9,7 +9,7 @@
 ## Eike: 
 
 ###### Graph:
-- [ ] Generic edge weight
+- [x] Generic edge weight
 
 ###### GraphGenerator:
 - [x] ManetNetwok mode
