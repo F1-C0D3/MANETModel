@@ -3,59 +3,76 @@ package de.manetmodel.graph.generator;
 import java.util.List;
 import java.util.Random;
 
-import de.manetmodel.graph.Coordinate;
-import de.manetmodel.graph.Edge;
+import de.manetmodel.graph.EdgeWeightBuilder;
+import de.manetmodel.graph.Position2D;
+import de.manetmodel.graph.UndirectedWeighted2DGraph;
 import de.manetmodel.graph.Vertex;
-import de.manetmodel.graph.WeightedUndirectedGraph;
+import de.manetmodel.graph.WeightedEdge;
 import de.manetmodel.graph.generator.GraphProperties.DoubleRange;
 import de.manetmodel.util.RandomNumbers;
 import de.manetmodel.util.log.Log;
 
-public class GraphGenerator<V extends Vertex, E extends Edge> {
+public class GraphGenerator<V extends Vertex<Position2D>, E extends WeightedEdge<W>, W> {
 
     private Log log;
-    private WeightedUndirectedGraph<V, E> graph;
+    private UndirectedWeighted2DGraph<V, E, W> graph;
+    private EdgeWeightBuilder<V, E, W> edgeWeightBuilder;
 
-    public GraphGenerator(WeightedUndirectedGraph<V, E> graph) {
+    public GraphGenerator(UndirectedWeighted2DGraph<V, E, W> graph) {
 	this.log = new Log();
 	this.graph = graph;
+    }
+
+    public GraphGenerator(UndirectedWeighted2DGraph<V, E, W> graph, EdgeWeightBuilder<V, E, W> edgeWeightBuilder) {
+	this.log = new Log();
+	this.graph = graph;
+	this.edgeWeightBuilder = edgeWeightBuilder;
     }
 
     public int generateNetworkGraph(NetworkGraphProperties properties) {
 
 	int numberOfVertices = RandomNumbers.getRandom(properties.getVertexCount().min,
 		properties.getVertexCount().max);
-	int vertexCount = 0;
-	int attemps = 0;
+	int vertexCount = 0, attemps = 0;
 	V currentVertex = graph.addVertex(0, 0);
 
 	while (vertexCount < numberOfVertices && attemps < 100) {
 
-	    Coordinate coordinate = generateRandomCoordinate(currentVertex, properties.getVertexDistance());
+	    Position2D Position2D = generateRandomPosition2D(currentVertex, properties.getVertexDistance());
 
-	    if (properties.isInside(coordinate.x(), coordinate.y())
-		    && !graph.hasVertexInRadius(coordinate, properties.getVertexDistance().min)) {
+	    if (properties.isInside(Position2D.x(), Position2D.y())
+		    && !graph.vertexInRadius(Position2D, properties.getVertexDistance().min)) {
 
-		V newVertex = graph.addVertex(coordinate.x(), coordinate.y());
+		V newVertex = graph.addVertex(Position2D.x(), Position2D.y());
 		vertexCount++;
 		attemps = 0;
 
 		if (properties.getVertexDistance().min <= properties.getEdgeDistance().max)
-		    graph.addEdge(currentVertex, newVertex);
+		    addEdge(currentVertex, newVertex);
 
+		addEdges(newVertex, properties.getEdgeDistance().max);
+		
 		currentVertex = newVertex;
-
-		List<V> verticesInRadius = graph.getVerticesInRadius(newVertex, properties.getEdgeDistance().max);
-
-		for (V target : verticesInRadius)
-		    graph.addEdge(newVertex, target);
-
 	    } else
 		currentVertex = graph.getVertex(RandomNumbers.getRandom(0, vertexCount));
 
 	    attemps++;
 	}
 	return vertexCount;
+    }
+    
+    private void addEdges(V vertex, double radius) {
+	List<V> verticesInRadius = graph.getVerticesInRadius(vertex, radius);
+
+	for (V targetVertex : verticesInRadius)
+	    addEdge(vertex, targetVertex);
+    }
+
+    private E addEdge(V v1, V v2) {
+	if (edgeWeightBuilder != null)
+	    return graph.addEdge(v1, v2, edgeWeightBuilder.get(v1, v2));
+	else
+	    return graph.addEdge(v1, v2);
     }
 
     public int generateRandomGraph(GraphProperties properties) {
@@ -80,28 +97,28 @@ public class GraphGenerator<V extends Vertex, E extends Edge> {
 	V currentVertex = graph.addVertex(0, 0);
 	vertexCount++;
 	this.log.info(
-		String.format("Added Vertex %d at %s", vertexCount, graph.getFirstVertex().getPostion().toString()));
+		String.format("Added Vertex %d at %s", vertexCount, graph.getFirstVertex().getPosition().toString()));
 
 	// As long as graph's size doesn't match GraphProperties requirements
 	// (vertexCount),
 	// process vertex generation process
 	while (vertexCount < numberOfVertices && attemps < 100) {
 
-	    // Search a coordinate in GraphProperties which matches vertexDistance
+	    // Search a Position2D in GraphProperties which matches vertexDistance
 	    // requirements
-	    Coordinate coordinate = generateRandomCoordinate(currentVertex, properties.getVertexDistance());
+	    Position2D Position2D = generateRandomPosition2D(currentVertex, properties.getVertexDistance());
 
-	    if (properties.isInside(coordinate.x(), coordinate.y())
-		    && !graph.hasVertexInRadius(coordinate, properties.getVertexDistance().min)) {
+	    if (properties.isInside(Position2D.x(), Position2D.y())
+		    && !graph.vertexInRadius(Position2D, properties.getVertexDistance().min)) {
 
 		// Add a new vertex to graph
-		V newVertex = graph.addVertex(coordinate.x(), coordinate.y());
+		V newVertex = graph.addVertex(Position2D.x(), Position2D.y());
 		vertexCount++;
 		attemps = 0;
-		this.log.info(String.format("Added Vertex %d at %s", vertexCount, newVertex.getPostion().toString()));
+		this.log.info(String.format("Added Vertex %d at %s", vertexCount, newVertex.getPosition().toString()));
 
 		// If..
-		
+
 		int edgeCount;
 
 		if (properties.getVertexDistance().min <= properties.getEdgeDistance().max) {
@@ -153,44 +170,43 @@ public class GraphGenerator<V extends Vertex, E extends Edge> {
 	}
     }
 
-    public Coordinate generateRandomCoordinate(V source, DoubleRange vertexDistanceRange) {
+    public Position2D generateRandomPosition2D(V source, DoubleRange vertexDistanceRange) {
 
-	Coordinate coordinate = null;
+	Position2D Position2D = null;
 	double angleRadians, x, y;
 
-	double distance = RandomNumbers.getRandom(vertexDistanceRange.min,
-		vertexDistanceRange.max);
+	double distance = RandomNumbers.getRandom(vertexDistanceRange.min, vertexDistanceRange.max);
 	double angleDegrees = RandomNumbers.getRandom(0d, 360d);
 
 	if ((angleDegrees >= 0d) && (angleDegrees < 90d)) {
 	    angleRadians = Math.toRadians(angleDegrees);
 	    x = distance * Math.cos(angleRadians);
 	    y = distance * Math.sin(angleRadians);
-	    coordinate = new Coordinate(source.x() + x, source.y() + y);
+	    Position2D = new Position2D(source.getPosition().x() + x, source.getPosition().y() + y);
 	}
 
 	if ((angleDegrees > 90d) && (angleDegrees <= 180d)) {
 	    angleRadians = Math.toRadians(180 - angleDegrees);
 	    x = distance * Math.cos(angleRadians);
 	    y = distance * Math.sin(angleRadians);
-	    coordinate = new Coordinate(source.x() - x, source.y() + y);
+	    Position2D = new Position2D(source.getPosition().x() - x, source.getPosition().y() + y);
 	}
 
 	if ((angleDegrees > 180d) && (angleDegrees <= 270d)) {
 	    angleRadians = Math.toRadians(270 - angleDegrees);
 	    x = distance * Math.sin(angleRadians);
 	    y = distance * Math.cos(angleRadians);
-	    coordinate = new Coordinate(source.x() - x, source.y() - y);
+	    Position2D = new Position2D(source.getPosition().x() - x, source.getPosition().y() - y);
 	}
 
 	if ((angleDegrees > 270d) && (angleDegrees <= 360d)) {
 	    angleRadians = Math.toRadians(360 - angleDegrees);
 	    x = distance * Math.cos(angleRadians);
 	    y = distance * Math.sin(angleRadians);
-	    coordinate = new Coordinate(source.x() + x, source.y() - y);
+	    Position2D = new Position2D(source.getPosition().x() + x, source.getPosition().y() - y);
 	}
 
-	return coordinate;
+	return Position2D;
     }
 
     public void generateGridGraph(GridGraphProperties properties) {
@@ -198,24 +214,26 @@ public class GraphGenerator<V extends Vertex, E extends Edge> {
 	V currentVertex = graph.addVertex(0, 0);
 	int vertexCount = 1;
 
-	while ((currentVertex.x() <= properties.getWidth().max - properties.getVertexDistance().max)) {
+	while ((currentVertex.getPosition().x() <= properties.getWidth().max - properties.getVertexDistance().max)) {
 	    if (vertexCount > 1) {
 		double xOffset = RandomNumbers.getRandom(properties.getVertexDistance().min,
 			properties.getVertexDistance().max);
-		V newVertex = graph.addVertex(currentVertex.x() + xOffset, 0);
+		V newVertex = graph.addVertex(currentVertex.getPosition().x() + xOffset, 0);
 		currentVertex = newVertex;
-		vertexCount++;	
+		vertexCount++;
 		List<V> verticesInRadius = graph.getVerticesInRadius(newVertex, properties.getEdgeDistance().max);
 		for (V target : verticesInRadius)
 		    graph.addEdge(newVertex, target);
 	    }
 
-	    while (currentVertex.y() <= (properties.getHeight().max - properties.getVertexDistance().max)) {
+	    while (currentVertex.getPosition()
+		    .y() <= (properties.getHeight().max - properties.getVertexDistance().max)) {
 		double yOffset = RandomNumbers.getRandom(properties.getVertexDistance().min,
 			properties.getVertexDistance().max);
-		V newVertex = graph.addVertex(currentVertex.x(), currentVertex.y() + yOffset);
+		V newVertex = graph.addVertex(currentVertex.getPosition().x(),
+			currentVertex.getPosition().y() + yOffset);
 		currentVertex = newVertex;
-		vertexCount++;	
+		vertexCount++;
 		List<V> verticesInRadius = graph.getVerticesInRadius(newVertex, properties.getEdgeDistance().max);
 		for (V target : verticesInRadius)
 		    graph.addEdge(newVertex, target);

@@ -16,6 +16,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.KeyStroke;
 import javax.swing.SwingUtilities;
+import javax.swing.WindowConstants;
 
 public class Terminal extends JPanel {
 
@@ -147,6 +148,7 @@ public class Terminal extends JPanel {
 	this.inputListener = inputListener;
     }
 
+    @Override
     public void paintComponent(Graphics g) {
 	g.setColor(getBackground());
 	Rectangle r = g.getClipBounds();
@@ -179,7 +181,6 @@ public class Terminal extends JPanel {
     private void executeCommand(String command) {
 	history.add(command);
 	historyIndex = history.size() - 1;
-	System.out.println(command);
 	if (inputListener != null)
 	    inputListener.accept(command);
     }
@@ -203,18 +204,18 @@ public class Terminal extends JPanel {
 	int lastPromptIndex = terminalText.lastIndexOf('_') + 2;
 	if (lastPromptIndex < 0 || lastPromptIndex >= terminalText.length())
 	    return "";
-	else
-	    return terminalText.substring(lastPromptIndex);
+	else return terminalText.substring(lastPromptIndex);
     }
     
     public static void main(String[] args) {
 	SwingUtilities.invokeLater(new Runnable() {
+	    @Override
 	    public void run() {
 		JFrame frame = new JFrame("Terminal");
 		Terminal term = new Terminal(new Font("Consolas", Font.PLAIN, 20), Color.WHITE);
 		frame.setBounds(0, 0, 1000, 500);
 		frame.setVisible(true);
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 		frame.getContentPane().add(term);
 		term.showPrompt();
 	    }

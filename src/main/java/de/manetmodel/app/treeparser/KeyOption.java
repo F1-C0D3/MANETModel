@@ -56,6 +56,7 @@ public class KeyOption extends Option {
 	super.info = info;
     }
 
+    @Override
     public void accept(OptionVisitor visitor) {
 	visitor.visit(this);
     }
@@ -64,6 +65,7 @@ public class KeyOption extends Option {
 	return this.flag;
     }
 
+    @Override
     public Key getKey() {
 	return this.key;
     }

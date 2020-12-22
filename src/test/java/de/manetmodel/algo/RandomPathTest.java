@@ -4,7 +4,6 @@ import static org.junit.Assert.assertNotNull;
 
 import org.junit.Test;
 
-import de.manetmodel.graph.WeightedUndirectedGraph;
 import de.manetmodel.network.Link;
 import de.manetmodel.network.ManetSupplier;
 import de.manetmodel.network.Node;

@@ -1,12 +1,11 @@
-package de.manetmodel.graph.experimental;
+package de.manetmodel.graph;
 
 public class WeightedEdge<W> {
 
-    int ID;
-    W weight;
+    private int ID;
+    private W weight;
 
-    public WeightedEdge() {
-    }
+    public WeightedEdge() {}
 
     public WeightedEdge(W weight) {
 	this.weight = weight;
@@ -26,5 +25,11 @@ public class WeightedEdge<W> {
 
     public W getWeight() {
 	return this.weight;
+    }
+
+    @Override
+    public String toString() {
+	// TODO Auto-generated method stub
+	return null;
     }
 }

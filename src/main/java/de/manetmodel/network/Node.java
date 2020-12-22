@@ -3,21 +3,23 @@ package de.manetmodel.network;
 import java.util.HashSet;
 import java.util.Set;
 
+import de.manetmodel.graph.Position2D;
 import de.manetmodel.graph.Vertex;
 
-public class Node<L extends Link> extends Vertex {
+public class Node<L extends Link<W>, W> extends Vertex<Position2D> {
+
     private double receptionSensitivity;
-    private Set<L> interferredLinks;
+    private Set<Link<W>> interferredLinks;
 
     public Node() {
-	interferredLinks = new HashSet<L>();
+	interferredLinks = new HashSet<Link<W>>();
     }
 
     public void setInterferedLink(L l) {
 	interferredLinks.add(l);
     }
 
-    public Set<L> getInterferedLinks() {
+    public Set<Link<W>> getInterferedLinks() {
 	return interferredLinks;
     }
 

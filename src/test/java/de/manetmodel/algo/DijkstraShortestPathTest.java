@@ -7,9 +7,6 @@ import org.junit.Test;
 
 import de.manetmodel.app.VisualGraphApp;
 import de.manetmodel.graph.Path;
-import de.manetmodel.graph.Playground;
-import de.manetmodel.graph.Playground.DoubleRange;
-import de.manetmodel.graph.Playground.IntRange;
 import de.manetmodel.graph.generator.GraphGenerator;
 import de.manetmodel.network.Link;
 import de.manetmodel.network.Manet;

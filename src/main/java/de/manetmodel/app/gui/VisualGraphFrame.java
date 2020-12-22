@@ -2,9 +2,7 @@ package de.manetmodel.app.gui;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Dimension;
 import java.awt.Font;
-import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
@@ -16,30 +14,21 @@ import javax.swing.KeyStroke;
 import javax.swing.OverlayLayout;
 import javax.swing.SwingUtilities;
 
-import de.manetmodel.algo.RandomPath;
-import de.manetmodel.app.gui.visualgraph.VisualEdgeDistanceTextBuilder;
 import de.manetmodel.app.gui.visualgraph.VisualGraph;
-import de.manetmodel.app.gui.visualgraph.VisualGraphMarkUp;
-import de.manetmodel.graph.Edge;
+import de.manetmodel.graph.Position2D;
 import de.manetmodel.graph.Vertex;
-import de.manetmodel.graph.WeightedUndirectedGraph;
-import de.manetmodel.graph.WeightedUndirectedGraphSupplier;
-import de.manetmodel.graph.generator.GraphGenerator;
-import de.manetmodel.graph.generator.GraphProperties.DoubleRange;
-import de.manetmodel.graph.generator.GraphProperties.IntRange;
-import de.manetmodel.graph.generator.NetworkGraphProperties;
-import de.manetmodel.util.RandomNumbers;
+import de.manetmodel.graph.WeightedEdge;
 
-public class VisualGraphFrame<V extends Vertex, E extends Edge> extends JFrame {
+public class VisualGraphFrame<V extends Vertex<Position2D>, E extends WeightedEdge<W>, W> extends JFrame {
 
     Terminal terminal;
-    VisualGraphPanel<V, E> visualGraphPanel;
+    VisualGraphPanel<V, E, W> visualGraphPanel;
 
-    public VisualGraphFrame(VisualGraph<V, E> graph) {
+    public VisualGraphFrame(VisualGraph<V, E, W> graph) {
 
 	this.setLayout(new BorderLayout());
 
-	this.visualGraphPanel = new VisualGraphPanel<V, E>(graph);
+	this.visualGraphPanel = new VisualGraphPanel<V, E, W>(graph);
 	this.visualGraphPanel.setFont(new Font("NotoSans", Font.PLAIN, 16));
 	this.visualGraphPanel.setLayout(new OverlayLayout(this.visualGraphPanel));
 	this.terminal = new Terminal(new Font("Monospace", Font.PLAIN, 20), Color.WHITE);
@@ -48,6 +37,7 @@ public class VisualGraphFrame<V extends Vertex, E extends Edge> extends JFrame {
 	this.terminal.setBackground(new Color(0, 0, 0, 100));
 	this.terminal.setVisible(true);
 	this.terminal.addComponentListener(new ComponentAdapter() {
+	    @Override
 	    public void componentShown(ComponentEvent e) {
 		terminal.textArea.requestFocus();
 		;
@@ -63,7 +53,7 @@ public class VisualGraphFrame<V extends Vertex, E extends Edge> extends JFrame {
 		new VisualGraphFrameAction(VisualGraphFrameActions.TOGGLE_TERMINAL));
     }
 
-    public VisualGraphPanel<V, E> getVisualGraphPanel() {
+    public VisualGraphPanel<V, E, W> getVisualGraphPanel() {
 	return this.visualGraphPanel;
     }
 
@@ -101,8 +91,10 @@ public class VisualGraphFrame<V extends Vertex, E extends Edge> extends JFrame {
 
     public static void main(String[] args) {
 	SwingUtilities.invokeLater(new Runnable() {
+	    @Override
 	    public void run() {
-
+		
+		/*
 		WeightedUndirectedGraph<Vertex, Edge> graph = new WeightedUndirectedGraph<Vertex, Edge>(
 			new WeightedUndirectedGraphSupplier.VertexSupplier(),
 			new WeightedUndirectedGraphSupplier.EdgeSupplier());
@@ -118,7 +110,7 @@ public class VisualGraphFrame<V extends Vertex, E extends Edge> extends JFrame {
 		RandomPath<Vertex, Edge> randomPath = new RandomPath<Vertex, Edge>(graph);
 
 		for (int i = 1; i <= 20; i++)
-		    visualGraph.addPath(randomPath
+		    visualGraph.addVisualPath(randomPath
 			    .compute(graph.getVertex(RandomNumbers.getRandom(0, graph.getVertices().size())), 5));
 
 		VisualGraphFrame<Vertex, Edge> frame = new VisualGraphFrame<Vertex, Edge>(visualGraph);
@@ -130,6 +122,7 @@ public class VisualGraphFrame<V extends Vertex, E extends Edge> extends JFrame {
 		frame.pack();
 		frame.setLocationRelativeTo(null);
 		frame.setVisible(true);
+		*/
 	    }
 	});
     }

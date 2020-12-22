@@ -17,7 +17,7 @@ public class DataRate {
 
     protected long toBits(double value, Unit.Type type) {
 	long factor = Unit.getFactor(type);
-	return (long) Math.round(value * factor);
+	return Math.round(value * factor);
     }
 
     public final long get() {

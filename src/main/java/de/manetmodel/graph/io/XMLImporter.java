@@ -4,21 +4,22 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 
-import de.manetmodel.graph.Edge;
+import de.manetmodel.graph.UndirectedWeightedGraph;
 import de.manetmodel.graph.Vertex;
-import de.manetmodel.graph.WeightedUndirectedGraph;
+import de.manetmodel.graph.WeightedEdge;
 import jakarta.xml.bind.JAXBContext;
 import jakarta.xml.bind.JAXBException;
 import jakarta.xml.bind.Unmarshaller;
 
-public class XMLImporter<V extends Vertex, E extends Edge> {
+public class XMLImporter<V extends Vertex<P>, P, E extends WeightedEdge<W>,W> {
 
-    WeightedUndirectedGraph<V, E> graph;
+    UndirectedWeightedGraph<V, P, E, W> graph;
 
-    public XMLImporter(WeightedUndirectedGraph<V, E> graph) {
+    public XMLImporter(UndirectedWeightedGraph<V, P, E, W> graph) {
 	this.graph = graph;
     }
-
+    
+    /*
     public boolean importGraph(String filePath) {
 	try {
 	    JAXBContext jaxbContext = JAXBContext.newInstance(graph.getClass());
@@ -33,5 +34,6 @@ public class XMLImporter<V extends Vertex, E extends Edge> {
 	}
 
 	return false;
-    }
+    }*/
 }
+

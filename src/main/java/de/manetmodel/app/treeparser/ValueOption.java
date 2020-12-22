@@ -55,10 +55,12 @@ public class ValueOption extends Option {
 	super.add(option);
     }
 
+    @Override
     public void accept(OptionVisitor visitor) {
 	visitor.visit(this);
     }
 
+    @Override
     public Key getKey() {
 	return null;
     }

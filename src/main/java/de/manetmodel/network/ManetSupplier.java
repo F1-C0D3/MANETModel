@@ -2,24 +2,24 @@ package de.manetmodel.network;
 
 import java.util.function.Supplier;
 
-public class ManetSupplier implements Supplier<Manet<Node, Link>> {
+public class ManetSupplier<W> implements Supplier<Manet<Node<Link<W>>, Link<W>, W>> {
+    
     @Override
-    public Manet<Node, Link> get() {
-	return new Manet<Node, Link>(new ManetNodeSupplier(), new ManetLinkSupplier(), null);
+    public Manet<Node<Link<W>>, Link<W>, W> get() {
+	return new Manet<Node<Link<W>>, Link<W>, W>(new ManetNodeSupplier<W>(), new ManetLinkSupplier<W>(), null);
     }
 
-    public static class ManetLinkSupplier implements Supplier<Link> {
+    public static class ManetLinkSupplier<W> implements Supplier<Link<W>> {
 	@Override
-	public Link get() {
-	    return new Link();
+	public Link<W> get() {
+	    return new Link<W>();
 	}
     }
 
-    public static class ManetNodeSupplier implements Supplier<Node> {
+    public static class ManetNodeSupplier<W> implements Supplier<Node<Link<W>>> {
 	@Override
-	public Node get() {
-	    return new Node();
+	public Node<Link<W>> get() {
+	    return new Node<Link<W>>();
 	}
     }
-
 }

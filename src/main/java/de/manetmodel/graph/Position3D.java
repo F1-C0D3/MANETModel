@@ -1,4 +1,4 @@
-package de.manetmodel.graph.experimental;
+package de.manetmodel.graph;
 
 public class Position3D {
 

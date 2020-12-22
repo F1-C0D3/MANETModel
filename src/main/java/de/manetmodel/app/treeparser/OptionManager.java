@@ -2,10 +2,6 @@ package de.manetmodel.app.treeparser;
 
 import java.util.ArrayList;
 
-import de.manetmodel.app.treeparser.AddOptionVisitor;
-import de.manetmodel.app.treeparser.KeyOption;
-import de.manetmodel.app.treeparser.ValueOption;
-
 public class OptionManager {
 	private ArrayList<Option> option;
     private ArrayList<KeyOption> keyOptions;

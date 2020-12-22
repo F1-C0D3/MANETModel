@@ -9,11 +9,13 @@ import java.awt.Stroke;
 
 import javax.swing.JComponent;
 import javax.swing.JFrame;
+import javax.swing.WindowConstants;
 
 class DrawArc extends JComponent {
 
     private static Stroke VERTEX_PATH_STROKE = new BasicStroke(3);
 
+    @Override
     public void paint(Graphics g) {
 	//drawArc(int x, int y, int width, int length, int startAngle, int arcAngle)	
 	
@@ -42,7 +44,7 @@ class DrawArc extends JComponent {
 public class DrawArcTest {
     public static void main(String[] a) {
 	JFrame window = new JFrame();
-	window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+	window.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 	window.setBounds(0, 0, 300, 300);
 	window.getContentPane().add(new DrawArc());
 	window.setVisible(true);

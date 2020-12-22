@@ -3,27 +3,25 @@ package de.manetmodel.algo;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ListIterator;
-import java.util.Random;
 import java.util.function.Function;
 
-import de.manetmodel.graph.Edge;
 import de.manetmodel.graph.Path;
+import de.manetmodel.graph.UndirectedWeightedGraph;
 import de.manetmodel.graph.Vertex;
-import de.manetmodel.graph.WeightedUndirectedGraph;
+import de.manetmodel.graph.WeightedEdge;
 import de.manetmodel.util.Tuple;
 
-public class DijkstraShortestPath<V extends Vertex, E extends Edge> {
-    
-    private WeightedUndirectedGraph<V, E> graph;
+public class DijkstraShortestPath<V extends Vertex<P>, P, E extends WeightedEdge<W>, W> {
 
-    public DijkstraShortestPath(WeightedUndirectedGraph<V, E> graph) {
+    private UndirectedWeightedGraph<V, P, E, W> graph;
+
+    public DijkstraShortestPath(UndirectedWeightedGraph<V, P, E, W> graph) {
 	this.graph = graph;
     }
 
     public Path<V, E> compute(V source, V target, Function<Tuple<E, V>, Double> metric) {
 	/* Initializaton */
 	V current = source;
-	Random random = new Random();
 	Path<V, E> sp = new Path<V, E>(source, target);
 	List<Integer> vertices = new ArrayList<Integer>();
 	List<Tuple<V, Double>> predDist = new ArrayList<Tuple<V, Double>>();
@@ -36,7 +34,6 @@ public class DijkstraShortestPath<V extends Vertex, E extends Edge> {
 	    } else {
 		predDist.add(new Tuple<V, Double>(null, Double.POSITIVE_INFINITY));
 	    }
-
 	}
 
 	while (!vertices.isEmpty()) {
@@ -49,9 +46,8 @@ public class DijkstraShortestPath<V extends Vertex, E extends Edge> {
 	    }
 
 	    for (V neig : graph.getNextHopsOf(current)) {
-		double edgeDist = metric.apply(new Tuple(graph.getEdge(current, neig), neig));
+		double edgeDist = metric.apply(new Tuple<E, V>(graph.getEdge(current, neig), neig));
 		double oldPahtDist = predDist.get(neig.getID()).getSecond();
-
 		double altPathDist = edgeDist + predDist.get(current.getID()).getSecond();
 
 		if (altPathDist < oldPahtDist) {
