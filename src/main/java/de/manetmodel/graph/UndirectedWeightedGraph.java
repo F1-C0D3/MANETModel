@@ -27,6 +27,10 @@ public class UndirectedWeightedGraph<V extends Vertex<P>, P, E extends WeightedE
 	this.edgeAdjacencies = new ArrayList<Tuple<Integer, Integer>>();
     }
 
+    public List<ArrayList<Tuple<Integer, Integer>>> getVertexAdjacencies() {
+	return this.vertexAdjacencies;
+    }
+
     public V addVertex(P position) {
 	V v = vertexSupplier.get();
 	v.setID(vertexCount++);
