@@ -22,3 +22,6 @@
     - on click listener for visualVertex/visualEdge
 
 
+###### Discussion:
+- Remove generic types (N,L,V,E) from Manet and maybe also from UndirectedWeightedGraph classes? 
+
