@@ -1,16 +1,19 @@
 package de.manetmodel.algo;
 
-import java.awt.Color;
+import static org.junit.Assert.assertTrue;
+
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 import java.util.function.Function;
 
 import org.junit.Test;
 
-import de.manetmodel.app.VisualGraphApp;
 import de.manetmodel.graph.Path;
-import de.manetmodel.graph.Playground;
-import de.manetmodel.graph.Playground.DoubleRange;
-import de.manetmodel.graph.Playground.IntRange;
 import de.manetmodel.graph.generator.GraphGenerator;
+import de.manetmodel.graph.generator.GraphProperties;
+import de.manetmodel.graph.generator.GraphProperties.DoubleRange;
+import de.manetmodel.graph.generator.GraphProperties.IntRange;
 import de.manetmodel.network.Link;
 import de.manetmodel.network.Manet;
 import de.manetmodel.network.ManetSupplier;
@@ -27,7 +30,7 @@ public class DijkstraShortestPathTest {
 		new ManetSupplier.ManetLinkSupplier(), new IdealRadioModel(100d, new DataRate(2d, Unit.Type.megabit)));
 
 	GraphGenerator<Node, Link> generator = new GraphGenerator<Node, Link>(manet);
-	Playground playground = new Playground(1024, 768, new IntRange(100, 200), new DoubleRange(50d, 100d),
+	GraphProperties playground = new GraphProperties(1024, 768, new IntRange(100, 200), new DoubleRange(50d, 100d),
 		new IntRange(2, 4), new DoubleRange(50d, 100d));
 	generator.generateRandomGraph(playground);
 
@@ -35,27 +38,19 @@ public class DijkstraShortestPathTest {
 	    return 1d;
 	};
 
-<<<<<<< HEAD
 	DijkstraShortestPath<Node, Link> dijkstra = new DijkstraShortestPath<Node, Link>(manet);
 	Path<Node, Link> shortestPath = dijkstra.compute(manet.getFirstVertex(), manet.getLastVertex(), metric);
 
-	ManetModelApp<Node, Link> app = new ManetModelApp<Node, Link>(manet);
-=======
-	DijkstraShortestPath<Node, Link> dijkstra = new DijkstraShortestPath<Node, Link>(manet.getGraph());
-	Path<Node, Link> shortestPath = dijkstra.compute(manet.getGraph().getFirstVertex(),
-		manet.getGraph().getLastVertex(), metric);
-	
-	VisualGraphApp<Node, Link> app = new VisualGraphApp<Node, Link>(manet.getGraph());
->>>>>>> d9c688037001abd4091369b19994122730eaa6ab
-	app.getPanel().getVisualGraph().addPath(shortestPath, Color.RED);
-	app.run();
+	List<Integer> spCompare = new ArrayList<Integer>();
+	spCompare.add(0);
+	spCompare.add(1);
+	spCompare.add(3);
+	Iterator<Tuple<Link, Node<Link>>> it = shortestPath.iterator();
+	List<Integer> spComputed = new ArrayList<Integer>();
+	while (it.hasNext()) {
+	    spComputed.add(it.next().getSecond().getID());
+	}
+	assertTrue(spCompare.equals(spComputed));
 
-	/*
-	 * List<Integer> spCompare = new ArrayList<Integer>(); spCompare.add(0);
-	 * spCompare.add(1); spCompare.add(3); Iterator<Tuple<Link, Node<Link>>> it =
-	 * sp.iterator(); List<Integer> spComputed = new ArrayList<Integer>(); while
-	 * (it.hasNext()) { spComputed.add(it.next().getSecond().getID()); }
-	 * assertTrue(spCompare.equals(spComputed));
-	 */
     }
 }
