@@ -21,15 +21,22 @@ public class AcoGraph extends ManetGraph<AcoEdgeWeight>{
     
     public static void main() {
 	
-	ManetGraph<AcoEdgeWeight> manetGraph = new AcoGraph(null, null);
+	ManetGraph<Double> manetGraph1 = new ManetGraph<Double>(null, null);
+	
+	ManetGraph<AcoEdgeWeight> manetGraph2 = new AcoGraph(null, null);
 	
 	AcoGraph acoGraph = new AcoGraph(null, null);
-			
-	// ? °_°
+		
 	
-	GraphGenerator<AcoNode, AcoLink, AcoEdgeWeight> gen1 = new GraphGenerator<AcoNode, AcoLink, AcoEdgeWeight>(manetGraph);	
+	GraphGenerator<Node, Link<Double>, Double> gen1 = new GraphGenerator<Node, Link<Double>, Double>(manetGraph1);	
+		
 	
-	GraphGenerator<AcoNode, AcoLink, AcoEdgeWeight> gen2 = new GraphGenerator<AcoNode, AcoLink, AcoEdgeWeight>(acoGraph);
-
+	GraphGenerator<Node, Link<AcoEdgeWeight>, AcoEdgeWeight> gen2 = new GraphGenerator<Node, Link<AcoEdgeWeight>, AcoEdgeWeight>(manetGraph2);	
+	
+	
+	GraphGenerator<Node, Link<AcoEdgeWeight>, AcoEdgeWeight> gen3 = new GraphGenerator<Node, Link<AcoEdgeWeight>, AcoEdgeWeight>(acoGraph);	
+	
+	// ? °_° ok java
+	GraphGenerator<AcoNode, AcoLink, AcoEdgeWeight> gen4 = new GraphGenerator<AcoNode, AcoLink, AcoEdgeWeight>(acoGraph);	
     }
 }
