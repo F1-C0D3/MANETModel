@@ -2,8 +2,6 @@ package de.manetmodel.app.treeparser;
 
 import java.util.function.Consumer;
 
-import de.manetmodel.app.treeparser.Input;
-
 public class Function extends Element {
     private Consumer<Input> consumer;
 

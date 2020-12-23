@@ -1,26 +1,20 @@
 package de.manetmodel.graph.io;
 
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
-
-import de.manetmodel.graph.Edge;
+import de.manetmodel.graph.UndirectedWeightedGraph;
 import de.manetmodel.graph.Vertex;
-import de.manetmodel.graph.WeightedUndirectedGraph;
-import jakarta.xml.bind.JAXBContext;
-import jakarta.xml.bind.JAXBException;
-import jakarta.xml.bind.Marshaller;
+import de.manetmodel.graph.WeightedEdge;
 
-public class XMLExporter<V extends Vertex, E extends Edge> {
+public class XMLExporter<V extends Vertex<P>, P, E extends WeightedEdge<W>,W> {
 
-    WeightedUndirectedGraph<V, E> graph;
+    UndirectedWeightedGraph<V, P, E, W> graph;
 
-    public XMLExporter(WeightedUndirectedGraph<V, E> graph) {
+    public XMLExporter(UndirectedWeightedGraph<V, P, E, W> graph) {
 	this.graph = graph;
     }
 
+    /*
     public boolean exportGraph(String filePath) {
-	try {
+	/*try {
 	    JAXBContext jaxbContent = JAXBContext.newInstance(graph.getClass());
 	    Marshaller marshaller = jaxbContent.createMarshaller();
 	    marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
@@ -35,5 +29,5 @@ public class XMLExporter<V extends Vertex, E extends Edge> {
 	}
 
 	return false;
-    }
+    }*/
 }

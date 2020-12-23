@@ -3,11 +3,6 @@ package de.manetmodel.app.treeparser;
 import java.util.ArrayList;
 import java.util.Iterator;
 
-import de.manetmodel.app.treeparser.KeyOption;
-import de.manetmodel.app.treeparser.OptionManager;
-import de.manetmodel.app.treeparser.OptionVisitor;
-import de.manetmodel.app.treeparser.ValueOption;
-
 public abstract class Option
 {
 	protected Info info;

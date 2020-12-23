@@ -44,6 +44,7 @@ public class Timer {
 	    return this.milliSeconds;
 	}
 
+	@Override
 	public String toString() {
 	    long milliSeconds = this.milliSeconds % 1000;
 	    long seconds = (this.milliSeconds / 1000) % 60;

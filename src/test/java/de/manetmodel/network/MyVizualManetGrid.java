@@ -6,12 +6,12 @@ import java.awt.Toolkit;
 
 import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
+import javax.swing.WindowConstants;
 
+import de.manetmodel.app.gui.VisualGraphPanel;
+import de.manetmodel.app.gui.visualgraph.VisualGraph;
+import de.manetmodel.app.gui.visualgraph.VisualGraphMarkUp;
 import de.manetmodel.graph.generator.GraphGenerator;
-import de.manetmodel.graph.viz.VisualEdgeDistanceTextBuilder;
-import de.manetmodel.graph.viz.VisualGraph;
-import de.manetmodel.graph.viz.VisualGraphMarkUp;
-import de.manetmodel.graph.viz.VisualGraphPanel;
 import de.manetmodel.network.radio.Propagation;
 import de.manetmodel.network.radio.ScalarRadioModel;
 
@@ -42,6 +42,7 @@ public class MyVizualManetGrid {
 
     void toVisual() {
 	SwingUtilities.invokeLater(new Runnable() {
+	    @Override
 	    public void run() {
 		VisualGraph<Node, Link> visualGraph = new VisualGraph<Node, Link>(manet,
 			new VisualGraphMarkUp<Link>(new VisualEdgeDistanceTextBuilder<Link>()));
@@ -55,7 +56,7 @@ public class MyVizualManetGrid {
 		panel.setLayout(null);
 
 		JFrame frame = new JFrame("VisualGraphPanel");
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 		frame.getContentPane().add(panel);
 		frame.pack();
 		frame.setLocationRelativeTo(null);

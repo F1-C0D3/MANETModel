@@ -4,17 +4,17 @@ import java.awt.Color;
 import java.util.ArrayList;
 import java.util.List;
 
-import de.manetmodel.graph.Coordinate;
+import de.manetmodel.graph.Position2D;
 
 public class VisualVertex {
 
-    private final Coordinate position;
+    private final Position2D position;
     private Color backgroundColor;
     private Color borderColor;
     private String text;
     private List<VisualPath> visualPaths;
 
-    public VisualVertex(Coordinate position, Color backgroundColor, Color borderColor, String text) {
+    public VisualVertex(Position2D position, Color backgroundColor, Color borderColor, String text) {
 	this.position = position;
 	this.backgroundColor = backgroundColor;
 	this.borderColor = borderColor;
@@ -22,7 +22,7 @@ public class VisualVertex {
 	this.visualPaths = new ArrayList<VisualPath>();
     }
 
-    public Coordinate getPosition() {
+    public Position2D getPosition() {
 	return this.position;
     }
 

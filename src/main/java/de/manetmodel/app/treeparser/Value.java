@@ -1,8 +1,5 @@
 package de.manetmodel.app.treeparser;
 
-import de.manetmodel.app.treeparser.Element;
-import de.manetmodel.app.treeparser.ValueType;
-
 public class Value extends Element{
 	private ValueType type;
 				

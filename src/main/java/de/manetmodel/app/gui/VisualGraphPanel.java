@@ -17,36 +17,34 @@ import java.text.DecimalFormat;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
+import javax.swing.WindowConstants;
 
-import de.manetmodel.algo.RandomPath;
 import de.manetmodel.app.gui.math.Line2D;
 import de.manetmodel.app.gui.math.Point2D;
 import de.manetmodel.app.gui.math.VectorLine2D;
 import de.manetmodel.app.gui.visualgraph.VisualEdge;
-import de.manetmodel.app.gui.visualgraph.VisualEdgeDistanceTextBuilder;
 import de.manetmodel.app.gui.visualgraph.VisualGraph;
 import de.manetmodel.app.gui.visualgraph.VisualGraphMarkUp;
 import de.manetmodel.app.gui.visualgraph.VisualPath;
 import de.manetmodel.app.gui.visualgraph.VisualVertex;
-import de.manetmodel.graph.Coordinate;
-import de.manetmodel.graph.Edge;
+import de.manetmodel.graph.EdgeDistance;
+import de.manetmodel.graph.EdgeDistanceBuilder;
+import de.manetmodel.graph.Position2D;
+import de.manetmodel.graph.UndirectedWeighted2DGraph;
+import de.manetmodel.graph.UndirectedWeighted2DGraphSupplier;
 import de.manetmodel.graph.Vertex;
-import de.manetmodel.graph.WeightedUndirectedGraph;
-import de.manetmodel.graph.WeightedUndirectedGraphSupplier;
+import de.manetmodel.graph.WeightedEdge;
 import de.manetmodel.graph.generator.GraphGenerator;
 import de.manetmodel.graph.generator.GraphProperties.DoubleRange;
 import de.manetmodel.graph.generator.GraphProperties.IntRange;
 import de.manetmodel.graph.generator.NetworkGraphProperties;
-import de.manetmodel.util.RandomNumbers;
 
-public class VisualGraphPanel<V extends Vertex, E extends Edge> extends JPanel {
+public class VisualGraphPanel<V extends Vertex<Position2D>, E extends WeightedEdge<W>, W> extends JPanel {
 
-    private VisualGraph<V, E> graph;
+    private VisualGraph<V, E, W> graph;
     private Scope scope;
-    private double xScale;
-    private double yScale;
-    private int vertexWidth = 50;
-    private int padding = vertexWidth;
+    private double xScale, yScale;
+    private int vertexWidth = 50, padding = vertexWidth;
     private static Stroke EDGE_STROKE = new BasicStroke(1);
     private static BasicStroke EDGE_PATH_STROKE = new BasicStroke(4.0f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_BEVEL,
 	    0.0f, new float[] { 10.0f, 2.0f }, 0);
@@ -54,10 +52,9 @@ public class VisualGraphPanel<V extends Vertex, E extends Edge> extends JPanel {
     private static Stroke VERTEX_PATH_STROKE = new BasicStroke(4);
 
     public VisualGraphPanel() {
-
     }
 
-    public VisualGraphPanel(VisualGraph<V, E> graph) {
+    public VisualGraphPanel(VisualGraph<V, E, W> graph) {
 	this.graph = graph;
 	this.scope = this.getScope(graph);
     }
@@ -68,7 +65,7 @@ public class VisualGraphPanel<V extends Vertex, E extends Edge> extends JPanel {
 	String str = "ManetModel v1.0";
 	FontMetrics fontMetrics = g2.getFontMetrics();
 	Rectangle2D stringBounds = fontMetrics.getStringBounds(str, g2);
-	g2.drawString(str, padding, padding/2 + (int)(stringBounds.getHeight()/2));
+	g2.drawString(str, padding, padding / 2 + (int) (stringBounds.getHeight() / 2));
 
 	g2.setColor(Color.WHITE);
 	g2.fillRect(padding, padding, getWidth() - (2 * padding), getHeight() - (2 * padding));
@@ -177,7 +174,6 @@ public class VisualGraphPanel<V extends Vertex, E extends Edge> extends JPanel {
 		i++;
 	    }
 	} else {
-
 	    g2.setStroke(EDGE_STROKE);
 	    g2.setColor(Color.GRAY);
 	    g2.drawLine(edgeLine.x1().intValue(), edgeLine.y1().intValue(), edgeLine.x2().intValue(),
@@ -216,21 +212,12 @@ public class VisualGraphPanel<V extends Vertex, E extends Edge> extends JPanel {
 	g2.setColor(vertex.getBackgroundColor());
 	g2.fillOval(x, y, vertexWidth, vertexWidth);
 
-	int offset = 0;
-	int offsetSteps = 6;
-
 	if (!vertex.getVisualPaths().isEmpty()) {
 
 	    int angle = 360 / vertex.getVisualPaths().size();
 	    int angleOffset = 0;
 
 	    for (VisualPath visualPath : vertex.getVisualPaths()) {
-		/*
-		 * g2.setStroke(VERTEX_PATH_STROKE); g2.setColor(visualPath.getColor());
-		 * g2.drawOval(x - offset/2, y - offset/2, vertexWidth + offset, vertexWidth +
-		 * offset); offset += offsetSteps;
-		 */
-
 		g2.setStroke(new BasicStroke(2 + vertex.getVisualPaths().size()));
 		g2.setColor(visualPath.getColor());
 		g2.drawArc(x, y, vertexWidth, vertexWidth, angleOffset, angle);
@@ -296,7 +283,7 @@ public class VisualGraphPanel<V extends Vertex, E extends Edge> extends JPanel {
 	}
     }
 
-    private Scope getScope(VisualGraph<V, E> graph) {
+    private Scope getScope(VisualGraph<V, E, W> graph) {
 
 	Scope scope = new Scope();
 
@@ -322,37 +309,50 @@ public class VisualGraphPanel<V extends Vertex, E extends Edge> extends JPanel {
 	return scope;
     }
 
-    public VisualGraph<V, E> getVisualGraph() {
+    public VisualGraph<V, E, W> getVisualGraph() {
 	return this.graph;
     }
 
-    public void updateVisualGraph(VisualGraph<V, E> graph) {
+    public void updateVisualGraph(VisualGraph<V, E, W> graph) {
 	this.graph = graph;
 	this.scope = this.getScope(graph);
     }
 
     public static void main(String[] args) {
 	SwingUtilities.invokeLater(new Runnable() {
+	    @Override
 	    public void run() {
 
-		WeightedUndirectedGraph<Vertex, Edge> graph = new WeightedUndirectedGraph<Vertex, Edge>(
-			new WeightedUndirectedGraphSupplier.VertexSupplier(),
-			new WeightedUndirectedGraphSupplier.EdgeSupplier());
+		UndirectedWeighted2DGraphSupplier<EdgeDistance> supplier = new UndirectedWeighted2DGraphSupplier<EdgeDistance>();
 
-		GraphGenerator<Vertex, Edge> generator = new GraphGenerator<Vertex, Edge>(graph);
-		NetworkGraphProperties properties = new NetworkGraphProperties(1024, 768, new IntRange(100, 200), new DoubleRange(50d, 100d), 100);
+		UndirectedWeighted2DGraph<Vertex<Position2D>, WeightedEdge<EdgeDistance>, EdgeDistance> graph = new UndirectedWeighted2DGraph<Vertex<Position2D>, WeightedEdge<EdgeDistance>, EdgeDistance>(
+			supplier.getVertexSupplier(), supplier.getEdgeSupplier());
+
+		EdgeDistanceBuilder<Vertex<Position2D>, WeightedEdge<EdgeDistance>> edgeDistanceBuilder = new EdgeDistanceBuilder<Vertex<Position2D>, WeightedEdge<EdgeDistance>>(graph);
+		
+		GraphGenerator<Vertex<Position2D>, WeightedEdge<EdgeDistance>, EdgeDistance> generator = new GraphGenerator<Vertex<Position2D>, WeightedEdge<EdgeDistance>, EdgeDistance>(
+			graph, edgeDistanceBuilder);
+		
+		NetworkGraphProperties properties = new NetworkGraphProperties(1024, 768, new IntRange(100, 200),
+			new DoubleRange(50d, 100d), 100);
+				
+		
 		generator.generateNetworkGraph(properties);
 
-		VisualGraph<Vertex, Edge> visualGraph = new VisualGraph<Vertex, Edge>(graph,
-			new VisualGraphMarkUp<Edge>(new VisualEdgeDistanceTextBuilder<Edge>()));
+		VisualGraph<Vertex<Position2D>, WeightedEdge<EdgeDistance>,EdgeDistance> visualGraph = new VisualGraph<Vertex<Position2D>, WeightedEdge<EdgeDistance>, EdgeDistance>(
+			graph, new VisualGraphMarkUp<WeightedEdge<EdgeDistance>, EdgeDistance>());
 
-		RandomPath<Vertex, Edge> randomPath = new RandomPath<Vertex, Edge>(graph);
+		/*
+		 * RandomPath<Vertex, WeightedEdge<Double>> randomPath = new RandomPath<Vertex,
+		 * Edge>(graph);
+		 * 
+		 * for (int i = 1; i <= 20; i++) visualGraph.addVisualPath(randomPath
+		 * .compute(graph.getVertex(RandomNumbers.getRandom(0,
+		 * graph.getVertices().size())), 5));
+		 */
 
-		for (int i = 1; i <= 20; i++)
-		    visualGraph.addPath(randomPath
-			    .compute(graph.getVertex(RandomNumbers.getRandom(0, graph.getVertices().size())), 5));
-
-		VisualGraphPanel<Vertex, Edge> panel = new VisualGraphPanel<Vertex, Edge>(visualGraph);
+		VisualGraphPanel<Vertex<Position2D>, WeightedEdge<EdgeDistance>, EdgeDistance> panel = new VisualGraphPanel<Vertex<Position2D>, WeightedEdge<EdgeDistance>, EdgeDistance>(
+			visualGraph);
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 		int width = (int) screenSize.getWidth() * 3 / 4;
 		int height = (int) screenSize.getHeight() * 3 / 4;
@@ -361,7 +361,7 @@ public class VisualGraphPanel<V extends Vertex, E extends Edge> extends JPanel {
 		panel.setLayout(null);
 
 		JFrame frame = new JFrame("VisualGraphPanel");
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 		frame.getContentPane().add(panel);
 		frame.pack();
 		frame.setLocationRelativeTo(null);

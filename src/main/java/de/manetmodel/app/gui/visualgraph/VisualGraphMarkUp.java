@@ -2,10 +2,9 @@ package de.manetmodel.app.gui.visualgraph;
 
 import java.awt.Color;
 
-import de.manetmodel.graph.Edge;
-import de.manetmodel.graph.Vertex;
+import de.manetmodel.graph.WeightedEdge;
 
-public class VisualGraphMarkUp<E extends Edge> {
+public class VisualGraphMarkUp<E extends WeightedEdge<W>, W> {
 
     /* Playground (background) mark up */
     private Color backgroundColor = Color.WHITE;
@@ -23,11 +22,11 @@ public class VisualGraphMarkUp<E extends Edge> {
     /* VisualPath mark up */
     private int pathWidth = 4;
 
-    private VisualEdgeTextBuilder<E> edgeTextBuilder;
+    /*private VisualEdgeTextBuilder<E,W> edgeTextBuilder;
     
-    public VisualGraphMarkUp(VisualEdgeTextBuilder<E> edgeTextBuilder) {
+    public VisualGraphMarkUp(VisualEdgeTextBuilder<E,W> edgeTextBuilder) {
 	this.edgeTextBuilder = edgeTextBuilder;
-    }
+    }*/
 
     public void setBackgroundColor(Color backgroundColor) {
 	this.backgroundColor = backgroundColor;
@@ -73,13 +72,13 @@ public class VisualGraphMarkUp<E extends Edge> {
 
     /* Edge mark up */
     
-    public VisualEdgeTextBuilder<E> getEdgeTextBuilder(){
+    /*public VisualEdgeTextBuilder<E,W> getEdgeTextBuilder(){
 	return this.edgeTextBuilder; 
     }
     
-    public void setEdgeTextBuilder(VisualEdgeTextBuilder<E> edgeText) {
+    public void setEdgeTextBuilder(VisualEdgeTextBuilder<E,W> edgeText) {
 	this.edgeTextBuilder = edgeText;
-    }
+    }*/
 
     public void setEdgeWidth(Integer edgeWidth) {
 	this.edgeWidth = edgeWidth;

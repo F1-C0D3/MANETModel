@@ -6,7 +6,8 @@ import de.manetmodel.graph.Path;
 import de.manetmodel.network.unit.DataRate;
 import de.manetmodel.util.Tuple;
 
-public class Flow<N extends Node, L extends Link> extends Path<N, L> {
+public class Flow<N extends Node<L,W>, L extends Link<W>, W> extends Path<N, L> {
+
     private DataRate rate;
 
     public Flow(N source, N target, DataRate bitrate) {
@@ -33,7 +34,7 @@ public class Flow<N extends Node, L extends Link> extends Path<N, L> {
 		pathString.append(", ");
 	    }
 	}
-
+	
 	return meta.append(pathString.append("]")).toString();
     }
 

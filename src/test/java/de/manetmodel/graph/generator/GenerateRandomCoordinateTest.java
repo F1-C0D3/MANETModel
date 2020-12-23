@@ -4,14 +4,7 @@ package de.manetmodel.graph.generator;
 import org.junit.Test;
 
 import de.manetmodel.app.VisualGraphApp;
-import de.manetmodel.graph.Coordinate;
-import de.manetmodel.graph.Edge;
-import de.manetmodel.graph.Playground;
 import de.manetmodel.graph.Vertex;
-import de.manetmodel.graph.WeightedUndirectedGraph;
-import de.manetmodel.graph.WeightedUndirectedGraphSupplier;
-import de.manetmodel.graph.Playground.DoubleRange;
-import de.manetmodel.graph.Playground.IntRange;
 
 public class GenerateRandomCoordinateTest {
 

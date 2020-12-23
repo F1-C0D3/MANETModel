@@ -5,29 +5,38 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-import de.manetmodel.graph.Edge;
 import de.manetmodel.graph.Path;
+import de.manetmodel.graph.Position2D;
+import de.manetmodel.graph.UndirectedWeighted2DGraph;
 import de.manetmodel.graph.Vertex;
-import de.manetmodel.graph.WeightedUndirectedGraph;
+import de.manetmodel.graph.WeightedEdge;
 import de.manetmodel.util.Tuple;
 
-public class VisualGraph<V extends Vertex, E extends Edge> {
+public class VisualGraph<V extends Vertex<Position2D>, E extends WeightedEdge<W>, W> {
 
     private ArrayList<VisualVertex> vertices;
     private ArrayList<VisualEdge> edges;
 
-    public VisualGraph(WeightedUndirectedGraph<V, E> graph, VisualGraphMarkUp<E> markUp) {
+    public VisualGraph(UndirectedWeighted2DGraph<V, E, W> graph, VisualGraphMarkUp<E, W> markUp) {
+
 	this.vertices = new ArrayList<VisualVertex>();
 	this.edges = new ArrayList<VisualEdge>();
 
 	for (V vertex : graph.getVertices())
-	    this.vertices.add(new VisualVertex(vertex.getPostion(), markUp.getVertexBackgroundColor(),
+	    this.vertices.add(new VisualVertex(vertex.getPosition(), markUp.getVertexBackgroundColor(),
 		    markUp.getVertexBorderColor(), Integer.toString(vertex.getID())));
 
 	for (E edge : graph.getEdges()) {
+
+	    String edgeText = "";
+
+	    if (edge.getWeight() != null)
+		edgeText = edge.getWeight().toString();
+
 	    Tuple<V, V> vertices = graph.getVerticesOf(edge);
-	    this.edges.add(new VisualEdge(vertices.getFirst().getPostion(), vertices.getSecond().getPostion(),
-		    markUp.getEdgeColor(), markUp.getEdgeTextBuilder().get(edge)));
+
+	    this.edges.add(new VisualEdge(vertices.getFirst().getPosition(), vertices.getSecond().getPosition(),
+		    markUp.getEdgeColor(), edgeText));
 	}
     }
 
@@ -39,13 +48,13 @@ public class VisualGraph<V extends Vertex, E extends Edge> {
 	return this.edges;
     }
 
-    public void addPath(Path<V, E> path) {
+    public void addVisualPath(Path<V, E> path) {
 	Random random = new Random();
 	Color visualPathColor = new Color(random.nextFloat(), random.nextFloat(), random.nextFloat());
-	this.addPath(path, visualPathColor);
+	this.addVisualPath(path, visualPathColor);
     }
 
-    public void addPath(Path<V, E> path, Color color) {
+    public void addVisualPath(Path<V, E> path, Color color) {
 
 	VisualPath visualPath = new VisualPath(color);
 

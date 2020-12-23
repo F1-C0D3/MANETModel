@@ -3,7 +3,6 @@ package de.manetgraph.app;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.function.Function;
 
 public class ConsoleAppTest {
 	
@@ -17,6 +16,7 @@ public class ConsoleAppTest {
 	        this.children = children;
 	    }
 
+	    @Override
 	    public String toString() {
 	        StringBuilder buffer = new StringBuilder(50);
 	        print(buffer, "", "");

@@ -1,4 +1,4 @@
-package de.manetmodel.graph.experimental;
+package de.manetmodel.graph;
 
 public class Position3D {
 
@@ -22,5 +22,5 @@ public class Position3D {
 
     public double z() {
 	return this.z;
-    }
+    }   
 }

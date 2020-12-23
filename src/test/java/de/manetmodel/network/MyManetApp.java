@@ -2,9 +2,6 @@ package de.manetmodel.network;
 
 import org.junit.Test;
 
-import de.manetmodel.graph.Playground;
-import de.manetmodel.graph.Playground.DoubleRange;
-import de.manetmodel.graph.Playground.IntRange;
 import de.manetmodel.graph.generator.GraphGenerator;
 
 public class MyManetApp {

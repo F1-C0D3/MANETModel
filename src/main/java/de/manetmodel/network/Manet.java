@@ -6,12 +6,12 @@ import java.util.List;
 import java.util.Set;
 import java.util.function.Supplier;
 
-import de.manetmodel.graph.WeightedUndirectedGraph;
+import de.manetmodel.graph.UndirectedWeighted2DGraph;
 import de.manetmodel.network.radio.IRadioModel;
 import de.manetmodel.network.unit.DataRate;
 import de.manetmodel.util.Tuple;
 
-public class Manet<N extends Node, L extends Link> extends WeightedUndirectedGraph<N, L> {
+public class Manet<N extends Node<L,W>, L extends Link<W>, W> extends UndirectedWeighted2DGraph<N, L, W> {
     private IRadioModel radioModel;
 
     public Manet(Supplier<N> vertexSupplier, Supplier<L> edgeSupplier, IRadioModel radioModel) {
@@ -27,7 +27,7 @@ public class Manet<N extends Node, L extends Link> extends WeightedUndirectedGra
 	    Tuple<N, N> lt = this.getVerticesOf(l);
 	    N s1 = lt.getFirst();
 	    N s2 = lt.getSecond();
-	    double distance = this.getDistance(s1, s2);
+	    double distance = this.getDistance(s1.getPosition(), s2.getPosition());
 	    l.setTransmissionRate(radioModel.transmissionBitrate(distance));
 	    l.setReceptionPower(radioModel.receptionPower(distance));
 
@@ -35,18 +35,16 @@ public class Manet<N extends Node, L extends Link> extends WeightedUndirectedGra
 	    List<N> lListOfs2 = this.getNextHopsOf(s2);
 
 	    for (N n : lListOfs1) {
-		l.setInReceptionRange(new HashSet<L>(this.getEdgesOf(n)));
+		l.setInReceptionRange(new HashSet<Link<W>>(this.getEdgesOf(n)));
 	    }
 
 	    for (N n : lListOfs2) {
-		l.setInReceptionRange(new HashSet<L>(this.getEdgesOf(n)));
+		l.setInReceptionRange(new HashSet<Link<W>>(this.getEdgesOf(n)));
 	    }
-
 	}
 	return e;
     }
 
-    @Override
     public boolean addVertex(N vertex) {
 	boolean result = super.addVertex(vertex);
 
@@ -54,7 +52,6 @@ public class Manet<N extends Node, L extends Link> extends WeightedUndirectedGra
 	    setLinksInterferedByL(v);
 	}
 	return result;
-
     }
 
     @Override
@@ -75,8 +72,8 @@ public class Manet<N extends Node, L extends Link> extends WeightedUndirectedGra
 	    N se = this.getVerticesOf(le).getFirst();
 	    N sk = this.getVerticesOf(le).getSecond();
 
-	    if (radioModel.interferencePresent(this.getDistance(n, se))
-		    && radioModel.interferencePresent(this.getDistance(n, sk))) {
+	    if (radioModel.interferencePresent(this.getDistance(n.getPosition(), se.getPosition()))
+		    && radioModel.interferencePresent(this.getDistance(n.getPosition(), sk.getPosition()))) {
 		n.setInterferedLink(le);
 	    }
 	}
@@ -89,24 +86,24 @@ public class Manet<N extends Node, L extends Link> extends WeightedUndirectedGra
      * 
      * @Todo: graph copy
      */
-    public DataRate utilization(List<Flow<N, L>> flows) {
+    public DataRate utilization(List<Flow<N, L, W>> flows) {
 	/* set link utilization to initial value (0) */
 //	relaxL();
-	Iterator<Flow<N, L>> flowsIter = flows.iterator();
+	Iterator<Flow<N, L, W>> flowsIter = flows.iterator();
 
 	long networkUtilization = 0L;
 
 	while (flowsIter.hasNext()) {
-	    Flow<N, L> f = flowsIter.next();
+	    Flow<N, L, W> f = flowsIter.next();
 	    Iterator<Tuple<L, N>> fIter = f.listIterator(1);
 
 	    while (fIter.hasNext()) {
 		Tuple<L, N> ln = fIter.next();
 		L l = ln.getFirst();
-		Set<L> uLinks = new HashSet<L>(l.inReceptionRange());
+		Set<Link<W>> uLinks = new HashSet<Link<W>>(l.inReceptionRange());
 		N se = this.getTargetOf(ln.getSecond(), l);
 		uLinks.addAll(se.getInterferedLinks());
-		Iterator<L> pIter = uLinks.iterator();
+		Iterator<Link<W>> pIter = uLinks.iterator();
 
 		while (pIter.hasNext()) {
 //		    L ul = pIter.next();

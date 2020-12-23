@@ -9,12 +9,14 @@ public class MyGraph extends WeightedUndirectedGraph<MyVertex, MyEdge>{
 	}
 	
 	public static class MyVertexSupplier implements Supplier<MyVertex> {
+		@Override
 		public MyVertex get() {
 			return new MyVertex();
 		}	
 	}
 	
 	public static class MyEdgeSupplier implements Supplier<MyEdge> {
+		@Override
 		public MyEdge get() {
 			return new MyEdge();
 		}	
