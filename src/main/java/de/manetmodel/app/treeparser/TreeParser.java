@@ -112,7 +112,7 @@ public class TreeParser {
 		    consume(string.substring(doubleValue.toString().length()), valueOption, input);
 		    break;
 		case STRING:
-		    subString = string.substring(0, string.indexOf(delimiter));
+		    subString = string.split(delimiter, 1)[0];
 		    input.STRING.add(subString);
 		    consume(string.substring(subString.length()), valueOption, input);
 		    break;
