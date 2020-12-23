@@ -24,6 +24,7 @@
 
 ###### Discussion:
 - Remove generic types (N,L,V,E) from Manet and maybe also from UndirectedWeightedGraph classes? 
+  - Might be a good idea :D
 - Flow deployment strategy regarding ACO
  - Link per Link which might be more tailored for ACO
  - Complete flow deployment
