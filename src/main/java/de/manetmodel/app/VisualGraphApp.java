@@ -191,6 +191,7 @@ public class VisualGraphApp<V extends Vertex, E extends Edge> {
 
 	terminal.add(font);
 
+	terminal.add(color);
 	parser.addOption(terminal);
     }
 
