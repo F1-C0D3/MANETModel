@@ -11,28 +11,28 @@ import de.manetmodel.graph.Vertex;
 import de.manetmodel.graph.WeightedEdge;
 import de.manetmodel.util.Tuple;
 
-public class DijkstraShortestPath<V extends Vertex<P>, P, E extends WeightedEdge<W>, W> {
+public class DijkstraShortestPath<P, W> {
 
-    private UndirectedWeightedGraph<V, P, E, W> graph;
+    private UndirectedWeightedGraph<P,W> graph;
 
-    public DijkstraShortestPath(UndirectedWeightedGraph<V, P, E, W> graph) {
+    public DijkstraShortestPath(UndirectedWeightedGraph<P, W> graph) {
 	this.graph = graph;
     }
 
-    public Path<V, E> compute(V source, V target, Function<Tuple<E, V>, Double> metric) {
+    public Path<P, W> compute(Vertex<P> source, Vertex<P> target, Function<Tuple<WeightedEdge<W>, Vertex<P>>, Double> metric) {
 	/* Initializaton */
-	V current = source;
-	Path<V, E> sp = new Path<V, E>(source, target);
+	Vertex<P> current = source;
+	Path<P,W> sp = new Path<P,W>(source, target);
 	List<Integer> vertices = new ArrayList<Integer>();
-	List<Tuple<V, Double>> predDist = new ArrayList<Tuple<V, Double>>();
+	List<Tuple<Vertex<P>, Double>> predDist = new ArrayList<Tuple<Vertex<P>, Double>>();
 
-	for (V n : graph.getVertices()) {
+	for (Vertex<P> n : graph.getVertices()) {
 	    vertices.add(n.getID());
 
 	    if (n.getID() == current.getID()) {
-		predDist.add(new Tuple<V, Double>(null, 0d));
+		predDist.add(new Tuple<Vertex<P>, Double>(null, 0d));
 	    } else {
-		predDist.add(new Tuple<V, Double>(null, Double.POSITIVE_INFINITY));
+		predDist.add(new Tuple<Vertex<P>, Double>(null, Double.POSITIVE_INFINITY));
 	    }
 	}
 
@@ -45,8 +45,8 @@ public class DijkstraShortestPath<V extends Vertex<P>, P, E extends WeightedEdge
 		return generateSP(predDist, sp);
 	    }
 
-	    for (V neig : graph.getNextHopsOf(current)) {
-		double edgeDist = metric.apply(new Tuple<E, V>(graph.getEdge(current, neig), neig));
+	    for (Vertex<P> neig : graph.getNextHopsOf(current)) {
+		double edgeDist = metric.apply(new Tuple<WeightedEdge<W>, Vertex<P>>(graph.getEdge(current, neig), neig));
 		double oldPahtDist = predDist.get(neig.getID()).getSecond();
 		double altPathDist = edgeDist + predDist.get(current.getID()).getSecond();
 
@@ -60,13 +60,13 @@ public class DijkstraShortestPath<V extends Vertex<P>, P, E extends WeightedEdge
 	return sp;
     }
 
-    private Path<V, E> generateSP(List<Tuple<V, Double>> predDist, Path<V, E> sp) {
-	V t = sp.getTarget();
-	List<Tuple<E, V>> copy = new ArrayList<Tuple<E, V>>();
+    private Path<P, W> generateSP(List<Tuple<Vertex<P>, Double>> predDist, Path<P, W> sp) {
+	Vertex<P> t = sp.getTarget();
+	List<Tuple<WeightedEdge<W>, Vertex<P>>> copy = new ArrayList<Tuple<WeightedEdge<W>, Vertex<P>>>();
 
 	do {
-	    V pred = predDist.get(t.getID()).getFirst();
-	    copy.add(0, new Tuple<E, V>(graph.getEdge(t, pred), t));
+	    Vertex<P> pred = predDist.get(t.getID()).getFirst();
+	    copy.add(0, new Tuple<WeightedEdge<W>, Vertex<P>>(graph.getEdge(t, pred), t));
 	    t = pred;
 	} while (t.getID() != sp.getSource().getID());
 
@@ -74,13 +74,13 @@ public class DijkstraShortestPath<V extends Vertex<P>, P, E extends WeightedEdge
 	return sp;
     }
 
-    private Integer minDistance(List<Tuple<V, Double>> predT, List<Integer> v) {
+    private Integer minDistance(List<Tuple<Vertex<P>, Double>> predT, List<Integer> v) {
 	int id = -1;
 	double result = Double.POSITIVE_INFINITY;
-	ListIterator<Tuple<V, Double>> it = predT.listIterator();
+	ListIterator<Tuple<Vertex<P>, Double>> it = predT.listIterator();
 
 	while (it.hasNext()) {
-	    Tuple<V, Double> pred = it.next();
+	    Tuple<Vertex<P>, Double> pred = it.next();
 
 	    if (v.contains(it.previousIndex()) && pred.getSecond() < result) {
 		result = pred.getSecond();

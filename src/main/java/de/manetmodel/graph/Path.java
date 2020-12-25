@@ -6,80 +6,80 @@ import java.util.List;
 
 import de.manetmodel.util.Tuple;
 
-public class Path<V extends Vertex<?>, E extends WeightedEdge<?>> extends LinkedList<Tuple<E, V>> {
+public class Path<P,W> extends LinkedList<Tuple<WeightedEdge<W>, Vertex<P>>> {
 
-    private V source;
-    private V target;
+    private Vertex<P> source;
+    private Vertex<P> target;
 
     public Path() {
 	this.source = null;
 	this.target = null;
     }
 
-    public Path(V source) {
+    public Path(Vertex<P> source) {
 	this.source = source;
-	super.add(new Tuple<E, V>(null, source));
+	super.add(new Tuple<WeightedEdge<W>, Vertex<P>>(null, source));
     }
 
-    public Path(V source, V target) {
+    public Path(Vertex<P> source, Vertex<P> target) {
 	this.source = source;
 	this.target = target;
-	super.add(new Tuple<E, V>(null, source));
+	super.add(new Tuple<WeightedEdge<W>, Vertex<P>>(null, source));
     }
     
     @Override
-    public boolean add(Tuple<E, V> linkAndNode) {
+    public boolean add(Tuple<WeightedEdge<W>, Vertex<P>> linkAndNode) {
 	return super.add(linkAndNode);
     }
 
     @Override
     public void clear() {
 	super.clear();
-	super.add(new Tuple<E, V>(null, source));
+	super.add(new Tuple<WeightedEdge<W>, Vertex<P>>(null, source));
     }
 
-    public V getSource() {
+    public Vertex<P> getSource() {
 	return this.source;
     }
 
-    public V getTarget() {
+    public Vertex<P> getTarget() {
 	return this.target;
     }
 
     @Override
-    public Tuple<E, V> getFirst() {
+    public Tuple<WeightedEdge<W>, Vertex<P>> getFirst() {
 	if (this.get(0) != null)
 	    return this.get(0);
 	return null;
     }
 
     @Override
-    public Tuple<E, V> getLast() {
+    public Tuple<WeightedEdge<W>, Vertex<P>> getLast() {
 	if (this.size() > 0)
 	    return this.get(this.size() - 1);
 	return null;
     }
 
-    public V getLastVertex() {
+    public Vertex<P> getLastVertex() {
 	if (this.size() > 0)
 	    return this.get(this.size() - 1).getSecond();
 	return null;
     }
 
-    public E getLastEdge() {
+    public WeightedEdge<W> getLastEdge() {
 	return this.get(this.size() - 1).getFirst();
     }
 
-    public boolean contains(V vertex) {
-	for (Tuple<E, V> edgeAndVertex : this)
-	    if (vertex.equals(edgeAndVertex.getSecond()))
+    public boolean contains(Vertex<P> vertex) {
+	for (Tuple<WeightedEdge<W>, Vertex<P>> vertexEdgeTuple : this)
+	    if (vertex.equals(vertexEdgeTuple.getSecond()))
 		return true;
 	return false;
     }
 
-    public boolean contains(E edge) {
-	for (Tuple<E, V> edgeAndVertex : this)
-	    if (edge.equals(edgeAndVertex.getFirst()))
+    public boolean contains(WeightedEdge<W> edge) {
+	for (Tuple<WeightedEdge<W>, Vertex<P>> vertexEdgeTuple : this)
+	    if (edge.equals(vertexEdgeTuple.getFirst()))
 		return true;
 	return false;
     }
@@ -88,22 +88,22 @@ public class Path<V extends Vertex<?>, E extends WeightedEdge<?>> extends Linked
 	return this.getLast().getSecond().equals(target);
     }
 
-    public List<V> getUnvisitedVertices(List<V> vertices) {
-	List<V> unvisitedVertices = new ArrayList<V>();
-	for (V vertex : vertices)
+    public List<Vertex<P>> getUnvisitedVertices(List<Vertex<P>> vertices) {
+	List<Vertex<P>> unvisitedVertices = new ArrayList<Vertex<P>>();
+	for (Vertex<P> vertex : vertices)
 	    if (!this.contains(vertex))
 		unvisitedVertices.add(vertex);
 	return unvisitedVertices;
     }
 
-    public List<V> getVisitedVertices() {
-	List<V> vertices = new ArrayList<V>();
-	for (Tuple<E, V> edgeAndVertex : this)
-	    vertices.add(edgeAndVertex.getSecond());
+    public List<Vertex<P>> getVisitedVertices() {
+	List<Vertex<P>> vertices = new ArrayList<Vertex<P>>();
+	for (Tuple<WeightedEdge<W>, Vertex<P>> vertexEdgeTuple : this)
+	    vertices.add(vertexEdgeTuple.getSecond());
 	return vertices;
     }
 
-    public boolean equals(Path<V, E> path) {
+    public boolean equals(Path<P,W> path) {
 	for (int i = 0; i < this.size(); i++) {
 	    if (path.get(i) != null)
 		if (!path.get(i).getSecond().equals(this.get(i).getSecond()))
@@ -117,10 +117,10 @@ public class Path<V extends Vertex<?>, E extends WeightedEdge<?>> extends Linked
     @Override
     public String toString() {
 	String str = "";
-	for (Tuple<E, V> linkAndNode : this) {
-	    if (linkAndNode.getFirst() != null)
-		str += String.format("- %.2f -", linkAndNode.getFirst().toString());
-	    str += String.format("[%s]", linkAndNode.getSecond().toString());
+	for (Tuple<WeightedEdge<W>, Vertex<P>> vertexEdgeTuple : this) {
+	    if (vertexEdgeTuple.getFirst() != null)
+		str += String.format("- %.2f -", vertexEdgeTuple.getFirst().toString());
+	    str += String.format("[%s]", vertexEdgeTuple.getSecond().toString());
 	}
 	return str;
     }

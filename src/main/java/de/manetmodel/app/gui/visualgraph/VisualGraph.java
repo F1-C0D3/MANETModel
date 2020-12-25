@@ -12,28 +12,28 @@ import de.manetmodel.graph.Vertex;
 import de.manetmodel.graph.WeightedEdge;
 import de.manetmodel.util.Tuple;
 
-public class VisualGraph<V extends Vertex<Position2D>, E extends WeightedEdge<W>, W> {
+public class VisualGraph<W> {
 
     private ArrayList<VisualVertex> vertices;
     private ArrayList<VisualEdge> edges;
 
-    public VisualGraph(UndirectedWeighted2DGraph<V, E, W> graph, VisualGraphMarkUp<E, W> markUp) {
+    public VisualGraph(UndirectedWeighted2DGraph<W> graph, VisualGraphMarkUp markUp) {
 
 	this.vertices = new ArrayList<VisualVertex>();
 	this.edges = new ArrayList<VisualEdge>();
 
-	for (V vertex : graph.getVertices())
+	for (Vertex<Position2D> vertex : graph.getVertices())
 	    this.vertices.add(new VisualVertex(vertex.getPosition(), markUp.getVertexBackgroundColor(),
 		    markUp.getVertexBorderColor(), Integer.toString(vertex.getID())));
 
-	for (E edge : graph.getEdges()) {
+	for (WeightedEdge<W> edge : graph.getEdges()) {
 
 	    String edgeText = "";
 
 	    if (edge.getWeight() != null)
 		edgeText = edge.getWeight().toString();
 
-	    Tuple<V, V> vertices = graph.getVerticesOf(edge);
+	    Tuple<Vertex<Position2D>, Vertex<Position2D>> vertices = graph.getVerticesOf(edge);
 
 	    this.edges.add(new VisualEdge(vertices.getFirst().getPosition(), vertices.getSecond().getPosition(),
 		    markUp.getEdgeColor(), edgeText));
@@ -48,20 +48,20 @@ public class VisualGraph<V extends Vertex<Position2D>, E extends WeightedEdge<W>
 	return this.edges;
     }
 
-    public void addVisualPath(Path<V, E> path) {
+    public void addVisualPath(Path<Position2D, W> path) {
 	Random random = new Random();
 	Color visualPathColor = new Color(random.nextFloat(), random.nextFloat(), random.nextFloat());
 	this.addVisualPath(path, visualPathColor);
     }
 
-    public void addVisualPath(Path<V, E> path, Color color) {
+    public void addVisualPath(Path<Position2D, W> path, Color color) {
 
 	VisualPath visualPath = new VisualPath(color);
 
-	for (Tuple<E, V> edgeAndVertex : path) {
+	for (Tuple<WeightedEdge<W>, Vertex<Position2D>> edgeAndVertex : path) {
 
-	    E edge = edgeAndVertex.getFirst();
-	    V vertex = edgeAndVertex.getSecond();
+	    WeightedEdge<W> edge = edgeAndVertex.getFirst();
+	    Vertex<Position2D> vertex = edgeAndVertex.getSecond();
 
 	    if (edge != null)
 		edges.get(edge.getID()).addVisualPath(visualPath);

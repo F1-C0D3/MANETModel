@@ -19,16 +19,16 @@ import de.manetmodel.graph.Position2D;
 import de.manetmodel.graph.Vertex;
 import de.manetmodel.graph.WeightedEdge;
 
-public class VisualGraphFrame<V extends Vertex<Position2D>, E extends WeightedEdge<W>, W> extends JFrame {
+public class VisualGraphFrame<W> extends JFrame {
 
     Terminal terminal;
-    VisualGraphPanel<V, E, W> visualGraphPanel;
+    VisualGraphPanel<W> visualGraphPanel;
 
-    public VisualGraphFrame(VisualGraph<V, E, W> graph) {
+    public VisualGraphFrame(VisualGraph<W> graph) {
 
 	this.setLayout(new BorderLayout());
 
-	this.visualGraphPanel = new VisualGraphPanel<V, E, W>(graph);
+	this.visualGraphPanel = new VisualGraphPanel<W>(graph);
 	this.visualGraphPanel.setFont(new Font("NotoSans", Font.PLAIN, 16));
 	this.visualGraphPanel.setLayout(new OverlayLayout(this.visualGraphPanel));
 	this.terminal = new Terminal(new Font("Monospace", Font.PLAIN, 20), Color.WHITE);
@@ -53,7 +53,7 @@ public class VisualGraphFrame<V extends Vertex<Position2D>, E extends WeightedEd
 		new VisualGraphFrameAction(VisualGraphFrameActions.TOGGLE_TERMINAL));
     }
 
-    public VisualGraphPanel<V, E, W> getVisualGraphPanel() {
+    public VisualGraphPanel<W> getVisualGraphPanel() {
 	return this.visualGraphPanel;
     }
 

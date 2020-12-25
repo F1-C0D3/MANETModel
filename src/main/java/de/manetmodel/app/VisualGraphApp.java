@@ -30,34 +30,36 @@ import de.manetmodel.app.treeparser.Value;
 import de.manetmodel.app.treeparser.ValueOption;
 import de.manetmodel.app.treeparser.ValueType;
 import de.manetmodel.graph.EdgeDistance;
-import de.manetmodel.graph.EdgeDistanceBuilder;
+import de.manetmodel.graph.EdgeDistanceSupplier;
+import de.manetmodel.graph.EdgeWeightSupplier;
 import de.manetmodel.graph.Path;
 import de.manetmodel.graph.Position2D;
 import de.manetmodel.graph.UndirectedWeighted2DGraph;
-import de.manetmodel.graph.UndirectedWeighted2DGraphSupplier;
 import de.manetmodel.graph.Vertex;
 import de.manetmodel.graph.WeightedEdge;
-import de.manetmodel.graph.generator.GraphGenerator;
+import de.manetmodel.graph.generator.GridGraphProperties;
+import de.manetmodel.graph.generator.NetworkGraphGenerator;
+import de.manetmodel.graph.generator.NetworkGraphProperties;
+import de.manetmodel.graph.generator.RandomGraphGenerator;
 import de.manetmodel.graph.generator.GraphProperties.DoubleRange;
 import de.manetmodel.graph.generator.GraphProperties.IntRange;
-import de.manetmodel.graph.generator.GridGraphProperties;
-import de.manetmodel.graph.generator.NetworkGraphProperties;
+import de.manetmodel.graph.generator.GridGraphGenerator;
 import de.manetmodel.util.RandomNumbers;
 import de.manetmodel.util.Tuple;
 
-public class VisualGraphApp<V extends Vertex<Position2D>, E extends WeightedEdge<W>, W> {
+public class VisualGraphApp<W extends EdgeDistance> {
 
-    private VisualGraphFrame<V, E, W> frame;
-    private UndirectedWeighted2DGraph<V, E, W> graph;
-    private GraphGenerator<V, E, W> generator;
+    private VisualGraphFrame<W> frame;
+    private UndirectedWeighted2DGraph<W> graph;
+    private EdgeWeightSupplier<W> edgeWeightSupplier;
     private TreeParser treeParser;
 
-    public VisualGraphApp(UndirectedWeighted2DGraph<V, E, W> graph, GraphGenerator<V, E, W> generator) {
+    public VisualGraphApp(UndirectedWeighted2DGraph<W> graph, EdgeWeightSupplier<W> edgeWeightSupplier) {
 	this.graph = graph;
-	this.generator = generator;
+	this.edgeWeightSupplier = edgeWeightSupplier;
 	this.initialize();
     }
-
+    
     public void buildOptions(TreeParser parser) {
 
 	/* create */
@@ -202,21 +204,10 @@ public class VisualGraphApp<V extends Vertex<Position2D>, E extends WeightedEdge
     public static void main(String[] args) {
 
 	// Create Graph
-	UndirectedWeighted2DGraph<Vertex<Position2D>, WeightedEdge<EdgeDistance>, EdgeDistance> graph = new UndirectedWeighted2DGraph<Vertex<Position2D>, WeightedEdge<EdgeDistance>, EdgeDistance>(
-		new UndirectedWeighted2DGraphSupplier<EdgeDistance>().getVertexSupplier(),
-		new UndirectedWeighted2DGraphSupplier<EdgeDistance>().getEdgeSupplier());
-
-	// Create EdgeDistanceBuilder
-	EdgeDistanceBuilder<Vertex<Position2D>, WeightedEdge<EdgeDistance>> edgeDistanceBuilder = new EdgeDistanceBuilder<Vertex<Position2D>, WeightedEdge<EdgeDistance>>(
-		graph);
-
-	// Create Generator
-	GraphGenerator<Vertex<Position2D>, WeightedEdge<EdgeDistance>, EdgeDistance> generator = new GraphGenerator<Vertex<Position2D>, WeightedEdge<EdgeDistance>, EdgeDistance>(
-		graph, edgeDistanceBuilder);
-
+	UndirectedWeighted2DGraph<EdgeDistance> graph = new UndirectedWeighted2DGraph<EdgeDistance>();
+	
 	// Create App
-	VisualGraphApp<Vertex<Position2D>, WeightedEdge<EdgeDistance>, EdgeDistance> app = new VisualGraphApp<Vertex<Position2D>, WeightedEdge<EdgeDistance>, EdgeDistance>(
-		graph, generator);
+	VisualGraphApp<EdgeDistance> app = new VisualGraphApp<EdgeDistance>(graph, new EdgeDistanceSupplier());
     }
 
     public void acceptTerminalCommand(String command) {
@@ -235,17 +226,19 @@ public class VisualGraphApp<V extends Vertex<Position2D>, E extends WeightedEdge
 
 	NetworkGraphProperties properties = new NetworkGraphProperties(1024, 768, new IntRange(100, 200),
 		new DoubleRange(50d, 100d), 100);
-	generator.generateNetworkGraph(properties);
+	
+	NetworkGraphGenerator<W> generator = new NetworkGraphGenerator<W>(graph, edgeWeightSupplier);
+	generator.generate(properties);
 
-	VisualGraph<V, E, W> visualGraph = new VisualGraph<V, E, W>(graph, new VisualGraphMarkUp<E, W>());
+	VisualGraph<W> visualGraph = new VisualGraph<W>(graph, new VisualGraphMarkUp());
 
-	RandomPath<V, Position2D, E, W> randomPath = new RandomPath<V, Position2D, E, W>(graph);
+	RandomPath<Position2D,W> randomPath = new RandomPath<Position2D,W>(graph);
 
 	for (int i = 1; i <= 20; i++)
 	    visualGraph.addVisualPath(
 		    randomPath.compute(graph.getVertex(RandomNumbers.getRandom(0, graph.getVertices().size())), 5));
 
-	frame = new VisualGraphFrame<V, E, W>(visualGraph);
+	frame = new VisualGraphFrame<W>(visualGraph);
 	Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 	frame.setPreferredSize(
 		new Dimension((int) screenSize.getWidth() * 3 / 4, (int) screenSize.getHeight() * 3 / 4));
@@ -267,7 +260,7 @@ public class VisualGraphApp<V extends Vertex<Position2D>, E extends WeightedEdge
 
     private void createEmpty(Input input) {
 	graph.clear();
-	frame.getVisualGraphPanel().updateVisualGraph(new VisualGraph<V, E, W>(graph, new VisualGraphMarkUp<E, W>()));
+	frame.getVisualGraphPanel().updateVisualGraph(new VisualGraph<W>(graph, new VisualGraphMarkUp()));
 	frame.getVisualGraphPanel().repaint();
     }
 
@@ -276,9 +269,12 @@ public class VisualGraphApp<V extends Vertex<Position2D>, E extends WeightedEdge
 	
 	NetworkGraphProperties properties = new NetworkGraphProperties(1024, 768,
 		new IntRange(input.INT.get(0), input.INT.get(0)), new DoubleRange(50d, 100d), 100);
-	generator.generateNetworkGraph(properties);
+	
+	NetworkGraphGenerator<W> generator = new NetworkGraphGenerator<W>(graph, edgeWeightSupplier);
+	
+	generator.generate(properties);
 
-	frame.getVisualGraphPanel().updateVisualGraph(new VisualGraph<V, E, W>(graph, new VisualGraphMarkUp<E, W>()));
+	frame.getVisualGraphPanel().updateVisualGraph(new VisualGraph<W>(graph, new VisualGraphMarkUp()));
 	frame.getVisualGraphPanel().repaint();
     }
 
@@ -288,9 +284,11 @@ public class VisualGraphApp<V extends Vertex<Position2D>, E extends WeightedEdge
 	NetworkGraphProperties properties = new NetworkGraphProperties(1024, 768,
 		new IntRange(input.INT.get(0), input.INT.get(0)), new DoubleRange(50d, 100d), 75);
 
-	generator.generateNetworkGraph(properties);
+	RandomGraphGenerator<W> generator = new RandomGraphGenerator<W>(graph, edgeWeightSupplier);
+	
+	generator.generate(properties);
 
-	frame.getVisualGraphPanel().updateVisualGraph(new VisualGraph<V, E, W>(graph, new VisualGraphMarkUp<E, W>()));
+	frame.getVisualGraphPanel().updateVisualGraph(new VisualGraph<W>(graph, new VisualGraphMarkUp()));
 	frame.getVisualGraphPanel().repaint();
     }
 
@@ -298,34 +296,37 @@ public class VisualGraphApp<V extends Vertex<Position2D>, E extends WeightedEdge
 	graph.clear();
 
 	GridGraphProperties properties = new GridGraphProperties(1000, 1000, 100, 200);
-	generator.generateGridGraph(properties);
+	
+	GridGraphGenerator<W> generator = new GridGraphGenerator<W>(graph, edgeWeightSupplier);
+	
+	generator.generate(properties);
 
-	frame.getVisualGraphPanel().updateVisualGraph(new VisualGraph<V, E, W>(graph, new VisualGraphMarkUp<E, W>()));
+	frame.getVisualGraphPanel().updateVisualGraph(new VisualGraph<W>(graph, new VisualGraphMarkUp()));
 	frame.getVisualGraphPanel().repaint();
     }
 
     private void addVertex(Input input) {
 	graph.addVertex(input.DOUBLE.get(0), input.DOUBLE.get(1));
-	frame.getVisualGraphPanel().updateVisualGraph(new VisualGraph<V, E, W>(graph, new VisualGraphMarkUp<E, W>()));
+	frame.getVisualGraphPanel().updateVisualGraph(new VisualGraph<W>(graph, new VisualGraphMarkUp()));
 	frame.getVisualGraphPanel().repaint();
     }
 
     private void addEdge(Input input) {
 	graph.addEdge(graph.getVertex(input.INT.get(0)), graph.getVertex(input.INT.get(1)));
-	frame.getVisualGraphPanel().updateVisualGraph(new VisualGraph<V, E, W>(graph, new VisualGraphMarkUp<E, W>()));
+	frame.getVisualGraphPanel().updateVisualGraph(new VisualGraph<W>(graph, new VisualGraphMarkUp()));
 	frame.getVisualGraphPanel().repaint();
     }
 
     private void addShortestPath(Input input) {
 
-	DijkstraShortestPath<V, Position2D, E, W> dijkstraShortestPath = new DijkstraShortestPath<V, Position2D, E, W>(
+	DijkstraShortestPath<Position2D, W> dijkstraShortestPath = new DijkstraShortestPath<Position2D, W>(
 		graph);
 
-	java.util.function.Function<Tuple<E, V>, Double> metric = (Tuple<E, V> t) -> {
+	java.util.function.Function<Tuple<WeightedEdge<W>, Vertex<Position2D>>, Double> metric = (Tuple<WeightedEdge<W>, Vertex<Position2D>> t) -> {
 	    return 1d;
 	};
 
-	Path<V, E> shortestPath = dijkstraShortestPath.compute(graph.getVertex(input.INT.get(0)),
+	Path<Position2D, W> shortestPath = dijkstraShortestPath.compute(graph.getVertex(input.INT.get(0)),
 		graph.getVertex(input.INT.get(1)), metric);
 
 	frame.getVisualGraphPanel().getVisualGraph().addVisualPath(shortestPath);

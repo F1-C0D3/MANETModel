@@ -9,11 +9,11 @@ import de.manetmodel.graph.WeightedEdge;
 import de.manetmodel.util.RandomNumbers;
 import de.manetmodel.util.Tuple;
 
-public class RandomPath<V extends Vertex<P>, P, E extends WeightedEdge<W>, W> {
+public class RandomPath<P,W> {
 
-    private UndirectedWeightedGraph<V, P, E, W> graph;
+    private UndirectedWeightedGraph<P,W> graph;
 
-    public RandomPath(UndirectedWeightedGraph<V, P, E, W> graph) {
+    public RandomPath(UndirectedWeightedGraph<P,W> graph) {
 	this.graph = graph;
     }
 
@@ -31,37 +31,37 @@ public class RandomPath<V extends Vertex<P>, P, E extends WeightedEdge<W>, W> {
      * 
      */
 
-    public Path<V, E> compute(V source, V target) {
+    public Path<P,W> compute(Vertex<P> source, Vertex<P> target) {
 
-	Path<V, E> randomPath = new Path<V, E>(source, target);
+	Path<P,W> randomPath = new Path<P,W>(source, target);
 
 	while (!randomPath.isComplete()) {
-
-	    List<V> nextHops = randomPath.getUnvisitedVertices(graph.getNextHopsOf(randomPath.getLastVertex()));
+	    
+	    List<Vertex<P>> nextHops = randomPath.getUnvisitedVertices(graph.getNextHopsOf(randomPath.getLastVertex()));
 
 	    if (!nextHops.isEmpty()) {
-		V nextHop = nextHops.get(RandomNumbers.getRandom(0, nextHops.size()));
-		randomPath.add(new Tuple<E, V>(graph.getEdge(randomPath.getLastVertex(), nextHop), nextHop));
+		Vertex<P> nextHop = nextHops.get(RandomNumbers.getRandom(0, nextHops.size()));
+		randomPath.add(new Tuple<WeightedEdge<W>, Vertex<P>>(graph.getEdge(randomPath.getLastVertex(), nextHop), nextHop));
 	    } else
-		return new Path<V, E>(source, target);
+		return new Path<P,W>(source, target);
 	}
 	return randomPath;
     }
 
-    public Path<V, E> compute(V source, int hops) {
+    public Path<P, W> compute(Vertex<P> source, int hops) {
 
-	Path<V, E> randomPath = new Path<V, E>(source);
+	Path<P,W> randomPath = new Path<P,W>(source, null);
 
 	for (int i = 0; i < hops; i++) {
 
-	    List<V> nextHops = randomPath.getUnvisitedVertices(graph.getNextHopsOf(randomPath.getLastVertex()));
+	    List<Vertex<P>> nextHops = randomPath.getUnvisitedVertices(graph.getNextHopsOf(randomPath.getLastVertex()));
 
 	    if (!nextHops.isEmpty()) {
-		V nextHop = nextHops.get(RandomNumbers.getRandom(0, nextHops.size()));
-		randomPath.add(new Tuple<E, V>(graph.getEdge(randomPath.getLastVertex(), nextHop), nextHop));
+		Vertex<P> nextHop = nextHops.get(RandomNumbers.getRandom(0, nextHops.size()));
+		randomPath.add(new Tuple<WeightedEdge<W>, Vertex<P>>(graph.getEdge(randomPath.getLastVertex(), nextHop), nextHop));
 	    }
 	    else
-		return new Path<V, E>(source, null);
+		return new Path<P,W>(source, null);
 	}
 	return randomPath;
     }

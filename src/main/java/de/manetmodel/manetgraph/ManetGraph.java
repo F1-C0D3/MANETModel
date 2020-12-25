@@ -2,20 +2,29 @@ package de.manetmodel.manetgraph;
 
 import java.util.function.Supplier;
 
+import de.manetmodel.graph.EdgeDistance;
 import de.manetmodel.graph.UndirectedWeighted2DGraph;
-import de.manetmodel.graph.generator.GraphGenerator;
+import de.manetmodel.graph.generator.NetworkGraphGenerator;
 
-public class ManetGraph<W> extends UndirectedWeighted2DGraph<Node, Link<W>, W>{
+public class ManetGraph<W> extends UndirectedWeighted2DGraph<W>{
 
-    public ManetGraph(Supplier<Node> vertexSupplier, Supplier<Link<W>> edgeSupplier) {
-	super(vertexSupplier, edgeSupplier);
+    public ManetGraph() {}
+    
+    public static class ManetEdgeWeight extends EdgeDistance {
+
+	public double Datarate;
+	
+	public ManetEdgeWeight(double distance) {
+	    super(distance);
+	}
+	
     }
     
     public static void main() {
 	
-	ManetGraph<Double> graph = new ManetGraph<Double>(null, null);
+	ManetGraph<ManetEdgeWeight> graph = new ManetGraph<ManetEdgeWeight>();
 		
-	GraphGenerator<Node, Link<Double>, Double> generator = new GraphGenerator<Node, Link<Double>, Double>(graph);
+	NetworkGraphGenerator<ManetEdgeWeight> generator = new NetworkGraphGenerator<ManetEdgeWeight>(graph);
 	
     }
 }

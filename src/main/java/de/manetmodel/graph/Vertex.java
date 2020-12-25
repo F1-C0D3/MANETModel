@@ -5,8 +5,7 @@ public class Vertex<P> {
     int ID;
     P position;
 
-    public Vertex() {
-    }
+    public Vertex() {}
 
     public Vertex(P position) {
 	this.position = position;
@@ -26,5 +25,9 @@ public class Vertex<P> {
 
     public P getPosition() {
 	return this.position;
+    }
+
+    public boolean equals(Vertex<P> vertex) {
+	return vertex.getID() == this.ID;
     }
 }

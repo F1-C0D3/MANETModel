@@ -4,7 +4,7 @@ import java.awt.Color;
 
 import de.manetmodel.graph.WeightedEdge;
 
-public class VisualGraphMarkUp<E extends WeightedEdge<W>, W> {
+public class VisualGraphMarkUp {
 
     /* Playground (background) mark up */
     private Color backgroundColor = Color.WHITE;

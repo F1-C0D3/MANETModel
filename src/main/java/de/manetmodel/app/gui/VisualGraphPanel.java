@@ -28,20 +28,16 @@ import de.manetmodel.app.gui.visualgraph.VisualGraphMarkUp;
 import de.manetmodel.app.gui.visualgraph.VisualPath;
 import de.manetmodel.app.gui.visualgraph.VisualVertex;
 import de.manetmodel.graph.EdgeDistance;
-import de.manetmodel.graph.EdgeDistanceBuilder;
-import de.manetmodel.graph.Position2D;
+import de.manetmodel.graph.EdgeDistanceSupplier;
 import de.manetmodel.graph.UndirectedWeighted2DGraph;
-import de.manetmodel.graph.UndirectedWeighted2DGraphSupplier;
-import de.manetmodel.graph.Vertex;
-import de.manetmodel.graph.WeightedEdge;
-import de.manetmodel.graph.generator.GraphGenerator;
+import de.manetmodel.graph.generator.NetworkGraphProperties;
 import de.manetmodel.graph.generator.GraphProperties.DoubleRange;
 import de.manetmodel.graph.generator.GraphProperties.IntRange;
-import de.manetmodel.graph.generator.NetworkGraphProperties;
+import de.manetmodel.graph.generator.NetworkGraphGenerator;
 
-public class VisualGraphPanel<V extends Vertex<Position2D>, E extends WeightedEdge<W>, W> extends JPanel {
+public class VisualGraphPanel<W> extends JPanel {
 
-    private VisualGraph<V, E, W> graph;
+    private VisualGraph<W> graph;
     private Scope scope;
     private double xScale, yScale;
     private int vertexWidth = 50, padding = vertexWidth;
@@ -54,7 +50,7 @@ public class VisualGraphPanel<V extends Vertex<Position2D>, E extends WeightedEd
     public VisualGraphPanel() {
     }
 
-    public VisualGraphPanel(VisualGraph<V, E, W> graph) {
+    public VisualGraphPanel(VisualGraph<W> graph) {
 	this.graph = graph;
 	this.scope = this.getScope(graph);
     }
@@ -283,7 +279,7 @@ public class VisualGraphPanel<V extends Vertex<Position2D>, E extends WeightedEd
 	}
     }
 
-    private Scope getScope(VisualGraph<V, E, W> graph) {
+    private Scope getScope(VisualGraph<W> graph) {
 
 	Scope scope = new Scope();
 
@@ -309,11 +305,11 @@ public class VisualGraphPanel<V extends Vertex<Position2D>, E extends WeightedEd
 	return scope;
     }
 
-    public VisualGraph<V, E, W> getVisualGraph() {
+    public VisualGraph<W> getVisualGraph() {
 	return this.graph;
     }
 
-    public void updateVisualGraph(VisualGraph<V, E, W> graph) {
+    public void updateVisualGraph(VisualGraph<W> graph) {
 	this.graph = graph;
 	this.scope = this.getScope(graph);
     }
@@ -323,24 +319,16 @@ public class VisualGraphPanel<V extends Vertex<Position2D>, E extends WeightedEd
 	    @Override
 	    public void run() {
 
-		UndirectedWeighted2DGraphSupplier<EdgeDistance> supplier = new UndirectedWeighted2DGraphSupplier<EdgeDistance>();
-
-		UndirectedWeighted2DGraph<Vertex<Position2D>, WeightedEdge<EdgeDistance>, EdgeDistance> graph = new UndirectedWeighted2DGraph<Vertex<Position2D>, WeightedEdge<EdgeDistance>, EdgeDistance>(
-			supplier.getVertexSupplier(), supplier.getEdgeSupplier());
-
-		EdgeDistanceBuilder<Vertex<Position2D>, WeightedEdge<EdgeDistance>> edgeDistanceBuilder = new EdgeDistanceBuilder<Vertex<Position2D>, WeightedEdge<EdgeDistance>>(graph);
+		UndirectedWeighted2DGraph<EdgeDistance> graph = new UndirectedWeighted2DGraph<EdgeDistance>();
 		
-		GraphGenerator<Vertex<Position2D>, WeightedEdge<EdgeDistance>, EdgeDistance> generator = new GraphGenerator<Vertex<Position2D>, WeightedEdge<EdgeDistance>, EdgeDistance>(
-			graph, edgeDistanceBuilder);
+		NetworkGraphGenerator<EdgeDistance> generator = new NetworkGraphGenerator<EdgeDistance>(graph, new EdgeDistanceSupplier());
 		
 		NetworkGraphProperties properties = new NetworkGraphProperties(1024, 768, new IntRange(100, 200),
 			new DoubleRange(50d, 100d), 100);
 				
-		
-		generator.generateNetworkGraph(properties);
+		generator.generate(properties);
 
-		VisualGraph<Vertex<Position2D>, WeightedEdge<EdgeDistance>,EdgeDistance> visualGraph = new VisualGraph<Vertex<Position2D>, WeightedEdge<EdgeDistance>, EdgeDistance>(
-			graph, new VisualGraphMarkUp<WeightedEdge<EdgeDistance>, EdgeDistance>());
+		VisualGraph<EdgeDistance> visualGraph = new VisualGraph<EdgeDistance>(graph, new VisualGraphMarkUp());
 
 		/*
 		 * RandomPath<Vertex, WeightedEdge<Double>> randomPath = new RandomPath<Vertex,
@@ -351,8 +339,8 @@ public class VisualGraphPanel<V extends Vertex<Position2D>, E extends WeightedEd
 		 * graph.getVertices().size())), 5));
 		 */
 
-		VisualGraphPanel<Vertex<Position2D>, WeightedEdge<EdgeDistance>, EdgeDistance> panel = new VisualGraphPanel<Vertex<Position2D>, WeightedEdge<EdgeDistance>, EdgeDistance>(
-			visualGraph);
+		VisualGraphPanel<EdgeDistance> panel = new VisualGraphPanel<EdgeDistance>(visualGraph);
+		
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 		int width = (int) screenSize.getWidth() * 3 / 4;
 		int height = (int) screenSize.getHeight() * 3 / 4;
