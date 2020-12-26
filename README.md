@@ -24,7 +24,7 @@
 
 ###### Discussion:
 - Remove generic types (N,L,V,E) from Manet and maybe also from UndirectedWeightedGraph classes? 
-  - Might be a good idea :D -> Vorschlag für ManetGraph in package de.manetmodel.manetgraph
+  - Vorschlag für ManetGraph in package de.manetmodel.manetgraph
 - Flow deployment strategy regarding ACO
  - Link per Link which might be more tailored for ACO
  - Complete flow deployment
