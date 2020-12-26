@@ -7,86 +7,88 @@ import java.util.function.Supplier;
 
 import de.manetmodel.util.Tuple;
 
-public abstract class WeightedGraph<P, W> {
+public abstract class WeightedGraph<V extends Vertex<P>, P, E extends WeightedEdge<W>, W> {
 
-    protected int vertexCount;
+    protected int VCount;
     protected int edgeCount;
-    protected ArrayList<Vertex<P>> vertices;    
-    protected ArrayList<WeightedEdge<W>> edges;
+    protected ArrayList<V> vertices;
+    protected ArrayList<E> edges;
+    protected Supplier<V> vertexSupplier;
+    protected Supplier<E> edgeSupplier;
     protected ArrayList<ArrayList<Tuple<Integer, Integer>>> vertexAdjacencies;
     protected ArrayList<Tuple<Integer, Integer>> edgeAdjacencies;
 
-    public WeightedGraph() {
-	this.vertices = new ArrayList<Vertex<P>>();
-	this.edges = new ArrayList<WeightedEdge<W>>();
+    public WeightedGraph(Supplier<V> vertexSupplier, Supplier<E> edgeSupplier) {
+	this.vertices = new ArrayList<V>();
+	this.edges = new ArrayList<E>();
 	this.vertexAdjacencies = new ArrayList<ArrayList<Tuple<Integer, Integer>>>();
 	this.edgeAdjacencies = new ArrayList<Tuple<Integer, Integer>>();
     }
 
-    public Vertex<P> addVertex(P position) {
-	Vertex<P> v = new Vertex<P>();
-	v.setID(vertexCount++);
+    public V addVertex(P position) {
+	V v = vertexSupplier.get();
+	v.setID(VCount++);
 	v.setPosition(position);
 	vertices.add(v);
-	vertexAdjacencies.add(new ArrayList<Tuple<Integer, Integer>>());	
+	vertexAdjacencies.add(new ArrayList<Tuple<Integer, Integer>>());
 	return v;
     }
 
-    public boolean addVertex(Vertex<P> vertex) {
-	if (vertex.getPosition() != null) {
-	    vertex.setID(vertexCount++);
-	    vertices.add(vertex);
+    public boolean addVertex(V v) {
+	if (v.getPosition() != null) {
+	    v.setID(VCount++);
+	    vertices.add(v);
 	    vertexAdjacencies.add(new ArrayList<Tuple<Integer, Integer>>());
-	    return true;	    
+	    return true;
 	}
 	return false;
     }
 
-    public List<WeightedEdge<W>> getEdges() {
+    public List<E> getEdges() {
 	return edges;
     }
 
-    public List<Vertex<P>> getVertices() {
+    public List<V> getVertices() {
 	return vertices;
     }
 
-    public Vertex<P> getFirstVertex() {
+    public V getFirstV() {
 	return this.vertices.get(0);
     }
 
-    public Vertex<P> getLastVertex() {
-	return this.vertices.get(vertexCount - 1);
+    public V getLastV() {
+	return this.vertices.get(VCount - 1);
     }
 
-    public Vertex<P> getVertex(Vertex<P> v) {
+    public V getV(V v) {
 	return this.vertices.get(v.getID());
     }
 
-    public Vertex<P> getVertex(int ID) {
+    public V getV(int ID) {
 	return this.vertices.get(ID);
     }
-    
-    public WeightedEdge<W> getEdge(WeightedEdge<W> e) {
+
+    public E getEdge(E e) {
 	return edges.get(e.getID());
     }
 
-    public WeightedEdge<W> getEdge(int ID) {
+    public E getEdge(int ID) {
 	return edges.get(ID);
     }
 
-    public Tuple<Vertex<P>, Vertex<P>> getVerticesOf(WeightedEdge<W> edge) {
-	Tuple<Integer, Integer> vertexIDs = this.edgeAdjacencies.get(edge.getID());
-	return new Tuple<Vertex<P>, Vertex<P>>(this.vertices.get(vertexIDs.getFirst()), this.vertices.get(vertexIDs.getSecond()));
+    public Tuple<V, V> getVerticesOf(E edge) {
+	Tuple<Integer, Integer> VIDs = this.edgeAdjacencies.get(edge.getID());
+	return new Tuple<V, V>(this.vertices.get(VIDs.getFirst()), this.vertices.get(VIDs.getSecond()));
     }
 
-    public WeightedEdge<W> getEdge(Vertex<P> source, Vertex<P> target) {
+    public E getEdge(V source, V target) {
 	for (Tuple<Integer, Integer> adjacency : vertexAdjacencies.get(source.getID()))
 	    if (adjacency.getSecond() == target.getID())
 		return this.edges.get(adjacency.getFirst());
 	return null;
     }
 
-    public boolean containsEdge(Vertex<P> source, Vertex<P> target) {
+    public boolean containsEdge(V source, V target) {
 	if (source.getID() < vertexAdjacencies.size())
 	    for (Tuple<Integer, Integer> adjacency : vertexAdjacencies.get(source.getID()))
 		if (adjacency.getSecond() == target.getID())
@@ -94,61 +96,66 @@ public abstract class WeightedGraph<P, W> {
 	return false;
     }
 
-    public WeightedEdge<W> addEdge(Vertex<P> source, Vertex<P> target) {
+    public E addEdge(V source, V target) {
 	return this.addEdge(source, target, null);
     }
 
-    public abstract WeightedEdge<W> addEdge(Vertex<P> source, Vertex<P> target, W weight);
+    public abstract E addEdge(V source, V target, W weight);
 
-    public abstract List<WeightedEdge<W>> getEdgesOf(Vertex<P> vertex);
- 
-    public Vertex<P> getTargetOf(Vertex<P> vertex, WeightedEdge<W> edge) {
-	Tuple<Integer, Integer> vertexIDs = this.edgeAdjacencies.get(edge.getID());
-	if (vertex.getID() == vertexIDs.getFirst())
-	    return this.vertices.get(vertexIDs.getSecond());
-	else if (vertex.getID() == vertexIDs.getSecond())
-	    return this.vertices.get(vertexIDs.getFirst());
+    public abstract List<E> getEdgesOf(V V);
+
+    public V getTargetOf(V vertex, E edge) {
+	Tuple<Integer, Integer> VIDs = this.edgeAdjacencies.get(edge.getID());
+	if (vertex.getID() == VIDs.getFirst())
+	    return this.vertices.get(VIDs.getSecond());
+	else if (vertex.getID() == VIDs.getSecond())
+	    return this.vertices.get(VIDs.getFirst());
 	return null;
     }
 
-    public List<Vertex<P>> getNextHopsOf(Vertex<P> vertex) {
-	List<Vertex<P>> nextHops = new ArrayList<Vertex<P>>();
-	for (Tuple<Integer, Integer> adjacency : vertexAdjacencies.get(vertex.getID()))
+    public List<V> getNextHopsOf(V v) {
+	List<V> nextHops = new ArrayList<V>();
+	for (Tuple<Integer, Integer> adjacency : vertexAdjacencies.get(v.getID()))
 	    nextHops.add(vertices.get(adjacency.getSecond()));
 	return nextHops;
     }
 
-    public List<Tuple<WeightedEdge<W>, Vertex<P>>> getNextPathsOf(Vertex<P> vertex) {
-	List<Tuple<WeightedEdge<W>, Vertex<P>>> nextPaths = new ArrayList<Tuple<WeightedEdge<W>, Vertex<P>>>();
-	for (Tuple<Integer, Integer> adjacency : vertexAdjacencies.get(vertex.getID()))
-	    nextPaths.add(new Tuple<WeightedEdge<W>, Vertex<P>>(edges.get(adjacency.getSecond()), vertices.get(adjacency.getFirst())));
+    public List<Tuple<E, V>> getNextPathsOf(V v) {
+	List<Tuple<E, V>> nextPaths = new ArrayList<Tuple<E, V>>();
+	for (Tuple<Integer, Integer> adjacency : vertexAdjacencies.get(v.getID()))
+	    nextPaths.add(new Tuple<E, V>(edges.get(adjacency.getSecond()),
+		    vertices.get(adjacency.getFirst())));
 	return nextPaths;
     }
 
-    public Iterator<Vertex<P>> vertexIterator() {
-	Iterator<Vertex<P>> iterator = new Iterator<Vertex<P>>() {
+    public Iterator<V> VIterator() {
+	Iterator<V> iterator = new Iterator<V>() {
 	    private int i = 0;
+
 	    @Override
 	    public boolean hasNext() {
 		return i < vertices.size() && vertices.get(i) != null;
 	    }
+
 	    @Override
-	    public Vertex<P> next() {
+	    public V next() {
 		return vertices.get(i++);
 	    }
 	};
 	return iterator;
     }
 
-    public Iterator<WeightedEdge<W>> edgeIterator() {
-	Iterator<WeightedEdge<W>> iterator = new Iterator<WeightedEdge<W>>() {
+    public Iterator<E> edgeIterator() {
+	Iterator<E> iterator = new Iterator<E>() {
 	    private int i = 0;
+
 	    @Override
 	    public boolean hasNext() {
 		return i < edges.size() && edges.get(i) != null;
 	    }
+
 	    @Override
-	    public WeightedEdge<W> next() {
+	    public E next() {
 		return edges.get(i++);
 	    }
 	};
@@ -157,7 +164,7 @@ public abstract class WeightedGraph<P, W> {
 
     public void clear() {
 	this.vertices.clear();
-	this.vertexCount = 0;
+	this.VCount = 0;
 	this.edges.clear();
 	this.edgeCount = 0;
 	this.vertexAdjacencies.clear();

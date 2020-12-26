@@ -6,12 +6,17 @@ import java.util.List;
 import java.util.Set;
 import java.util.function.Supplier;
 
+import de.manetmodel.graph.EdgeDistance;
+import de.manetmodel.graph.Position2D;
 import de.manetmodel.graph.UndirectedWeighted2DGraph;
+import de.manetmodel.graph.Vertex;
+import de.manetmodel.graph.WeightedEdge;
 import de.manetmodel.network.radio.IRadioModel;
 import de.manetmodel.network.unit.DataRate;
 import de.manetmodel.util.Tuple;
 
-public class Manet<N extends Node<L,W>, L extends Link<W>, W> extends UndirectedWeighted2DGraph<N, L, W> {
+public class Manet<N extends Node<W>, L extends Link<W>, W extends EdgeDistance>
+	extends UndirectedWeighted2DGraph<N, L, W> {
     private IRadioModel radioModel;
 
     public Manet(Supplier<N> vertexSupplier, Supplier<L> edgeSupplier, IRadioModel radioModel) {
@@ -21,12 +26,13 @@ public class Manet<N extends Node<L,W>, L extends Link<W>, W> extends Undirected
 
     @Override
     public L addEdge(N source, N target) {
-	L e = super.addEdge(source, target);
+	L link = super.addEdge(source, target);
 
 	for (L l : this.getEdges()) {
 	    Tuple<N, N> lt = this.getVerticesOf(l);
 	    N s1 = lt.getFirst();
 	    N s2 = lt.getSecond();
+
 	    double distance = this.getDistance(s1.getPosition(), s2.getPosition());
 	    l.setTransmissionRate(radioModel.transmissionBitrate(distance));
 	    l.setReceptionPower(radioModel.receptionPower(distance));
@@ -42,26 +48,28 @@ public class Manet<N extends Node<L,W>, L extends Link<W>, W> extends Undirected
 		l.setInReceptionRange(new HashSet<Link<W>>(this.getEdgesOf(n)));
 	    }
 	}
-	return e;
+	return link;
     }
 
-    public boolean addVertex(N vertex) {
-	boolean result = super.addVertex(vertex);
+    public boolean addVertex(N node) {
+	boolean result = super.addVertex(node);
 
-	for (N v : this.getVertices()) {
-	    setLinksInterferedByL(v);
+	for (N n : this.getVertices()) {
+	    setLinksInterferedByL(n);
 	}
 	return result;
     }
 
     @Override
     public N addVertex(double x, double y) {
-	N n = super.addVertex(x, y);
 
-	for (N v : this.getVertices()) {
-	    setLinksInterferedByL(v);
+	N node = super.addVertex(x, y);
+
+	for (N n : this.getVertices()) {
+	    setLinksInterferedByL(n);
 	}
-	return n;
+
+	return node;
     }
 
     private void setLinksInterferedByL(N n) {
@@ -70,7 +78,7 @@ public class Manet<N extends Node<L,W>, L extends Link<W>, W> extends Undirected
 	while (iterator.hasNext()) {
 	    L le = iterator.next();
 	    N se = this.getVerticesOf(le).getFirst();
-	    N sk = this.getVerticesOf(le).getSecond();
+	    N sk =  this.getVerticesOf(le).getSecond();
 
 	    if (radioModel.interferencePresent(this.getDistance(n.getPosition(), se.getPosition()))
 		    && radioModel.interferencePresent(this.getDistance(n.getPosition(), sk.getPosition()))) {

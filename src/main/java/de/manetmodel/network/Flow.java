@@ -2,11 +2,16 @@ package de.manetmodel.network;
 
 import java.util.Iterator;
 
+import de.manetmodel.graph.EdgeDistance;
 import de.manetmodel.graph.Path;
+import de.manetmodel.graph.Path2D;
+import de.manetmodel.graph.Position2D;
+import de.manetmodel.graph.Vertex;
+import de.manetmodel.graph.WeightedEdge;
 import de.manetmodel.network.unit.DataRate;
 import de.manetmodel.util.Tuple;
 
-public class Flow<N extends Node<L,W>, L extends Link<W>, W> extends Path<N, L> {
+public class Flow<N extends Vertex<Position2D>, L extends WeightedEdge<W>, W extends EdgeDistance> extends Path2D<N,L,W> {
 
     private DataRate rate;
 

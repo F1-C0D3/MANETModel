@@ -4,12 +4,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Supplier;
 
-public class UndirectedWeighted2DGraph<W> extends UndirectedWeightedGraph<Position2D, W> {
+public class UndirectedWeighted2DGraph<V extends Vertex<Position2D>, E extends WeightedEdge<W>, W>
+	extends UndirectedWeightedGraph<V, Position2D, E, W> {
 
-    public UndirectedWeighted2DGraph() {
+    public UndirectedWeighted2DGraph(Supplier<V> vertexSupplier, Supplier<E> edgeSupplier) {
+	super(vertexSupplier, edgeSupplier);
     }
 
-    public Vertex<Position2D> addVertex(double x, double y) {
+    public V addVertex(double x, double y) {
 	return super.addVertex(new Position2D(x, y));
     }
 

@@ -6,13 +6,15 @@ import java.util.function.Supplier;
 
 import de.manetmodel.util.Tuple;
 
-public class UndirectedWeightedGraph<P, W> extends WeightedGraph<P, W>{
+public class UndirectedWeightedGraph<V extends Vertex<P>, P, E extends WeightedEdge<W>, W> extends WeightedGraph<V, P, E, W>{
 
-    public UndirectedWeightedGraph() {}
+    public UndirectedWeightedGraph(Supplier<V> vertexSupplier, Supplier<E> edgeSupplier) {
+	super(vertexSupplier, edgeSupplier);
+    }
 
-    public WeightedEdge<W> addEdge(Vertex<P> source, Vertex<P> target, W weight) {
+    public E addEdge(V source, V target, W weight) {
 	if (containsEdge(source, target)) return null;
-	WeightedEdge<W> edge = new WeightedEdge<W>();
+	E edge = edgeSupplier.get();
 	edge.setID(edgeCount++);
 	edge.setWeight(weight);
 	edges.add(edge);
@@ -22,8 +24,8 @@ public class UndirectedWeightedGraph<P, W> extends WeightedGraph<P, W>{
 	return edge;
     }
 
-    public List<WeightedEdge<W>> getEdgesOf(Vertex<P> vertex) {
-	List<WeightedEdge<W>> edges = new ArrayList<WeightedEdge<W>>();
+    public List<E> getEdgesOf(V vertex) {
+	List<E> edges = new ArrayList<E>();
 	for (Tuple<Integer, Integer> adjacency : vertexAdjacencies.get(vertex.getID()))
 	    edges.add(this.edges.get(adjacency.getFirst()));
 	return edges;
