@@ -20,9 +20,9 @@ public class UndirectedWeighted2DGraph<V extends Vertex<Position2D>, E extends W
 	return distance;
     }
 
-    public List<Vertex<Position2D>> getVerticesInRadius(Vertex<Position2D> source, double radius) {
-	List<Vertex<Position2D>> vertices = new ArrayList<Vertex<Position2D>>();
-	for (Vertex<Position2D> vertex : this.vertices)
+    public List<V> getVerticesInRadius(V source, double radius) {
+	List<V> vertices = new ArrayList<V>();
+	for (V vertex : this.vertices)
 	    if (!vertex.equals(source) && getDistance(source.getPosition(), vertex.getPosition()) <= radius)
 		vertices.add(vertex);
 
@@ -30,7 +30,7 @@ public class UndirectedWeighted2DGraph<V extends Vertex<Position2D>, E extends W
     }
 
     public Boolean vertexInRadius(Position2D position, double radius) {
-	for (Vertex<Position2D> vertex : vertices)
+	for (V vertex : vertices)
 	    if (getDistance(position, vertex.getPosition()) <= radius)
 		return true;
 	return false;

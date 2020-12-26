@@ -8,15 +8,16 @@ import de.manetmodel.graph.EdgeWeightSupplier;
 import de.manetmodel.graph.Position2D;
 import de.manetmodel.graph.UndirectedWeighted2DGraph;
 import de.manetmodel.graph.Vertex;
+import de.manetmodel.graph.WeightedEdge;
 import de.manetmodel.util.RandomNumbers;
 
-public class RandomGraphGenerator<W extends EdgeDistance> extends Weighted2DGraphGenerator<W> {
+public class RandomGraphGenerator<V extends Vertex<Position2D>, E extends WeightedEdge<W>, W extends EdgeDistance> extends Weighted2DGraphGenerator<V,E,W> {
 
-    public RandomGraphGenerator(UndirectedWeighted2DGraph<W> graph) {
+    public RandomGraphGenerator(UndirectedWeighted2DGraph<V,E,W> graph) {
 	super(graph);
     }
 
-    public RandomGraphGenerator(UndirectedWeighted2DGraph<W> graph, EdgeWeightSupplier<W> edgeWeightSupplier) {
+    public RandomGraphGenerator(UndirectedWeighted2DGraph<V,E,W> graph, EdgeWeightSupplier<W> edgeWeightSupplier) {
 	super(graph, edgeWeightSupplier);
     }
 
@@ -40,7 +41,7 @@ public class RandomGraphGenerator<W extends EdgeDistance> extends Weighted2DGrap
 	 * properties.height.max));
 	 */
 
-	Vertex<Position2D> currentVertex = graph.addVertex(0, 0);
+	V currentVertex = graph.addVertex(0, 0);
 	vertexCount++;
 	log.info(String.format("Added Vertex %d at %s", vertexCount, graph.getFirstVertex().getPosition().toString()));
 
@@ -57,7 +58,7 @@ public class RandomGraphGenerator<W extends EdgeDistance> extends Weighted2DGrap
 		    && !graph.vertexInRadius(Position2D, properties.getVertexDistance().min)) {
 
 		// Add a new vertex to graph
-		Vertex<Position2D> newVertex = graph.addVertex(Position2D.x(), Position2D.y());
+		V newVertex = graph.addVertex(Position2D.x(), Position2D.y());
 		vertexCount++;
 		attemps = 0;
 		this.log.info(String.format("Added Vertex %d at %s", vertexCount, newVertex.getPosition().toString()));
@@ -90,7 +91,7 @@ public class RandomGraphGenerator<W extends EdgeDistance> extends Weighted2DGrap
 	return vertexCount;
     }
 
-    private void generateEdges(Vertex<Position2D> source, int edgeCount, GraphProperties properties) {
+    private void generateEdges(V source, int edgeCount, GraphProperties properties) {
 
 	// (1) Radius to gather vertices in environment, specified by a randomly chosen
 	// number in interval [properties.edgeDistance.min, properties.edgeDistance.max]
@@ -99,15 +100,15 @@ public class RandomGraphGenerator<W extends EdgeDistance> extends Weighted2DGrap
 
 	// (2) Gather all vertices in radius, specified by a randomly chosen radius in
 	// interval [properties.edgeDistance.min, properties.edgeDistance.max]
-	List<Vertex<Position2D>> verticesInRadius = graph.getVerticesInRadius(source, edgeDistance);
+	List<V> verticesInRadius = graph.getVerticesInRadius(source, edgeDistance);
 
 	if (verticesInRadius.size() > 0) {
 
 	    // (3) Select n vertices randomly from vertex environment
-	    List<Vertex<Position2D>> randomVertices = RandomNumbers.selectNrandomOfM(verticesInRadius, edgeCount, new Random());
+	    List<V> randomVertices = RandomNumbers.selectNrandomOfM(verticesInRadius, edgeCount, new Random());
 
 	    // (4) Add edges
-	    for (Vertex<Position2D> target : randomVertices)
+	    for (V target : randomVertices)
 		// Only add edge while target node's number of edges is below requirement given
 		// by properties.edgeCount.max
 		if (graph.getEdgesOf(target).size() < properties.getEdgeCount().max)

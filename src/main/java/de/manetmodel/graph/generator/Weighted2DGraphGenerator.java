@@ -7,22 +7,23 @@ import de.manetmodel.graph.EdgeWeightSupplier;
 import de.manetmodel.graph.Position2D;
 import de.manetmodel.graph.UndirectedWeighted2DGraph;
 import de.manetmodel.graph.Vertex;
+import de.manetmodel.graph.WeightedEdge;
 import de.manetmodel.graph.generator.GraphProperties.DoubleRange;
 import de.manetmodel.util.RandomNumbers;
 import de.manetmodel.util.log.Log;
 
-public abstract class Weighted2DGraphGenerator<W extends EdgeDistance> {
+public abstract class Weighted2DGraphGenerator<V extends Vertex<Position2D>, E extends WeightedEdge<W>, W extends EdgeDistance> {
 
     protected Log log;
-    protected UndirectedWeighted2DGraph<W> graph;
+    protected UndirectedWeighted2DGraph<V,E,W> graph;
     protected EdgeWeightSupplier<W> edgeWeightSupplier;
 
-    public Weighted2DGraphGenerator(UndirectedWeighted2DGraph<W> graph) {
+    public Weighted2DGraphGenerator(UndirectedWeighted2DGraph<V,E,W> graph) {
 	this.log = new Log();
 	this.graph = graph;
     }
 
-    public Weighted2DGraphGenerator(UndirectedWeighted2DGraph<W> graph, EdgeWeightSupplier<W> edgeWeightSupplier) {
+    public Weighted2DGraphGenerator(UndirectedWeighted2DGraph<V,E,W> graph, EdgeWeightSupplier<W> edgeWeightSupplier) {
 	this.log = new Log();
 	this.graph = graph;
 	this.edgeWeightSupplier = edgeWeightSupplier;
@@ -32,9 +33,9 @@ public abstract class Weighted2DGraphGenerator<W extends EdgeDistance> {
 	return edgeWeightSupplier != null;
     }
 
-    protected void connectVerticesInRadius(Vertex<Position2D> vertex, double radius) {
-	List<Vertex<Position2D>> verticesInRadius = graph.getVerticesInRadius(vertex, radius);
-	for (Vertex<Position2D> targetVertex : verticesInRadius)
+    protected void connectVerticesInRadius(V vertex, double radius) {
+	List<V> verticesInRadius = graph.getVerticesInRadius(vertex, radius);
+	for (V targetVertex : verticesInRadius)
 	    if (edgeWeightSupplier()) {
 		W edgeWeight = edgeWeightSupplier.get();
 		edgeWeight.setDistance(graph.getDistance(vertex.getPosition(), targetVertex.getPosition()));
@@ -44,7 +45,7 @@ public abstract class Weighted2DGraphGenerator<W extends EdgeDistance> {
 		graph.addEdge(vertex, targetVertex);
     }
 
-    protected Position2D generateRandomPosition2D(Vertex<Position2D> source, DoubleRange vertexDistanceRange) {
+    protected Position2D generateRandomPosition2D(V source, DoubleRange vertexDistanceRange) {
 
 	Position2D Position2D = null;
 	double angleRadians, x, y;

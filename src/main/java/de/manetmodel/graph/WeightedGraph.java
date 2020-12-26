@@ -19,11 +19,15 @@ public abstract class WeightedGraph<V extends Vertex<P>, P, E extends WeightedEd
     protected ArrayList<Tuple<Integer, Integer>> edgeAdjacencies;
 
     public WeightedGraph(Supplier<V> vertexSupplier, Supplier<E> edgeSupplier) {
+	this.vertexSupplier = vertexSupplier;
+	this.edgeSupplier = edgeSupplier;
 	this.vertices = new ArrayList<V>();
 	this.edges = new ArrayList<E>();
 	this.vertexAdjacencies = new ArrayList<ArrayList<Tuple<Integer, Integer>>>();
 	this.edgeAdjacencies = new ArrayList<Tuple<Integer, Integer>>();
     }
+
+
 
     public V addVertex(P position) {
 	V v = vertexSupplier.get();
@@ -52,19 +56,19 @@ public abstract class WeightedGraph<V extends Vertex<P>, P, E extends WeightedEd
 	return vertices;
     }
 
-    public V getFirstV() {
+    public V getFirstVertex() {
 	return this.vertices.get(0);
     }
 
-    public V getLastV() {
+    public V getLastVertex() {
 	return this.vertices.get(VCount - 1);
     }
 
-    public V getV(V v) {
+    public V getVertex(V v) {
 	return this.vertices.get(v.getID());
     }
 
-    public V getV(int ID) {
+    public V getVertex(int ID) {
 	return this.vertices.get(ID);
     }
 
@@ -123,8 +127,7 @@ public abstract class WeightedGraph<V extends Vertex<P>, P, E extends WeightedEd
     public List<Tuple<E, V>> getNextPathsOf(V v) {
 	List<Tuple<E, V>> nextPaths = new ArrayList<Tuple<E, V>>();
 	for (Tuple<Integer, Integer> adjacency : vertexAdjacencies.get(v.getID()))
-	    nextPaths.add(new Tuple<E, V>(edges.get(adjacency.getSecond()),
-		    vertices.get(adjacency.getFirst())));
+	    nextPaths.add(new Tuple<E, V>(edges.get(adjacency.getSecond()), vertices.get(adjacency.getFirst())));
 	return nextPaths;
     }
 
