@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import de.manetmodel.graph.EdgeDistance;
 import de.manetmodel.graph.Path;
 import de.manetmodel.graph.Position2D;
 import de.manetmodel.graph.UndirectedWeighted2DGraph;
@@ -12,17 +13,17 @@ import de.manetmodel.graph.Vertex;
 import de.manetmodel.graph.WeightedEdge;
 import de.manetmodel.util.Tuple;
 
-public class VisualGraph<V extends Vertex<Position2D>, E extends WeightedEdge<W>, W> {
+public class VisualGraph<V extends Vertex<Position2D>, E extends WeightedEdge<?>> {
 
     private ArrayList<VisualVertex> vertices;
     private ArrayList<VisualEdge> edges;
 
-    public VisualGraph(UndirectedWeighted2DGraph<V, E, W> graph, VisualGraphMarkUp<E, W> markUp) {
+    public VisualGraph(UndirectedWeighted2DGraph<V, E, ?> graph, VisualGraphMarkUp markUp) {
 
 	this.vertices = new ArrayList<VisualVertex>();
 	this.edges = new ArrayList<VisualEdge>();
 
-	for (V vertex : graph.getVertices())
+	for (Vertex<Position2D> vertex : graph.getVertices())
 	    this.vertices.add(new VisualVertex(vertex.getPosition(), markUp.getVertexBackgroundColor(),
 		    markUp.getVertexBorderColor(), Integer.toString(vertex.getID())));
 

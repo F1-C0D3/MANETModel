@@ -6,23 +6,25 @@ import java.util.ListIterator;
 import java.util.function.Function;
 
 import de.manetmodel.graph.Path;
+import de.manetmodel.graph.Position2D;
 import de.manetmodel.graph.UndirectedWeightedGraph;
 import de.manetmodel.graph.Vertex;
 import de.manetmodel.graph.WeightedEdge;
 import de.manetmodel.util.Tuple;
 
-public class DijkstraShortestPath<V extends Vertex<P>, P, E extends WeightedEdge<W>, W> {
+public class DijkstraShortestPath<V extends Vertex<?>, E extends WeightedEdge<?>> {
 
-    private UndirectedWeightedGraph<V, P, E, W> graph;
+    private UndirectedWeightedGraph<V,?,E,?> graph;
 
-    public DijkstraShortestPath(UndirectedWeightedGraph<V, P, E, W> graph) {
+    public DijkstraShortestPath(UndirectedWeightedGraph<V,?,E,?> graph) {
 	this.graph = graph;
     }
 
-    public Path<V, E> compute(V source, V target, Function<Tuple<E, V>, Double> metric) {
+    public Path<V,E> compute(V source, V target, Function<Tuple<E, V>, Double> metric) {
+	
 	/* Initializaton */
 	V current = source;
-	Path<V, E> sp = new Path<V, E>(source, target);
+	Path<V,E> sp = new Path<V,E>(source, target);
 	List<Integer> vertices = new ArrayList<Integer>();
 	List<Tuple<V, Double>> predDist = new ArrayList<Tuple<V, Double>>();
 

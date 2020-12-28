@@ -8,8 +8,8 @@ import de.manetmodel.util.Tuple;
 
 public class Path<V extends Vertex<?>, E extends WeightedEdge<?>> extends LinkedList<Tuple<E, V>> {
 
-    private V source;
-    private V target;
+    protected V source;
+    protected V target;
 
     public Path() {
 	this.source = null;
@@ -71,15 +71,15 @@ public class Path<V extends Vertex<?>, E extends WeightedEdge<?>> extends Linked
     }
 
     public boolean contains(V vertex) {
-	for (Tuple<E, V> edgeAndVertex : this)
-	    if (vertex.equals(edgeAndVertex.getSecond()))
+	for (Tuple<E, V> vertexEdgeTuple : this)
+	    if (vertex.equals(vertexEdgeTuple.getSecond()))
 		return true;
 	return false;
     }
 
     public boolean contains(E edge) {
-	for (Tuple<E, V> edgeAndVertex : this)
-	    if (edge.equals(edgeAndVertex.getFirst()))
+	for (Tuple<E, V> vertexEdgeTuple : this)
+	    if (edge.equals(vertexEdgeTuple.getFirst()))
 		return true;
 	return false;
     }
@@ -98,12 +98,12 @@ public class Path<V extends Vertex<?>, E extends WeightedEdge<?>> extends Linked
 
     public List<V> getVisitedVertices() {
 	List<V> vertices = new ArrayList<V>();
-	for (Tuple<E, V> edgeAndVertex : this)
-	    vertices.add(edgeAndVertex.getSecond());
+	for (Tuple<E, V> vertexEdgeTuple : this)
+	    vertices.add(vertexEdgeTuple.getSecond());
 	return vertices;
     }
 
-    public boolean equals(Path<V, E> path) {
+    public boolean equals(Path<V,E> path) {
 	for (int i = 0; i < this.size(); i++) {
 	    if (path.get(i) != null)
 		if (!path.get(i).getSecond().equals(this.get(i).getSecond()))
@@ -117,10 +117,10 @@ public class Path<V extends Vertex<?>, E extends WeightedEdge<?>> extends Linked
     @Override
     public String toString() {
 	String str = "";
-	for (Tuple<E, V> linkAndNode : this) {
-	    if (linkAndNode.getFirst() != null)
-		str += String.format("- %.2f -", linkAndNode.getFirst().toString());
-	    str += String.format("[%s]", linkAndNode.getSecond().toString());
+	for (Tuple<E, V> vertexEdgeTuple : this) {
+	    if (vertexEdgeTuple.getFirst() != null)
+		str += String.format("- %.2f -", vertexEdgeTuple.getFirst().toString());
+	    str += String.format("[%s]", vertexEdgeTuple.getSecond().toString());
 	}
 	return str;
     }

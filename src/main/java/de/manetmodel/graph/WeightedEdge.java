@@ -27,9 +27,7 @@ public class WeightedEdge<W> {
 	return this.weight;
     }
 
-    @Override
-    public String toString() {
-	// TODO Auto-generated method stub
-	return null;
+    public boolean equals(WeightedEdge<W> edge) {
+	return edge.getID() == this.ID;
     }
 }

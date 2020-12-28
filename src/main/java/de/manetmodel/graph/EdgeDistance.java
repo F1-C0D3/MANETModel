@@ -4,10 +4,15 @@ import java.text.DecimalFormat;
 
 public class EdgeDistance extends EdgeWeight {
 
-    private final double distance;
+    private double distance;
     
+    public EdgeDistance() {}
     
     public EdgeDistance(double distance) {
+	this.distance = distance;
+    }
+    
+    public void setDistance(double distance) {
 	this.distance = distance;
     }
     
