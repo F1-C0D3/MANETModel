@@ -3,7 +3,6 @@ package de.manetmodel.network;
 import java.util.HashSet;
 import java.util.Set;
 
-import de.manetmodel.graph.EdgeDistance;
 import de.manetmodel.graph.WeightedEdge;
 import de.manetmodel.network.unit.DataRate;
 
@@ -11,9 +10,9 @@ public class Link<W> extends WeightedEdge<W> {
 
     private double receptionPower;
     private DataRate transmissionRate;
-    private double occupation;
-    
-    private Set<Link<W>> interferedLinks; 
+    private DataRate utilization;
+
+    private Set<Link<W>> interferedLinks;
 
     public Link() {
 	interferedLinks = new HashSet<Link<W>>();
@@ -40,21 +39,25 @@ public class Link<W> extends WeightedEdge<W> {
 	return interferedLinks;
     }
 
-    public void setInReceptionRange(Set<Link<W>> l) {
+    public void setInterferedLinks(Set<Link<W>> l) {
 	interferedLinks.addAll(l);
     }
 
-    public double getOccupation() {
-	return this.occupation;
+    public DataRate getUtilization() {
+	return this.utilization;
     }
 
-    public double setOccupation(double o) {
-	return this.occupation = o;
+    public void setUtilization(DataRate u) {
+	this.utilization.set(u.get());
+    }
+
+    public void increaseUtilizationBy(DataRate u) {
+	this.utilization.set(utilization.get() + u.get());
     }
 
     @Override
     public String toString() {
-	return new StringBuffer("ID: ").append(getID()).append(", Utilization: ").append(this.getOccupation())
+	return new StringBuffer("ID: ").append(getID()).append(", Utilization: ").append(this.getUtilization())
 		.toString();
     }
 }

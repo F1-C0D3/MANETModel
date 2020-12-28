@@ -20,6 +20,10 @@ public class DataRate {
 	return Math.round(value * factor);
     }
 
+    public void set(long bits) {
+	this.bits = bits;
+    }
+
     public final long get() {
 	return bits;
     }
