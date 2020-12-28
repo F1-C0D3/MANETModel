@@ -3,25 +3,25 @@ package de.manetmodel.network;
 import java.util.HashSet;
 import java.util.Set;
 
-import de.manetmodel.graph.EdgeDistance;
+import de.manetmodel.graph.EdgeWeight;
 import de.manetmodel.graph.Position2D;
 import de.manetmodel.graph.Vertex;
 
-public class Node<W extends EdgeDistance> extends Vertex<Position2D> {
+public class Node<L extends Link<L, W>, W extends EdgeWeight> extends Vertex<Position2D> {
 
     private double receptionSensitivity;
-    private Set<Link<W>> interferredLinks;
+    private Set<L> interferredLinks;
 
     public Node(double x, double y) {
-	super.setPosition(new Position2D(x,y));
-	interferredLinks = new HashSet<Link<W>>();
+	super.setPosition(new Position2D(x, y));
+	interferredLinks = new HashSet<L>();
     }
 
-    public void setInterferedLink(Link<W> l) {
+    public void setInterferedLink(L l) {
 	interferredLinks.add(l);
     }
 
-    public Set<Link<W>> getInterferedLinks() {
+    public Set<L> getInterferedLinks() {
 	return interferredLinks;
     }
 

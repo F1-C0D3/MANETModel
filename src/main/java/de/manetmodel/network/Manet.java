@@ -7,15 +7,12 @@ import java.util.Set;
 import java.util.function.Supplier;
 
 import de.manetmodel.graph.EdgeDistance;
-import de.manetmodel.graph.Position2D;
 import de.manetmodel.graph.UndirectedWeighted2DGraph;
-import de.manetmodel.graph.Vertex;
-import de.manetmodel.graph.WeightedEdge;
 import de.manetmodel.network.radio.IRadioModel;
 import de.manetmodel.network.unit.DataRate;
 import de.manetmodel.util.Tuple;
 
-public class Manet<N extends Node<W>, L extends Link<W>, W extends EdgeDistance>
+public class Manet<N extends Node<L, W>, L extends Link<L, W>, W extends EdgeDistance>
 	extends UndirectedWeighted2DGraph<N, L, W> {
     private IRadioModel radioModel;
     private DataRate utilization;
@@ -42,11 +39,11 @@ public class Manet<N extends Node<W>, L extends Link<W>, W extends EdgeDistance>
 	    List<N> lListOfs2 = this.getNextHopsOf(s2);
 
 	    for (N n : lListOfs1) {
-		l.setInterferedLinks(new HashSet<Link<W>>(this.getEdgesOf(n)));
+		l.setInterferedLinks(new HashSet<L>(this.getEdgesOf(n)));
 	    }
 
 	    for (N n : lListOfs2) {
-		l.setInterferedLinks(new HashSet<Link<W>>(this.getEdgesOf(n)));
+		l.setInterferedLinks(new HashSet<L>(this.getEdgesOf(n)));
 	    }
 	}
 	return link;
@@ -94,14 +91,14 @@ public class Manet<N extends Node<W>, L extends Link<W>, W extends EdgeDistance>
 	while (flowIterator.hasNext()) {
 	    Tuple<L, N> linkAndNode = flowIterator.next();
 	    L l = linkAndNode.getFirst();
-	    Set<Link<W>> interferedLinks = new HashSet<Link<W>>(l.inReceptionRange());
+	    Set<L> interferedLinks = new HashSet<L>(l.inReceptionRange());
 	    N se = this.getTargetOf(linkAndNode.getSecond(), l);
 	    interferedLinks.addAll(se.getInterferedLinks());
-	    Iterator<Link<W>> iLinkIterator = interferedLinks.iterator();
+	    Iterator<L> iLinkIterator = interferedLinks.iterator();
 
 	    while (iLinkIterator.hasNext()) {
 		utilization.set(utilization.get() + flow.getDataRate().get());
-		Link<W> interferedLink = iLinkIterator.next();
+		L interferedLink = iLinkIterator.next();
 		interferedLink.increaseUtilizationBy(flow.getDataRate());
 	    }
 	}

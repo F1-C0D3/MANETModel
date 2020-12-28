@@ -6,16 +6,16 @@ import java.util.Set;
 import de.manetmodel.graph.WeightedEdge;
 import de.manetmodel.network.unit.DataRate;
 
-public class Link<W> extends WeightedEdge<W> {
+public class Link<L, W> extends WeightedEdge<W> {
 
     private double receptionPower;
     private DataRate transmissionRate;
     private DataRate utilization;
 
-    private Set<Link<W>> interferedLinks;
+    private Set<L> interferedLinks;
 
     public Link() {
-	interferedLinks = new HashSet<Link<W>>();
+	interferedLinks = new HashSet<L>();
     }
 
     public void setReceptionPower(double receptionPower) {
@@ -35,11 +35,11 @@ public class Link<W> extends WeightedEdge<W> {
 	return this.receptionPower;
     }
 
-    public Set<Link<W>> inReceptionRange() {
+    public Set<L> inReceptionRange() {
 	return interferedLinks;
     }
 
-    public void setInterferedLinks(Set<Link<W>> l) {
+    public void setInterferedLinks(Set<L> l) {
 	interferedLinks.addAll(l);
     }
 
