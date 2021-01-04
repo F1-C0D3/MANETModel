@@ -2,7 +2,7 @@ package de.manetmodel.graph;
 
 import de.manetmodel.util.Tuple;
 
-public class Path2D<V extends Vertex<Position2D>, E extends WeightedEdge<W>, W extends EdgeDistance> extends Path<V, E> {
+public class Path2D<V extends Vertex<Position2D>, E extends WeightedEdge<W>, W extends EdgeDistance> extends Path<V, E> implements Comparable<Path2D>{
 
     public Path2D() {
 	this.source = null;
@@ -23,5 +23,10 @@ public class Path2D<V extends Vertex<Position2D>, E extends WeightedEdge<W>, W e
 		distance += edgeVertexTuple.getFirst().getWeight().getDistance();
 	
 	return distance;
+    }
+
+    @Override
+    public int compareTo(Path2D other) {
+	return Double.compare(getDistance(), other.getDistance());
     }
 }

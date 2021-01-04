@@ -1,6 +1,7 @@
 package de.manetmodel.graph;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -26,7 +27,7 @@ public class Path<V extends Vertex<?>, E extends WeightedEdge<?>> extends Linked
 	this.target = target;
 	super.add(new Tuple<E, V>(null, source));
     }
-    
+
     @Override
     public boolean add(Tuple<E, V> linkAndNode) {
 	return super.add(linkAndNode);
@@ -103,7 +104,7 @@ public class Path<V extends Vertex<?>, E extends WeightedEdge<?>> extends Linked
 	return vertices;
     }
 
-    public boolean equals(Path<V,E> path) {
+    public boolean equals(Path<V, E> path) {
 	for (int i = 0; i < this.size(); i++) {
 	    if (path.get(i) != null)
 		if (!path.get(i).getSecond().equals(this.get(i).getSecond()))
@@ -116,12 +117,15 @@ public class Path<V extends Vertex<?>, E extends WeightedEdge<?>> extends Linked
 
     @Override
     public String toString() {
-	String str = "";
-	for (Tuple<E, V> vertexEdgeTuple : this) {
-	    if (vertexEdgeTuple.getFirst() != null)
-		str += String.format("- %.2f -", vertexEdgeTuple.getFirst().toString());
-	    str += String.format("[%s]", vertexEdgeTuple.getSecond().toString());
+	StringBuilder stringBuilder = new StringBuilder();
+	Iterator<Tuple<E, V>> iterator = this.iterator();
+	while (iterator.hasNext()) {
+	    Tuple<E, V> next = iterator.next();
+	    if (iterator.hasNext())
+		stringBuilder.append(next.getSecond().getID()).append(", ");
+	    else
+		stringBuilder.append(next.getSecond().getID());
 	}
-	return str;
+	return stringBuilder.toString();
     }
 }
