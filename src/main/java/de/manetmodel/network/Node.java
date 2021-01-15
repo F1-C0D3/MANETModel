@@ -12,9 +12,13 @@ public class Node<W extends EdgeDistance> extends Vertex<Position2D> {
     private double receptionSensitivity;
     private Set<Link<W>> interferredLinks;
 
-    public Node(double x, double y) {
-	super.setPosition(new Position2D(x,y));
+    public Node() {
 	interferredLinks = new HashSet<Link<W>>();
+    }
+
+    public Node(double x, double y) {
+	this();
+	super.setPosition(new Position2D(x, y));
     }
 
     public void setInterferedLink(Link<W> l) {

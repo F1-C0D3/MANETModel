@@ -15,7 +15,8 @@ public class Link<W> extends WeightedEdge<W> {
     private Set<Link<W>> interferedLinks;
 
     public Link() {
-	interferedLinks = new HashSet<Link<W>>();
+	this.interferedLinks = new HashSet<Link<W>>();
+	this.utilization = new DataRate(0L);
     }
 
     public void setReceptionPower(double receptionPower) {

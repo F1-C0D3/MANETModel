@@ -7,10 +7,7 @@ import java.util.Set;
 import java.util.function.Supplier;
 
 import de.manetmodel.graph.EdgeDistance;
-import de.manetmodel.graph.Position2D;
 import de.manetmodel.graph.UndirectedWeighted2DGraph;
-import de.manetmodel.graph.Vertex;
-import de.manetmodel.graph.WeightedEdge;
 import de.manetmodel.network.radio.IRadioModel;
 import de.manetmodel.network.unit.DataRate;
 import de.manetmodel.util.Tuple;
@@ -19,10 +16,13 @@ public class Manet<N extends Node<W>, L extends Link<W>, W extends EdgeDistance>
 	extends UndirectedWeighted2DGraph<N, L, W> {
     private IRadioModel radioModel;
     private DataRate utilization;
+    private DataRate capacity;
 
     public Manet(Supplier<N> vertexSupplier, Supplier<L> edgeSupplier, IRadioModel radioModel) {
 	super(vertexSupplier, edgeSupplier);
 	this.radioModel = radioModel;
+	this.capacity = new DataRate(0L);
+	this.utilization = new DataRate(0L);
     }
 
     @Override
@@ -35,6 +35,10 @@ public class Manet<N extends Node<W>, L extends Link<W>, W extends EdgeDistance>
 	    N s2 = lt.getSecond();
 
 	    double distance = this.getDistance(s1.getPosition(), s2.getPosition());
+
+	    if (l == link) {
+		capacity.set(capacity.get() + radioModel.transmissionBitrate(distance).get());
+	    }
 	    l.setTransmissionRate(radioModel.transmissionBitrate(distance));
 	    l.setReceptionPower(radioModel.receptionPower(distance));
 
@@ -98,9 +102,8 @@ public class Manet<N extends Node<W>, L extends Link<W>, W extends EdgeDistance>
 	    N se = this.getTargetOf(linkAndNode.getSecond(), l);
 	    interferedLinks.addAll(se.getInterferedLinks());
 	    Iterator<Link<W>> iLinkIterator = interferedLinks.iterator();
-
 	    while (iLinkIterator.hasNext()) {
-		utilization.set(utilization.get() + flow.getDataRate().get());
+		this.utilization.set(this.utilization.get() + flow.getDataRate().get());
 		Link<W> interferedLink = iLinkIterator.next();
 		interferedLink.increaseUtilizationBy(flow.getDataRate());
 	    }
@@ -111,7 +114,9 @@ public class Manet<N extends Node<W>, L extends Link<W>, W extends EdgeDistance>
      * Must be implemented
      */
     public void removeFlow(Flow<N, L, W> flow) {
-	this.getEdges().forEach(l -> l.setUtilization(new DataRate(0L)));
+	for (Link<W> l : this.getEdges()) {
+	    l.setUtilization(new DataRate(0L));
+	}
 	utilization = new DataRate(0L);
     }
 
@@ -119,33 +124,8 @@ public class Manet<N extends Node<W>, L extends Link<W>, W extends EdgeDistance>
 	return this.utilization;
     }
 
-//    public DataRate utilization(List<Flow<N, L, W>> flows) {
-//
-//	Iterator<Flow<N, L, W>> flowsIter = flows.iterator();
-//
-//	long networkUtilization = 0L;
-//
-//	while (flowsIter.hasNext()) {
-//	    Flow<N, L, W> f = flowsIter.next();
-//	    Iterator<Tuple<L, N>> fIter = f.listIterator(1);
-//
-//	    while (fIter.hasNext()) {
-//		Tuple<L, N> ln = fIter.next();
-//		L l = ln.getFirst();
-//		Set<Link<W>> uLinks = new HashSet<Link<W>>(l.inReceptionRange());
-//		N se = this.getTargetOf(ln.getSecond(), l);
-//		uLinks.addAll(se.getInterferedLinks());
-//		Iterator<Link<W>> pIter = uLinks.iterator();
-//
-//		while (pIter.hasNext()) {
-//		    networkUtilization += f.getDataRate().get();
-//		    L ul = pIter.next();
-//		    ul.setTransmissionRate(new DataRate(f.getDataRate().get() + ul.getTr
-//		}
-//	    }
-//	}
-//
-//	return new DataRate(networkUtilization);
-//    }
+    public DataRate getCapacity() {
+	return this.capacity;
+    }
 
 }
