@@ -11,15 +11,17 @@ import javax.swing.WindowConstants;
 import de.manetmodel.app.gui.VisualGraphPanel;
 import de.manetmodel.app.gui.visualgraph.VisualGraph;
 import de.manetmodel.app.gui.visualgraph.VisualGraphMarkUp;
-import de.manetmodel.graph.generator.GraphGenerator;
+import de.manetmodel.graph.EdgeDistance;
+import de.manetmodel.graph.generator.GridGraphGenerator;
+import de.manetmodel.graph.generator.GridGraphProperties;
 import de.manetmodel.network.radio.Propagation;
 import de.manetmodel.network.radio.ScalarRadioModel;
 
 public class MyVizualManetGrid {
 
-    public Manet<Node, Link> manet;
+    public Manet<Node<EdgeDistance>, Link<EdgeDistance>, EdgeDistance> manet;
 
-    VisualGraphPanel<Node, Link> panel;
+    VisualGraphPanel<Node<EdgeDistance>, Link<EdgeDistance>> panel;
 
     public MyVizualManetGrid(int numNodes) {
 
@@ -29,12 +31,13 @@ public class MyVizualManetGrid {
     }
 
     void createManetGrid(int numNodes) {
-	Manet<Node, Link> manet = new Manet<Node, Link>(new ManetSupplier.ManetNodeSupplier(),
-		new ManetSupplier.ManetLinkSupplier(),
+	Manet<Node<EdgeDistance>, Link<EdgeDistance>, EdgeDistance> manet = new Manet<Node<EdgeDistance>, Link<EdgeDistance>, EdgeDistance>(
+		new ManetSupplier.ManetNodeSupplier(), new ManetSupplier.ManetLinkSupplier(),
 		new ScalarRadioModel(Propagation.pathLoss(125d, Propagation.waveLength(2412000000d)), 0.002d, 1e-11,
 			2000000d, 2412000000d));
-	GraphGenerator<Node, Link> generator = new GraphGenerator<Node, Link>(manet);
-	generator.generateGridGraph(400, 500, 100, numNodes);
+	GridGraphGenerator<Node<EdgeDistance>, Link<EdgeDistance>, EdgeDistance> generator = new GridGraphGenerator<Node<EdgeDistance>, Link<EdgeDistance>, EdgeDistance>(
+		manet);
+	generator.generate(new GridGraphProperties(400, 400, 100, 100));
 
 	this.manet = manet;
 
@@ -44,12 +47,13 @@ public class MyVizualManetGrid {
 	SwingUtilities.invokeLater(new Runnable() {
 	    @Override
 	    public void run() {
-		VisualGraph<Node, Link> visualGraph = new VisualGraph<Node, Link>(manet,
-			new VisualGraphMarkUp<Link>(new VisualEdgeDistanceTextBuilder<Link>()));
+		VisualGraph<Node<EdgeDistance>, Link<EdgeDistance>> visualGraph = new VisualGraph<Node<EdgeDistance>, Link<EdgeDistance>>(
+			manet, new VisualGraphMarkUp());
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 		int windowWidth = (int) screenSize.getWidth() * 3 / 4;
 		int windowHeight = (int) screenSize.getHeight() * 3 / 4;
-		VisualGraphPanel<Node, Link> panel = new VisualGraphPanel<Node, Link>(visualGraph);
+		VisualGraphPanel<Node<EdgeDistance>, Link<EdgeDistance>> panel = new VisualGraphPanel<Node<EdgeDistance>, Link<EdgeDistance>>(
+			visualGraph);
 
 		panel.setPreferredSize(new Dimension(windowWidth, windowHeight));
 		panel.setFont(new Font("Consolas", Font.PLAIN, 16));
