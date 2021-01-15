@@ -1,7 +1,7 @@
 package de.manetmodel.network;
 
-import de.manetmodel.graph.Vertex;
+import de.manetmodel.graph.EdgeDistance;
 
-public class MyNode extends Vertex{
-	
+public class MyNode extends Node<EdgeDistance> {
+
 }
