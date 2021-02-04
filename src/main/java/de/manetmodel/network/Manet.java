@@ -1,9 +1,7 @@
 package de.manetmodel.network;
 
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Set;
 import java.util.function.Supplier;
 
 import de.manetmodel.graph.EdgeDistance;
@@ -15,8 +13,8 @@ import de.manetmodel.util.Tuple;
 public class Manet<N extends Node<W>, L extends Link<W>, W extends EdgeDistance>
 	extends UndirectedWeighted2DGraph<N, L, W> {
     private IRadioModel radioModel;
-    private DataRate utilization;
     private DataRate capacity;
+    protected DataRate utilization;
 
     public Manet(Supplier<N> vertexSupplier, Supplier<L> edgeSupplier, IRadioModel radioModel) {
 	super(vertexSupplier, edgeSupplier);
@@ -56,69 +54,21 @@ public class Manet<N extends Node<W>, L extends Link<W>, W extends EdgeDistance>
 	return link;
     }
 
-    public boolean addVertex(N node) {
-	boolean result = super.addVertex(node);
-
-	for (N n : this.getVertices()) {
-	    setLinksInterferedByL(n);
-	}
-	return result;
-    }
-
-    @Override
-    public N addVertex(double x, double y) {
-
-	N node = super.addVertex(x, y);
-
-	for (N n : this.getVertices()) {
-	    setLinksInterferedByL(n);
-	}
-
-	return node;
-    }
-
-    private void setLinksInterferedByL(N n) {
-	Iterator<L> iterator = this.getEdges().iterator();
-
-	while (iterator.hasNext()) {
-	    L le = iterator.next();
-	    N se = this.getVerticesOf(le).getFirst();
-	    N sk = this.getVerticesOf(le).getSecond();
-
-	    if (radioModel.interferencePresent(this.getDistance(n.getPosition(), se.getPosition()))
-		    && radioModel.interferencePresent(this.getDistance(n.getPosition(), sk.getPosition()))) {
-		n.setInterferedLink(le);
-	    }
-	}
-    }
-
-    public void addFlow(Flow<N, L, W> flow) {
-	Iterator<Tuple<L, N>> flowIterator = flow.listIterator(1);
-
-	while (flowIterator.hasNext()) {
-	    Tuple<L, N> linkAndNode = flowIterator.next();
-	    L l = linkAndNode.getFirst();
-	    Set<Link<W>> interferedLinks = new HashSet<Link<W>>(l.inReceptionRange());
-	    N se = this.getTargetOf(linkAndNode.getSecond(), l);
-	    interferedLinks.addAll(se.getInterferedLinks());
-	    Iterator<Link<W>> iLinkIterator = interferedLinks.iterator();
-	    while (iLinkIterator.hasNext()) {
-		this.utilization.set(this.utilization.get() + flow.getDataRate().get());
-		Link<W> interferedLink = iLinkIterator.next();
-		interferedLink.increaseUtilizationBy(flow.getDataRate());
-	    }
-	}
-    }
-
     /*
-     * Must be implemented
+     * Method detects links which are interfered due to eventually overlapping
+     * transmissions. Is not considered to be used during evaluations
+     * 
+     * private void setLinksInterferedByL(N n) { Iterator<L> iterator =
+     * this.getEdges().iterator();
+     * 
+     * while (iterator.hasNext()) { L le = iterator.next(); N se =
+     * this.getVerticesOf(le).getFirst(); N sk = this.getVerticesOf(le).getSecond();
+     * 
+     * if (radioModel.interferencePresent(this.getDistance(n.getPosition(),
+     * se.getPosition())) &&
+     * radioModel.interferencePresent(this.getDistance(n.getPosition(),
+     * sk.getPosition()))) { n.setInterferedLink(le); } } }
      */
-    public void removeFlow(Flow<N, L, W> flow) {
-	for (Link<W> l : this.getEdges()) {
-	    l.setUtilization(new DataRate(0L));
-	}
-	utilization = new DataRate(0L);
-    }
 
     public DataRate getUtilization() {
 	return this.utilization;
