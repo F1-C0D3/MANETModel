@@ -1,5 +1,7 @@
 package de.manetmodel.network.unit;
 
+import de.manetmodel.network.unit.Unit.Type;
+
 public class DataRate {
     private long bits;
 
@@ -26,6 +28,13 @@ public class DataRate {
 
     public final long get() {
 	return bits;
+    }
+
+    @Override
+    public String toString() {
+
+	Type type = Unit.getNextLowerType(bits);
+	return new StringBuffer().append(bits / (double) Unit.getFactor(type)).append(" ").append(type).toString();
     }
 
 }

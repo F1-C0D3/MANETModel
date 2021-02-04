@@ -22,6 +22,25 @@ public class Unit {
 	types = Collections.unmodifiableList(units);
     }
 
+    public static Type getNextLowerType(long bits) {
+
+	if (bits < 0) {
+	    bits = -bits;
+	}
+
+	int i = 0;
+	for (i = 0; i < types.size(); i++) {
+
+	    if (bits + 1 >= types.get(types.size() - 1).getSecond()) {
+		i = types.size() - 1;
+		break;
+	    } else if (bits + 1 >= types.get(i).getSecond() && bits < types.get(i + 1).getSecond()) {
+		break;
+	    }
+	}
+	return types.get(i).getFirst();
+    }
+
     public static long getFactor(Unit.Type type) {
 	return types.stream().filter(t -> t.getFirst().equals(type)).findFirst().get().getSecond();
     }
