@@ -20,7 +20,7 @@ public class DijkstraShortestPath<V extends Vertex<?>, E extends WeightedEdge<?>
 	this.graph = graph;
     }
 
-    public Path<V, E> compute(V source, V target, DataRate flowDataRate, Function<Tuple<E, DataRate>, Long> metric) {
+    public Path<V, E> compute(V source, V target, DataRate flowDataRate, Function<Tuple<E, DataRate>, Double> metric) {
 
 	/* Initializaton */
 	V current = source;

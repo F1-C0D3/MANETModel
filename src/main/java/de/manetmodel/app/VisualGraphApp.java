@@ -10,7 +10,6 @@ import java.io.File;
 import java.io.IOException;
 
 import javax.imageio.ImageIO;
-import javax.swing.JFrame;
 import javax.swing.WindowConstants;
 
 import de.manetmodel.algo.DijkstraShortestPath;
@@ -38,13 +37,14 @@ import de.manetmodel.graph.UndirectedWeighted2DGraph;
 import de.manetmodel.graph.Vertex;
 import de.manetmodel.graph.WeightedEdge;
 import de.manetmodel.graph.WeightedGraphSupplier;
+import de.manetmodel.graph.generator.GraphProperties.DoubleRange;
+import de.manetmodel.graph.generator.GraphProperties.IntRange;
+import de.manetmodel.graph.generator.GridGraphGenerator;
 import de.manetmodel.graph.generator.GridGraphProperties;
 import de.manetmodel.graph.generator.NetworkGraphGenerator;
 import de.manetmodel.graph.generator.NetworkGraphProperties;
 import de.manetmodel.graph.generator.RandomGraphGenerator;
-import de.manetmodel.graph.generator.GraphProperties.DoubleRange;
-import de.manetmodel.graph.generator.GraphProperties.IntRange;
-import de.manetmodel.graph.generator.GridGraphGenerator;
+import de.manetmodel.network.unit.DataRate;
 import de.manetmodel.util.RandomNumbers;
 import de.manetmodel.util.Tuple;
 
@@ -335,12 +335,12 @@ public class VisualGraphApp<V extends Vertex<Position2D>, E extends WeightedEdge
 
 	DijkstraShortestPath<V, E> dijkstraShortestPath = new DijkstraShortestPath<V, E>(graph);
 
-	java.util.function.Function<Tuple<E, V>, Double> metric = (Tuple<E, V> t) -> {
+	java.util.function.Function<Tuple<E, DataRate>, Double> metric = (Tuple<E, DataRate> t) -> {
 	    return 1d;
 	};
 
 	Path<V, E> shortestPath = dijkstraShortestPath.compute(graph.getVertex(input.INT.get(0)),
-		graph.getVertex(input.INT.get(1)), metric);
+		graph.getVertex(input.INT.get(1)), new DataRate(), metric);
 
 	frame.getVisualGraphPanel().getVisualGraph().addVisualPath(shortestPath);
 	frame.getVisualGraphPanel().repaint();
