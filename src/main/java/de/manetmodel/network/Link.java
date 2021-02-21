@@ -11,12 +11,14 @@ public class Link<W> extends WeightedEdge<W> {
     private double receptionPower;
     private DataRate transmissionRate;
     private DataRate utilization;
+    private boolean isActive; // true if link is part of a path
 
     private Set<Link<W>> interferedLinks;
 
     public Link() {
 	this.interferedLinks = new HashSet<Link<W>>();
 	this.utilization = new DataRate(0L);
+	isActive = false;
     }
 
     public void setReceptionPower(double receptionPower) {
@@ -60,5 +62,14 @@ public class Link<W> extends WeightedEdge<W> {
     public String toString() {
 	return new StringBuffer("ID: ").append(getID()).append(", Utilization: ").append(this.getUtilization())
 		.toString();
+    }
+
+    public void setToParticipant(boolean isParticipant) {
+	this.isActive = isParticipant;
+
+    }
+
+    public boolean isParticipant() {
+	return this.isActive;
     }
 }
