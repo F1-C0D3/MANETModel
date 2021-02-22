@@ -64,12 +64,12 @@ public class Link<W> extends WeightedEdge<W> {
 		.toString();
     }
 
-    public void setToParticipant(boolean isParticipant) {
+    public void setIsActive(boolean isParticipant) {
 	this.isActive = isParticipant;
 
     }
 
-    public boolean isParticipant() {
+    public boolean getIsActive() {
 	return this.isActive;
     }
 }
