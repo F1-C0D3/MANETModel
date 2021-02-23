@@ -16,7 +16,7 @@ public class Link<W extends LinkProperties> extends WeightedEdge<W> {
     
     public Link() {
 	interferedLinks = new HashSet<Link<W>>();
-	getWeight().setUtilization(new DataRate(0L));
+	//getWeight().setUtilization(new DataRate(0L));
 	isActive = false;
     }
 

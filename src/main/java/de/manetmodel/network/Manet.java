@@ -4,7 +4,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.function.Supplier;
 
-import de.jgraphlib.graph.EdgeDistance;
 import de.jgraphlib.graph.UndirectedWeighted2DGraph;
 import de.jgraphlib.util.Tuple;
 import de.manetmodel.network.radio.IRadioModel;
@@ -23,8 +22,8 @@ public class Manet<N extends Node, L extends Link<W>, W extends LinkProperties> 
     }
 
     @Override
-    public L addEdge(N source, N target) {
-	L link = super.addEdge(source, target);
+    public L addEdge(N source, N target, W weight) {
+	L link = super.addEdge(source, target, weight);
 
 	for (L l : this.getEdges()) {
 	    Tuple<N, N> lt = this.getVerticesOf(l);
