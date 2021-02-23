@@ -47,6 +47,7 @@ public class Link<W extends LinkProperties> extends WeightedEdge<W> {
     
     public void setInterferedLinks(Set<Link<W>> l) {
 	interferedLinks.addAll(l);
+	getWeight().setInterference(interferedLinks.size());
     }
 
     // can be removed
