@@ -2,17 +2,17 @@ package de.manetmodel.network;
 
 import java.util.Iterator;
 
-import de.manetmodel.graph.EdgeDistance;
-import de.manetmodel.graph.Path;
-import de.manetmodel.graph.Path2D;
-import de.manetmodel.graph.Position2D;
-import de.manetmodel.graph.Vertex;
-import de.manetmodel.graph.WeightedEdge;
+import de.jgraphlib.graph.EdgeDistance;
+import de.jgraphlib.graph.Path2D;
+import de.jgraphlib.graph.Position2D;
+import de.jgraphlib.graph.Vertex;
+import de.jgraphlib.graph.WeightedEdge;
+import de.jgraphlib.util.Tuple;
 import de.manetmodel.network.unit.DataRate;
-import de.manetmodel.util.Tuple;
 
 public class Flow<N extends Vertex<Position2D>, L extends WeightedEdge<W>, W extends EdgeDistance> extends Path2D<N,L,W> {
 
+    private static final long serialVersionUID = 1L;
     private DataRate rate;
 
     public Flow(N source, N target, DataRate bitrate) {

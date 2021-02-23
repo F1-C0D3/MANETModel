@@ -14,7 +14,6 @@ public class DataRate {
     }
 
     public DataRate() {
-
     }
 
     protected long toBits(double value, Unit.Type type) {
@@ -32,9 +31,7 @@ public class DataRate {
 
     @Override
     public String toString() {
-
 	Type type = Unit.getNextLowerType(bits);
 	return new StringBuffer().append(bits / (double) Unit.getFactor(type)).append(" ").append(type).toString();
     }
-
 }

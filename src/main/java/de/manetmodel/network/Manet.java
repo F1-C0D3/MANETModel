@@ -4,14 +4,13 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.function.Supplier;
 
-import de.manetmodel.graph.EdgeDistance;
-import de.manetmodel.graph.UndirectedWeighted2DGraph;
+import de.jgraphlib.graph.EdgeDistance;
+import de.jgraphlib.graph.UndirectedWeighted2DGraph;
+import de.jgraphlib.util.Tuple;
 import de.manetmodel.network.radio.IRadioModel;
 import de.manetmodel.network.unit.DataRate;
-import de.manetmodel.util.Tuple;
 
-public class Manet<N extends Node<W>, L extends Link<W>, W extends EdgeDistance>
-	extends UndirectedWeighted2DGraph<N, L, W> {
+public class Manet<N extends Node, L extends Link<W>, W extends LinkProperties> extends UndirectedWeighted2DGraph<N, L, W> {
     private IRadioModel radioModel;
     private DataRate capacity;
     protected DataRate utilization;

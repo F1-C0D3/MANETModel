@@ -1,6 +1,3 @@
 eclipse.preferences.version=1
-encoding//src/main/java/de/manetmodel/app/VisualGraphApp.java=UTF-8
-encoding//src/main/java/de/manetmodel/app/treeparser/Option.java=UTF-8
-encoding//src/main/java/de/manetmodel/app/treeparser/TreeParser.java=UTF-8
 encoding//src/main/java/de/manetmodel/network/Link.java=UTF-8
 encoding//src/test/java/de/manetgraph/app/ConsoleAppTest.java=UTF-8

@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import de.manetmodel.util.Tuple;
+import de.jgraphlib.util.Tuple;
 
 public class Unit {
 

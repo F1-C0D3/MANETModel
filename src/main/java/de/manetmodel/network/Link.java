@@ -3,59 +3,66 @@ package de.manetmodel.network;
 import java.util.HashSet;
 import java.util.Set;
 
-import de.manetmodel.graph.WeightedEdge;
+import de.jgraphlib.graph.WeightedEdge;
 import de.manetmodel.network.unit.DataRate;
 
-public class Link<W> extends WeightedEdge<W> {
+public class Link<W extends LinkProperties> extends WeightedEdge<W> {
 
-    private double receptionPower;
-    private DataRate transmissionRate;
-    private DataRate utilization;
-    private boolean isActive; // true if link is part of a path
-
+    // Links, that are actively and passively affected (in interference range)
     private Set<Link<W>> interferedLinks;
-
+    
+    // Indicates, whether Link is occupied actively through transmission as part of a flow
+    private boolean isActive; 
+    
     public Link() {
-	this.interferedLinks = new HashSet<Link<W>>();
-	this.utilization = new DataRate(0L);
+	interferedLinks = new HashSet<Link<W>>();
+	getWeight().setUtilization(new DataRate(0L));
 	isActive = false;
     }
 
-    public void setReceptionPower(double receptionPower) {
-	this.receptionPower = receptionPower;
-    }
-
-    public void setTransmissionRate(DataRate transmissionBitrate) {
-	this.transmissionRate = transmissionBitrate;
-
-    }
-
-    public DataRate getTransmissionRate() {
-	return this.transmissionRate;
-    }
-
+    // can be removed
     public double getReceptionPower() {
-	return this.receptionPower;
+	return getWeight().getReceptionPower();
+    }
+    
+    // can be removed
+    public void setReceptionPower(double receptionPower) {
+	getWeight().setReceptionPower(receptionPower);
     }
 
+    // can be removed
+    public void setTransmissionRate(DataRate transmissionBitrate) {
+	getWeight().setTransmissionRate(transmissionBitrate);
+    }
+    
+    // can be removed
+    public DataRate getTransmissionRate() {
+	return getWeight().getTransmissionRate();
+    }
+
+    // can be removed
     public Set<Link<W>> inReceptionRange() {
 	return interferedLinks;
     }
-
+    
     public void setInterferedLinks(Set<Link<W>> l) {
 	interferedLinks.addAll(l);
     }
 
+    // can be removed
     public DataRate getUtilization() {
-	return this.utilization;
+	return getWeight().getUtilization();
     }
 
+    // can be removed
     public void setUtilization(DataRate u) {
-	this.utilization.set(u.get());
+	//this.utilization.set(u.get());
+	getWeight().setUtilization(u);
     }
 
+    // can be removed
     public void increaseUtilizationBy(DataRate u) {
-	this.utilization.set(utilization.get() + u.get());
+	getWeight().getUtilization().set(getWeight().getUtilization().get() + u.get());
     }
 
     @Override

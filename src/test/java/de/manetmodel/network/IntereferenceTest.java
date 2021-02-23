@@ -18,13 +18,13 @@ import de.manetmodel.network.unit.DataRate;
 import de.manetmodel.network.unit.Unit;
 import de.manetmodel.util.Tuple;
 
-public class OccupationTest {
+public class IntereferenceTest {
 
     public Manet<Node<EdgeDistance>, Link<EdgeDistance>, EdgeDistance> manet;
     DijkstraShortestPath<Node<EdgeDistance>, Link<EdgeDistance>> sp;
     Function<Tuple<Link<EdgeDistance>, Node<EdgeDistance>>, Double> metric;
 
-    public OccupationTest() {
+    public IntereferenceTest() {
 	MyVizualManetGrid manetGrid = new MyVizualManetGrid(30);
 	manet = manetGrid.manet;
 

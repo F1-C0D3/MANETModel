@@ -2,9 +2,7 @@ package de.manetmodel.network;
 
 import java.util.function.Supplier;
 
-import de.manetmodel.graph.EdgeDistance;
-
-public class MyManet extends Manet<MyNode, MyLink, EdgeDistance> {
+public class MyManet extends Manet<MyNode, MyLink, MyLinkProperties> {
 
     public MyManet() {
 	super(new MyVertexSupplier(), new MyEdgeSupplier(), null);
