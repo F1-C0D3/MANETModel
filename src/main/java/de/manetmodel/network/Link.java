@@ -6,7 +6,7 @@ import java.util.Set;
 import de.jgraphlib.graph.WeightedEdge;
 import de.manetmodel.network.unit.DataRate;
 
-public class Link<W extends LinkProperties> extends WeightedEdge<W> {
+public class Link<W extends LinkQuality> extends WeightedEdge<W> {
 
     // Links, that are actively and passively affected (in interference range)
     private Set<Link<W>> interferedLinks;

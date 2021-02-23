@@ -3,7 +3,7 @@ package de.manetmodel.network;
 import de.jgraphlib.graph.EdgeDistance;
 import de.manetmodel.network.unit.DataRate;
 
-public class LinkProperties extends EdgeDistance {
+public class LinkQuality extends EdgeDistance {
 
     // Amount of interfered links
     private int interference;

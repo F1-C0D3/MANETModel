@@ -9,12 +9,12 @@ import de.jgraphlib.util.Tuple;
 import de.manetmodel.network.radio.IRadioModel;
 import de.manetmodel.network.unit.DataRate;
 
-public class Manet<N extends Node, L extends Link<W>, W extends LinkProperties> extends UndirectedWeighted2DGraph<N, L, W> {
+public class MANET<N extends Node, L extends Link<W>, W extends LinkQuality> extends UndirectedWeighted2DGraph<N, L, W> {
     private IRadioModel radioModel;
     private DataRate capacity;
     protected DataRate utilization;
 
-    public Manet(Supplier<N> vertexSupplier, Supplier<L> edgeSupplier, IRadioModel radioModel) {
+    public MANET(Supplier<N> vertexSupplier, Supplier<L> edgeSupplier, IRadioModel radioModel) {
 	super(vertexSupplier, edgeSupplier);
 	this.radioModel = radioModel;
 	this.capacity = new DataRate(0L);

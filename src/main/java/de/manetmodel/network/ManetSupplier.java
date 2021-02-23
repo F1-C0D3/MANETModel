@@ -25,17 +25,17 @@ public class ManetSupplier {
 	}
     }
 
-    private class LinkSupplier implements Supplier<Link<LinkProperties>> {
+    private class LinkSupplier implements Supplier<Link<LinkQuality>> {
 	@Override
-	public Link<LinkProperties> get() {
-	    return new Link<LinkProperties>();
+	public Link<LinkQuality> get() {
+	    return new Link<LinkQuality>();
 	}
     }
 
-    private class LinkPopertiesSupplier extends EdgeWeightSupplier<LinkProperties> {
+    private class LinkPopertiesSupplier extends EdgeWeightSupplier<LinkQuality> {
 	@Override
-	public LinkProperties get() {
-	    return new LinkProperties();
+	public LinkQuality get() {
+	    return new LinkQuality();
 	}
     }
 }
