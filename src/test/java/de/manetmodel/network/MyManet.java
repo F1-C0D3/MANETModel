@@ -2,7 +2,7 @@ package de.manetmodel.network;
 
 import java.util.function.Supplier;
 
-public class MyManet extends Manet<MyNode, MyLink, MyLinkProperties> {
+public class MyManet extends MANET<MyNode, MyLink, MyLinkProperties> {
 
     public MyManet() {
 	super(new MyVertexSupplier(), new MyEdgeSupplier(), null);

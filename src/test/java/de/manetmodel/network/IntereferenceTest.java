@@ -20,7 +20,7 @@ import de.manetmodel.util.Tuple;
 
 public class IntereferenceTest {
 
-    public Manet<Node<EdgeDistance>, Link<EdgeDistance>, EdgeDistance> manet;
+    public MANET<Node<EdgeDistance>, Link<EdgeDistance>, EdgeDistance> manet;
     DijkstraShortestPath<Node<EdgeDistance>, Link<EdgeDistance>> sp;
     Function<Tuple<Link<EdgeDistance>, Node<EdgeDistance>>, Double> metric;
 
@@ -55,9 +55,9 @@ public class IntereferenceTest {
 	    f.add(next);
 	}
 	flows.add(f);
-	manet.removeFlow(null);
+	manet.undeployFlow(null);
 	for (Flow<Node<EdgeDistance>, Link<EdgeDistance>, EdgeDistance> nf : flows) {
-	    manet.addFlow(nf);
+	    manet.deployFlow(nf);
 	}
 	assertEquals((int) manet.getUtilization().get(), 46);
     }
@@ -88,9 +88,9 @@ public class IntereferenceTest {
 	}
 	flows.add(f1);
 	flows.add(f2);
-	manet.removeFlow(null);
+	manet.undeployFlow(null);
 	for (Flow<Node<EdgeDistance>, Link<EdgeDistance>, EdgeDistance> nf : flows) {
-	    manet.addFlow(nf);
+	    manet.deployFlow(nf);
 	}
 	assertEquals((int) manet.getUtilization().get(), 112);
 

@@ -19,7 +19,7 @@ import de.manetmodel.network.radio.ScalarRadioModel;
 
 public class MyVizualManetGrid {
 
-    public Manet<Node<EdgeDistance>, Link<EdgeDistance>, EdgeDistance> manet;
+    public MANET<Node<EdgeDistance>, Link<EdgeDistance>, EdgeDistance> manet;
 
     VisualGraphPanel<Node<EdgeDistance>, Link<EdgeDistance>> panel;
 
@@ -31,7 +31,7 @@ public class MyVizualManetGrid {
     }
 
     void createManetGrid(int numNodes) {
-	Manet<Node<EdgeDistance>, Link<EdgeDistance>, EdgeDistance> manet = new Manet<Node<EdgeDistance>, Link<EdgeDistance>, EdgeDistance>(
+	MANET<Node<EdgeDistance>, Link<EdgeDistance>, EdgeDistance> manet = new MANET<Node<EdgeDistance>, Link<EdgeDistance>, EdgeDistance>(
 		new ManetSupplier.ManetNodeSupplier(), new ManetSupplier.ManetLinkSupplier(),
 		new ScalarRadioModel(Propagation.pathLoss(125d, Propagation.waveLength(2412000000d)), 0.002d, 1e-11,
 			2000000d, 2412000000d));

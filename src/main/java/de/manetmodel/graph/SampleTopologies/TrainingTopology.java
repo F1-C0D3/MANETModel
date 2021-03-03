@@ -1,14 +1,16 @@
 package de.manetmodel.graph.SampleTopologies;
 
+import de.manetmodel.network.Flow;
 import de.manetmodel.network.Link;
 import de.manetmodel.network.LinkQuality;
 import de.manetmodel.network.MANET;
 import de.manetmodel.network.Node;
 
 public class TrainingTopology {
-    MANET<Node, Link<LinkQuality>, LinkQuality> manet;
+    MANET<Node, Link<LinkQuality>, LinkQuality, Flow<Node, Link<LinkQuality>, LinkQuality>> manet;
 
-    public TrainingTopology(MANET<Node, Link<LinkQuality>, LinkQuality> manet) {
+    public TrainingTopology(
+	    MANET<Node, Link<LinkQuality>, LinkQuality, Flow<Node, Link<LinkQuality>, LinkQuality>> manet) {
 	this.manet = manet;
     }
 

@@ -1,5 +1,5 @@
 package de.manetmodel.network;
 
-public class MyLinkProperties extends LinkProperties {
+public class MyLinkProperties extends LinkQuality {
 
 }

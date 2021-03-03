@@ -1,5 +1,7 @@
 package de.manetmodel.graph;
 
-public class MyEdge extends Edge {
+import de.manetmodel.network.Link;
 
-}	
+public class MyEdge extends Link {
+
+}
