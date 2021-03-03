@@ -2,7 +2,6 @@ package de.manetmodel.network;
 
 import java.util.Iterator;
 
-import de.jgraphlib.graph.EdgeDistance;
 import de.jgraphlib.graph.Path2D;
 import de.jgraphlib.graph.Position2D;
 import de.jgraphlib.graph.Vertex;
@@ -10,10 +9,20 @@ import de.jgraphlib.graph.WeightedEdge;
 import de.jgraphlib.util.Tuple;
 import de.manetmodel.network.unit.DataRate;
 
-public class Flow<N extends Vertex<Position2D>, L extends WeightedEdge<W>, W extends EdgeDistance> extends Path2D<N,L,W> {
+public class Flow<N extends Vertex<Position2D>, L extends WeightedEdge<W>, W extends LinkQuality>
+	extends Path2D<N, L, W> {
 
+    private int id;
     private static final long serialVersionUID = 1L;
     private DataRate rate;
+
+    public Flow() {
+
+    }
+
+    public void setId(int id) {
+	this.id = id;
+    }
 
     public Flow(N source, N target, DataRate bitrate) {
 	super(source, target);
@@ -22,6 +31,14 @@ public class Flow<N extends Vertex<Position2D>, L extends WeightedEdge<W>, W ext
 
     public DataRate getDataRate() {
 	return this.rate;
+    }
+
+    @Override
+    public double getDistance() {
+	double distance = 0;
+	for (Tuple<L, N> tuple : this)
+	    distance += tuple.getFirst().getWeight().getUtilizedLinks() * rate.get();
+	return distance;
     }
 
     @Override
@@ -39,8 +56,19 @@ public class Flow<N extends Vertex<Position2D>, L extends WeightedEdge<W>, W ext
 		pathString.append(", ");
 	    }
 	}
-	
+
 	return meta.append(pathString.append("]")).toString();
+    }
+
+    public void setProperties(N source, N target, DataRate r) {
+	this.rate = r;
+	super.source = source;
+	super.target = target;
+	super.add(new Tuple<L, N>(null, source));
+    }
+
+    public Integer getId() {
+	return id;
     }
 
 }
