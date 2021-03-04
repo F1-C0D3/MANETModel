@@ -12,8 +12,7 @@ import de.jgraphlib.util.Tuple;
 import de.manetmodel.network.radio.IRadioModel;
 import de.manetmodel.network.unit.DataRate;
 
-public class MANET<N extends Node, L extends Link<W>, W extends LinkQuality, F extends Flow<Node, Link<W>, W>>
-	extends UndirectedWeighted2DGraph<N, L, W> {
+public class MANET<N extends Node, L extends Link<W>, W extends LinkQuality, F extends Flow<Node, Link<W>, W>> extends UndirectedWeighted2DGraph<N, L, W> {
     private int flowCount;
     private ArrayList<F> flows;
     private IRadioModel radioModel;
@@ -42,6 +41,10 @@ public class MANET<N extends Node, L extends Link<W>, W extends LinkQuality, F e
 
     public F getFlow(int id) {
 	return flows.get(id);
+    }
+    
+    public List<F> getFlows(){
+	return flows;
     }
 
     public List<Integer> getFlowIds() {
