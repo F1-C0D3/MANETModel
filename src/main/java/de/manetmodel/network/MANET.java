@@ -20,8 +20,7 @@ public class MANET<N extends Node, L extends Link<W>, W extends LinkQuality, F e
     private DataRate capacity;
     protected DataRate utilization;
 
-    public MANET(Supplier<N> vertexSupplier, Supplier<L> edgeSupplier, Supplier<F> flowSupplier,
-	    IRadioModel radioModel) {
+    public MANET(Supplier<N> vertexSupplier, Supplier<L> edgeSupplier, Supplier<F> flowSupplier, IRadioModel radioModel) {
 	super(vertexSupplier, edgeSupplier);
 	this.flowCount = 0;
 	this.flowSupplier = flowSupplier;
@@ -30,13 +29,17 @@ public class MANET<N extends Node, L extends Link<W>, W extends LinkQuality, F e
 	this.capacity = new DataRate(0L);
 	this.utilization = new DataRate(0L);
     }
-
+        
     public F addFlow(N source, N target, DataRate r) {
 	F f = flowSupplier.get();
 	f.setId(flowCount++);
 	f.setProperties(source, target, r);
 	flows.add(f);
 	return f;
+    }
+    
+    public void addFlow(F f) {
+	flows.add(f);
     }
 
     public F getFlow(int id) {
