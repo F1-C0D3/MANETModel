@@ -41,6 +41,10 @@ public class MANET<N extends Node, L extends Link<W>, W extends LinkQuality, F e
 	return f;
     }
 
+    public void addFlow(F f) {
+	flows.add(f);
+    }
+
     public List<F> getFlows() {
 	return flows;
     }
