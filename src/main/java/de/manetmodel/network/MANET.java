@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.ListIterator;
 import java.util.Set;
 import java.util.function.Supplier;
 
@@ -12,10 +13,10 @@ import de.jgraphlib.util.Tuple;
 import de.manetmodel.network.radio.IRadioModel;
 import de.manetmodel.network.unit.DataRate;
 
-public class MANET<N extends Node, L extends Link<W>, W extends LinkQuality, F extends Flow<Node, Link<W>, W>>
+public class MANET<N extends Node, L extends Link<W>, W extends LinkQuality, F extends Flow<N, L, W>>
 	extends UndirectedWeighted2DGraph<N, L, W> {
     private int flowCount;
-    private ArrayList<F> flows;
+    private List<F> flows;
     private IRadioModel radioModel;
     private Supplier<F> flowSupplier;
     private DataRate capacity;
@@ -40,6 +41,10 @@ public class MANET<N extends Node, L extends Link<W>, W extends LinkQuality, F e
 	return f;
     }
 
+    public List<F> getFlows() {
+	return flows;
+    }
+
     public F getFlow(int id) {
 	return flows.get(id);
     }
@@ -51,8 +56,8 @@ public class MANET<N extends Node, L extends Link<W>, W extends LinkQuality, F e
 	return flowIds;
     }
 
-    public void deployFlow(Flow<N, L, W> flow) {
-	Iterator<Tuple<L, N>> flowIterator = flow.listIterator(1);
+    public void deployFlow(F flow) {
+	ListIterator<Tuple<L, N>> flowIterator = flow.listIterator(1);
 
 	while (flowIterator.hasNext()) {
 	    Tuple<L, N> linkAndNode = flowIterator.next();
@@ -62,15 +67,31 @@ public class MANET<N extends Node, L extends Link<W>, W extends LinkQuality, F e
 	}
     }
 
-    /*
-     * Must be implemented
-     */
-    public void undeployFlow(Flow<N, L, W> flow) {
-	for (L l : this.getEdges()) {
+    public void eraseFlows() {
+	for (L l : getEdges()) {
 	    l.getWeight().setUtilization(new DataRate(0L));
 	    l.setIsActive(false);
 	}
-	utilization = new DataRate(0L);
+	this.utilization = new DataRate(0L);
+
+    }
+
+    public void undeployFlow(F f) {
+	ListIterator<Tuple<L, N>> flowIterator = f.listIterator(1);
+	while (flowIterator.hasNext()) {
+	    Tuple<L, N> linkAndNode = flowIterator.next();
+	    L l = linkAndNode.getFirst();
+	    l.setIsActive(false);
+	    DataRate r = f.getDataRate();
+	    Set<Integer> linkIds = l.getUtilizedLinkIds();
+	    for (Integer lId : linkIds) {
+		DataRate cUtilization = this.getEdge(lId).getWeight().getUtilization();
+		cUtilization.set(cUtilization.get() - r.get());
+		this.getEdge(lId).getWeight().setUtilization(cUtilization);
+		this.utilization.set(this.utilization.get() - r.get());
+	    }
+
+	}
     }
 
     public void increaseUtilizationBy(L l, DataRate r) {
@@ -112,7 +133,7 @@ public class MANET<N extends Node, L extends Link<W>, W extends LinkQuality, F e
 		l.setUtilizedLinks(new HashSet<Integer>(this.getEdgeIdsOf(n.getID())));
 	    }
 
-	    l.getWeight().setUtilizedLinks(l.getUtilizedLinkIds().size());
+	    l.getWeight().setNumUtilizedLinks(l.getUtilizedLinkIds().size());
 	}
 	return link;
     }
