@@ -1,5 +1,7 @@
 package de.manetmodel.network;
 
+import com.opencsv.bean.CsvBindByName;
+
 import de.jgraphlib.graph.EdgeDistance;
 import de.manetmodel.network.unit.DataRate;
 
@@ -20,11 +22,13 @@ public class LinkQuality extends EdgeDistance {
     private DataRate transmissionRate;
 
     // Rate as unit (bits,kbits,mbits,...)
+    @CsvBindByName(column = "utilization")
     private DataRate utilization;
 
     // Number of actively and passively utilized links inclusive own (in
     // interference range)
-    private int utilizedLinks;
+    @CsvBindByName(column = "numUtilizedLinks")
+    private int numUtilizedLinks;
 
     public double getReceptionPower() {
 	return receptionPower;
@@ -34,12 +38,12 @@ public class LinkQuality extends EdgeDistance {
 	this.receptionPower = receptionPower;
     }
 
-    public int getUtilizedLinks() {
-	return utilizedLinks;
+    public int getNumUtilizedLinks() {
+	return numUtilizedLinks;
     }
 
-    public void setUtilizedLinks(int utilizedLinks) {
-	this.utilizedLinks = utilizedLinks;
+    public void setNumUtilizedLinks(int utilizedLinks) {
+	this.numUtilizedLinks = utilizedLinks;
     }
 
     public DataRate getTransmissionRate() {

@@ -37,7 +37,7 @@ public class Flow<N extends Vertex<Position2D>, L extends WeightedEdge<W>, W ext
     public double getDistance() {
 	double distance = 0;
 	for (Tuple<L, N> tuple : this)
-	    distance += tuple.getFirst().getWeight().getUtilizedLinks() * rate.get();
+	    distance += tuple.getFirst().getWeight().getNumUtilizedLinks() * rate.get();
 	return distance;
     }
 
