@@ -10,8 +10,20 @@ public class MANETRunResult extends RunResult {
     @CsvBindByName(column = "utilization")
     private double utilization;
 
+    @CsvBindByName(column = "pathParticipant")
+    private boolean isPathParticipant;
+
     public MANETRunResult() {
 	overUtilization = 0d;
+	isPathParticipant = false;
+    }
+
+    public boolean isPathParticipant() {
+	return isPathParticipant;
+    }
+
+    public void setPathParticipant(boolean isPathParticipant) {
+	this.isPathParticipant = isPathParticipant;
     }
 
     public void setOverUtilization(double oUtilization) {

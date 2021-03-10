@@ -77,9 +77,10 @@ public class CSVExporter<R extends RunResult> {
 
     }
 
-    public void write(String name, List<R> result) {
+    public void write(List<R> result, Scenario scenario, String run) {
 	try {
-	    Path resFile = createResultFile(name);
+	    Path resFile = createResultFile(
+		    new StringBuffer().append(run).append("_").append(scenario.getResultFile()).toString());
 
 	    Writer writer = new PrintWriter(resFile.toFile());
 	    StatefulBeanToCsv<R> beanToCsv = new StatefulBeanToCsvBuilder<R>(writer).build();

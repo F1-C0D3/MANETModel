@@ -3,29 +3,35 @@ package de.results;
 import java.util.List;
 import java.util.function.Supplier;
 
-import de.manetmodel.network.Link;
 import de.manetmodel.network.LinkQuality;
 
-public class MANETParameterRecorder<L extends Link<W>, W extends LinkQuality, R extends MANETRunResult>
-	extends ParameterRecorder<L, W, R> {
+public class MANETParameterRecorder<W extends LinkQuality, R extends MANETRunResult> extends ParameterRecorder<W, R> {
+
+    public MANETParameterRecorder(Supplier<R> supplier, Scenario scenario) {
+	super(supplier, scenario);
+    }
 
     public MANETParameterRecorder(Supplier<R> supplier) {
 	super(supplier);
     }
 
     @Override
-    public R toResultFormatR(L l) {
+    public R toResultFormatR(int n1Id, int n2Id, int lId, W w) {
 
 	R r = supplier.get();
-	r.setId(l.getID());
+	r.setlId(lId);
+	r.setN1Id(n1Id);
+	r.setN2Id(n2Id);
 
-	double transmissionrate = l.getWeight().getTransmissionRate().get();
-	double utilization = l.getWeight().getUtilization().get();
+	double transmissionrate = w.getTransmissionRate().get();
+	double utilization = w.getUtilization().get();
 
-	if (transmissionrate < utilization)
-	    r.setOverUtilization(utilization - transmissionrate);
-
-	r.setUtilization(l.getWeight().getUtilization().get());
+	if (w.getIsActive()) {
+	    r.setPathParticipant(true);
+	    if (transmissionrate < utilization)
+		r.setOverUtilization(utilization - transmissionrate);
+	}
+	r.setUtilization(w.getUtilization().get());
 	return r;
     }
 
