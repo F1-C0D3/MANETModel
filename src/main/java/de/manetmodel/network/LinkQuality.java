@@ -12,8 +12,6 @@ public class LinkQuality extends EdgeDistance {
     }
 
     boolean isActive;
-    // Amount of interfered links
-    private int interference;
 
     // Reception power in dB
     private double receptionPower;
