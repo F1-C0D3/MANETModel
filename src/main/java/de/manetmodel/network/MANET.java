@@ -66,15 +66,16 @@ public class MANET<N extends Node, L extends Link<W>, W extends LinkQuality, F e
 	while (flowIterator.hasNext()) {
 	    Tuple<L, N> linkAndNode = flowIterator.next();
 	    L l = linkAndNode.getFirst();
-	    l.setIsActive(true);
+	    l.getWeight().setIsActive(true);
 	    increaseUtilizationBy(l, flow.getDataRate());
 	}
     }
 
     public void eraseFlows() {
 	for (L l : getEdges()) {
-	    l.getWeight().setUtilization(new DataRate(0L));
-	    l.setIsActive(false);
+	    W w = l.getWeight();
+	    w.setUtilization(new DataRate(0L));
+	    w.setIsActive(false);
 	}
 	this.utilization = new DataRate(0L);
 
@@ -85,7 +86,7 @@ public class MANET<N extends Node, L extends Link<W>, W extends LinkQuality, F e
 	while (flowIterator.hasNext()) {
 	    Tuple<L, N> linkAndNode = flowIterator.next();
 	    L l = linkAndNode.getFirst();
-	    l.setIsActive(false);
+	    l.getWeight().setIsActive(false);
 	    DataRate r = f.getDataRate();
 	    Set<Integer> linkIds = l.getUtilizedLinkIds();
 	    for (Integer lId : linkIds) {
@@ -146,7 +147,7 @@ public class MANET<N extends Node, L extends Link<W>, W extends LinkQuality, F e
 	DataRate overUtilization = new DataRate(0L);
 
 	for (L l : this.getEdges()) {
-	    if (l.getIsActive()) {
+	    if (l.getWeight().getIsActive()) {
 		DataRate tRate = l.getWeight().getTransmissionRate();
 		DataRate utilization = l.getWeight().getUtilization();
 		double oU = tRate.get() - utilization.get();

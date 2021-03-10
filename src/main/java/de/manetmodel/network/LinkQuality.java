@@ -8,8 +8,10 @@ public class LinkQuality extends EdgeDistance {
     public LinkQuality() {
 	transmissionRate = new DataRate(0L);
 	utilization = new DataRate(0L);
+	isActive = false;
     }
 
+    boolean isActive;
     // Amount of interfered links
     private int interference;
 
@@ -56,6 +58,15 @@ public class LinkQuality extends EdgeDistance {
 
     public void setUtilization(DataRate u) {
 	this.utilization = u;
+    }
+
+    public void setIsActive(boolean isParticipant) {
+	this.isActive = isParticipant;
+
+    }
+
+    public boolean getIsActive() {
+	return this.isActive;
     }
 
 }

@@ -12,11 +12,8 @@ public class Link<W extends LinkQuality> extends WeightedEdge<W> {
 
     // Indicates, whether Link is occupied actively through transmission as part of
     // a flow
-    private boolean isActive;
-
     public Link() {
 	utilizedLinkIds = new HashSet<Integer>();
-	isActive = false;
     }
 
     public Set<Integer> getUtilizedLinkIds() {
@@ -32,12 +29,4 @@ public class Link<W extends LinkQuality> extends WeightedEdge<W> {
 	return new StringBuffer("ID: ").append(getID()).toString();
     }
 
-    public void setIsActive(boolean isParticipant) {
-	this.isActive = isParticipant;
-
-    }
-
-    public boolean getIsActive() {
-	return this.isActive;
-    }
 }
