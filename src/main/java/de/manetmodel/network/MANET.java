@@ -9,7 +9,10 @@ import java.util.Set;
 import java.util.function.Supplier;
 
 import de.jgraphlib.graph.UndirectedWeighted2DGraph;
+import de.jgraphlib.util.RandomNumbers;
 import de.jgraphlib.util.Tuple;
+import de.manetmodel.mobility.MobilityModel;
+import de.manetmodel.mobility.MovementPattern;
 import de.manetmodel.network.radio.IRadioModel;
 import de.manetmodel.network.unit.DataRate;
 
@@ -18,16 +21,18 @@ public class MANET<N extends Node, L extends Link<W>, W extends LinkQuality, F e
     private int flowCount;
     private List<F> flows;
     private IRadioModel radioModel;
+    private MobilityModel mobilityModel;
     private Supplier<F> flowSupplier;
     private DataRate capacity;
     protected DataRate utilization;
 
-    public MANET(Supplier<N> vertexSupplier, Supplier<L> edgeSupplier, Supplier<F> flowSupplier,
-	    IRadioModel radioModel) {
+    public MANET(Supplier<N> vertexSupplier, Supplier<L> edgeSupplier, Supplier<F> flowSupplier, IRadioModel radioModel,
+	    MobilityModel mobilityModel) {
 	super(vertexSupplier, edgeSupplier);
 	this.flowCount = 0;
 	this.flowSupplier = flowSupplier;
 	this.radioModel = radioModel;
+	this.mobilityModel = mobilityModel;
 	this.flows = new ArrayList<F>();
 	this.capacity = new DataRate(0L);
 	this.utilization = new DataRate(0L);
@@ -141,6 +146,27 @@ public class MANET<N extends Node, L extends Link<W>, W extends LinkQuality, F e
 	    l.getWeight().setNumUtilizedLinks(l.getUtilizedLinkIds().size());
 	}
 	return link;
+    }
+
+    @Override
+    public N addVertex(double x, double y) {
+	N n = super.addVertex(x, y);
+	List<MovementPattern> patternList = new ArrayList<MovementPattern>();
+	MovementPattern movementPattern = null;
+	for (int i = 0; i < mobilityModel.getSegments(); i++) {
+
+	    if (i == 0) {
+		movementPattern = mobilityModel.computeMovementPattern(n.getPosition(), 0d,
+			mobilityModel.speedRange.max / 2d);
+
+	    } else {
+		movementPattern = mobilityModel.computeMovementPattern(n.getPosition(), movementPattern.getAngle(),
+			movementPattern.getSpeed());
+	    }
+	    patternList.add(movementPattern);
+	}
+	n.setPrevMobility(patternList);
+	return n;
     }
 
     public DataRate getOverUtilizedLinks() {

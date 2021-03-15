@@ -1,14 +1,18 @@
 package de.manetmodel.network;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import de.jgraphlib.graph.Position2D;
 import de.jgraphlib.graph.Vertex;
+import de.manetmodel.mobility.MovementPattern;
 
 public class Node extends Vertex<Position2D> {
 
     private Set<Link<?>> interferredLinks;
+
+    List<MovementPattern> prevMobility;
 
     public Node() {
 	interferredLinks = new HashSet<Link<?>>();
@@ -25,6 +29,14 @@ public class Node extends Vertex<Position2D> {
 
     public Set<Link<?>> getInterferedLinks() {
 	return interferredLinks;
+    }
+
+    public List<MovementPattern> getPrevMobility() {
+	return prevMobility;
+    }
+
+    public void setPrevMobility(List<MovementPattern> prevMobility) {
+	this.prevMobility = prevMobility;
     }
 
     @Override

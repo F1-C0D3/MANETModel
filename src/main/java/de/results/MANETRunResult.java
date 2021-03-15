@@ -13,6 +13,9 @@ public class MANETRunResult extends RunResult {
     @CsvBindByName(column = "pathParticipant")
     private boolean isPathParticipant;
 
+    @CsvBindByName(column = "connectionStability")
+    private double connectionStability;
+
     public MANETRunResult() {
 	overUtilization = 0d;
 	isPathParticipant = false;
@@ -42,4 +45,11 @@ public class MANETRunResult extends RunResult {
 	return this.overUtilization;
     }
 
+    public double getConnectionStability() {
+	return connectionStability;
+    }
+
+    public void setConnectionStability(double connectionStability) {
+	this.connectionStability = connectionStability;
+    }
 }
