@@ -11,10 +11,12 @@ import java.util.function.Supplier;
 import de.jgraphlib.graph.UndirectedWeighted2DGraph;
 import de.jgraphlib.util.RandomNumbers;
 import de.jgraphlib.util.Tuple;
-import de.manetmodel.mobility.MobilityModel;
-import de.manetmodel.mobility.MovementPattern;
+import de.manetmodel.network.mobility.MobilityModel;
+import de.manetmodel.network.mobility.MovementPattern;
 import de.manetmodel.network.radio.IRadioModel;
 import de.manetmodel.network.unit.DataRate;
+import de.manetmodel.network.unit.Speed;
+import de.manetmodel.network.unit.VelocityUnits;
 
 public class MANET<N extends Node, L extends Link<W>, W extends LinkQuality, F extends Flow<N, L, W>>
 	extends UndirectedWeighted2DGraph<N, L, W> {
@@ -151,18 +153,14 @@ public class MANET<N extends Node, L extends Link<W>, W extends LinkQuality, F e
     @Override
     public N addVertex(double x, double y) {
 	N n = super.addVertex(x, y);
+	Speed initialSpeed = new Speed(mobilityModel.speedRange.max().value / 2d, VelocityUnits.DistanceUnit.meter,
+		VelocityUnits.TimeUnit.second);
 	List<MovementPattern> patternList = new ArrayList<MovementPattern>();
-	MovementPattern movementPattern = null;
-	for (int i = 0; i < mobilityModel.getSegments(); i++) {
+	MovementPattern movementPattern = new MovementPattern(initialSpeed, n.getPosition(), 0d);
+	patternList.add(movementPattern);
+	for (int i = 0; i < mobilityModel.getSegments() - 1; i++) {
 
-	    if (i == 0) {
-		movementPattern = mobilityModel.computeMovementPattern(n.getPosition(), 0d,
-			mobilityModel.speedRange.max / 2d);
-
-	    } else {
-		movementPattern = mobilityModel.computeMovementPattern(n.getPosition(), movementPattern.getAngle(),
-			movementPattern.getSpeed());
-	    }
+	    movementPattern = mobilityModel.computeNextMovementPattern(movementPattern);
 	    patternList.add(movementPattern);
 	}
 	n.setPrevMobility(patternList);

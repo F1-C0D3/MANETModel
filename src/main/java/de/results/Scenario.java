@@ -3,6 +3,11 @@ package de.results;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
+import de.jgraphlib.graph.generator.NetworkGraphProperties;
+import de.manetmodel.generator.MANETProperties;
+import de.manetmodel.network.mobility.MobilityModel;
+import de.manetmodel.network.radio.IRadioModel;
+
 public class Scenario {
 
     private int flows;
@@ -21,6 +26,11 @@ public class Scenario {
 	this.flows = flows;
     }
 
+    public Scenario() {
+	this.flows = -1;
+	this.nodes = -1;
+    }
+
     public Path getResultFolder() {
 	return Paths.get(new StringBuffer().append(indivdualName).toString());
     }
@@ -29,4 +39,5 @@ public class Scenario {
 	return new StringBuffer().append(indivdualName).append("_Flows_").append(flows).append("_Nodes_").append(nodes)
 		.toString();
     }
+
 }

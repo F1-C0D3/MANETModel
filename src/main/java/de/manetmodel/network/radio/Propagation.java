@@ -1,7 +1,7 @@
 package de.manetmodel.network.radio;
 
 import de.manetmodel.network.unit.DataRate;
-import de.manetmodel.network.unit.Unit;
+import de.manetmodel.network.unit.DataUnit;
 
 public class Propagation {
 
@@ -21,7 +21,7 @@ public class Propagation {
     public static DataRate upperBoundTransmissionBitrate(double receptionPower, double noise, double frequency) {
 	return new DataRate(
 		frequency * ((Math.log10(1d + (20 * Math.log10(receptionPower / noise))) / Math.log10(2) + 1e-10)),
-		Unit.Type.bit);
+		DataUnit.Type.bit);
     }
 
 }

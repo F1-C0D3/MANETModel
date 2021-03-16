@@ -1,11 +1,11 @@
 package de.manetmodel.network.unit;
 
-import de.manetmodel.network.unit.Unit.Type;
+import de.manetmodel.network.unit.DataUnit.Type;
 
 public class DataRate {
     private long bits;
 
-    public DataRate(double value, Unit.Type type) {
+    public DataRate(double value, DataUnit.Type type) {
 	this.bits = toBits(value, type);
     }
 
@@ -16,8 +16,8 @@ public class DataRate {
     public DataRate() {
     }
 
-    protected long toBits(double value, Unit.Type type) {
-	long factor = Unit.getFactor(type);
+    protected long toBits(double value, DataUnit.Type type) {
+	long factor = DataUnit.getFactor(type);
 	return Math.round(value * factor);
     }
 
@@ -31,7 +31,7 @@ public class DataRate {
 
     @Override
     public String toString() {
-	Type type = Unit.getNextLowerType(bits);
-	return new StringBuffer().append(bits / (double) Unit.getFactor(type)).append(" ").append(type).toString();
+	Type type = DataUnit.getNextLowerType(bits);
+	return new StringBuffer().append(bits / (double) DataUnit.getFactor(type)).append(" ").append(type).toString();
     }
 }

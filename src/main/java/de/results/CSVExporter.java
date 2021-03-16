@@ -9,6 +9,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
 
+import com.opencsv.bean.ColumnPositionMappingStrategy;
 import com.opencsv.bean.StatefulBeanToCsv;
 import com.opencsv.bean.StatefulBeanToCsvBuilder;
 import com.opencsv.exceptions.CsvDataTypeMismatchException;
@@ -77,13 +78,13 @@ public class CSVExporter<R extends RunResult> {
 
     }
 
-    public void write(List<R> result, Scenario scenario, String run) {
+    public void write(List<R> result, ColumnPositionMappingStrategy<R> mappingStrategy, Scenario scenario, String run) {
 	try {
 	    Path resFile = createResultFile(
 		    new StringBuffer().append(run).append("_").append(scenario.getResultFile()).toString());
-
 	    Writer writer = new PrintWriter(resFile.toFile());
-	    StatefulBeanToCsv<R> beanToCsv = new StatefulBeanToCsvBuilder<R>(writer).build();
+	    StatefulBeanToCsv<R> beanToCsv = new StatefulBeanToCsvBuilder<R>(writer)
+		    .withMappingStrategy(mappingStrategy).build();
 	    try {
 		for (R res : result) {
 		    beanToCsv.write(res);
@@ -97,6 +98,7 @@ public class CSVExporter<R extends RunResult> {
 	    // TODO Auto-generated catch block
 	    e.printStackTrace();
 	}
+
     }
 
 }

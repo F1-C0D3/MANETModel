@@ -4,15 +4,13 @@ import de.manetmodel.network.unit.DataRate;
 
 public class ScalarRadioModel implements IRadioModel {
 
-    private final double interferenceThreshold;
     private final double transmissionPower;
     private final double backgroundNoisePower;
     private final double bandwidth;
     private final double carrierFrequency;
 
-    public ScalarRadioModel(double interferenceThreshold, double transmissionPower, double backgroundNoise,
-	    double bandwidth, double carrierFrequency) {
-	this.interferenceThreshold = interferenceThreshold;
+    public ScalarRadioModel(double transmissionPower, double backgroundNoise, double bandwidth,
+	    double carrierFrequency) {
 	this.transmissionPower = transmissionPower;
 	this.backgroundNoisePower = backgroundNoise;
 	this.bandwidth = bandwidth;
@@ -36,12 +34,6 @@ public class ScalarRadioModel implements IRadioModel {
     public double receptionPower(double distance) {
 	/** Example with 2.4Ghz **/
 	return transmissionPower * Propagation.pathLoss(distance, Propagation.waveLength(carrierFrequency));
-    }
-
-    @Override
-    public boolean interferencePresent(double distance) {
-	// TODO Auto-generated method stub
-	return receptionPower(distance) >= interferenceThreshold;
     }
 
 }

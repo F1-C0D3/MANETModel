@@ -1,27 +1,28 @@
-package de.manetmodel.mobility;
+package de.manetmodel.network.mobility;
 
 import de.jgraphlib.graph.Position2D;
+import de.manetmodel.network.unit.Speed;
 
 public class MovementPattern {
 
-    private double speed;
+    private Speed speed;
     private Position2D absolutePostion;
     double absoluteAngle;
 
     public MovementPattern() {
     }
 
-    public MovementPattern(double speed, Position2D position,double absoluteAngle) {
+    public MovementPattern(Speed speed, Position2D position,double absoluteAngle) {
 	this.speed = speed;
 	this.absolutePostion = position;
 	this.absoluteAngle = absoluteAngle;
     }
 
-    public double getSpeed() {
+    public Speed getSpeed() {
 	return speed;
     }
 
-    public void setSpeed(double speed) {
+    public void setSpeed(Speed speed) {
 	this.speed = speed;
     }
 

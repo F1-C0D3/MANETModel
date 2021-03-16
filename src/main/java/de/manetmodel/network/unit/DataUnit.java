@@ -6,7 +6,7 @@ import java.util.List;
 
 import de.jgraphlib.util.Tuple;
 
-public class Unit {
+public class DataUnit {
 
     public enum Type {
 	bit, kilobit, megabit, gigabit
@@ -15,10 +15,10 @@ public class Unit {
     private static final List<Tuple<Type, Long>> types;
     static {
 	List<Tuple<Type, Long>> units = new ArrayList<Tuple<Type, Long>>();
-	units.add(new Tuple<Unit.Type, Long>(Type.bit, 1L));
-	units.add(new Tuple<Unit.Type, Long>(Type.kilobit, 1000L));
-	units.add(new Tuple<Unit.Type, Long>(Type.megabit, 1000000L));
-	units.add(new Tuple<Unit.Type, Long>(Type.gigabit, 1000000000L));
+	units.add(new Tuple<DataUnit.Type, Long>(Type.bit, 1L));
+	units.add(new Tuple<DataUnit.Type, Long>(Type.kilobit, 1000L));
+	units.add(new Tuple<DataUnit.Type, Long>(Type.megabit, 1000000L));
+	units.add(new Tuple<DataUnit.Type, Long>(Type.gigabit, 1000000000L));
 	types = Collections.unmodifiableList(units);
     }
 
@@ -41,7 +41,7 @@ public class Unit {
 	return types.get(i).getFirst();
     }
 
-    public static long getFactor(Unit.Type type) {
+    public static long getFactor(DataUnit.Type type) {
 	return types.stream().filter(t -> t.getFirst().equals(type)).findFirst().get().getSecond();
     }
 
@@ -49,7 +49,7 @@ public class Unit {
 	return types.get(types.size() - 1);
     }
 
-    public static Tuple<Type, Long> nextLower(Unit.Type type) {
+    public static Tuple<Type, Long> nextLower(DataUnit.Type type) {
 	Tuple<Type, Long> result = types.get(0);
 
 	for (int index = 0; index < types.size(); index++) {

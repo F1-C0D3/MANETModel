@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
+import com.opencsv.bean.ColumnPositionMappingStrategy;
+
 import de.jgraphlib.util.Tuple;
 import de.manetmodel.network.Flow;
 import de.manetmodel.network.Link;
@@ -11,18 +13,21 @@ import de.manetmodel.network.LinkQuality;
 import de.manetmodel.network.MANET;
 import de.manetmodel.network.Node;
 
-public class ResultRecorder<N extends Node, L extends Link<W>, W extends LinkQuality, F extends Flow<N, L, W>, R extends RunResult> {
+public class ResultRecorder<N extends Node, L extends Link<W>, W extends LinkQuality, F extends Flow<N, L, W>, R  extends RunResult> {
 
     List<List<R>> resultRuns;
     ParameterRecorder<W, R> runRecorder;
     List<String> scalarIdentifiers;
     LinkedList<Double> scalarResults;
     CSVExporter<R> exporter;
+    ColumnPositionMappingStrategy<R> mappingStrategy;
 
-    public ResultRecorder(Class<? extends MANET<N, L, W, F>> resultClass, ParameterRecorder<W, R> runRecorder) {
+    public ResultRecorder(Class<? extends MANET<N, L, W, F>> resultClass, ParameterRecorder<W, R> runRecorder,
+	    ColumnPositionMappingStrategy<R> mappingStrategy) {
 	this.runRecorder = runRecorder;
 	this.resultRuns = new ArrayList<List<R>>();
-	exporter = new CSVExporter<R>(resultClass.getSimpleName());
+	this.exporter = new CSVExporter<R>(resultClass.getSimpleName());
+	this.mappingStrategy = mappingStrategy;
     }
 
     public void recordRun(MANET<N, L, W, F> manet) {
@@ -35,7 +40,8 @@ public class ResultRecorder<N extends Node, L extends Link<W>, W extends LinkQua
 	    individualRun.add(runResult);
 	}
 	resultRuns.add(individualRun);
-	exporter.write(individualRun, runRecorder.getScenario(),
+	mappingStrategy.setColumnMapping("lId", "n1Id");
+	exporter.write(individualRun, mappingStrategy, runRecorder.getScenario(),
 		new StringBuffer().append(resultRuns.size() - 1).toString());
 
     }
@@ -44,7 +50,8 @@ public class ResultRecorder<N extends Node, L extends Link<W>, W extends LinkQua
 	R mean = runRecorder.toMean(resultRuns);
 	List<R> r = new ArrayList<R>();
 	r.add(mean);
-	exporter.write(r, runRecorder.getScenario(), "average");
+	mappingStrategy.setColumnMapping("lId");
+	exporter.write(r, mappingStrategy, runRecorder.getScenario(), "average");
     }
 
     private double maxDeviation(Double[] values) {

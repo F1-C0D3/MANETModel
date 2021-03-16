@@ -15,7 +15,7 @@ import de.manetmodel.algo.DijkstraShortestPath;
 import de.manetmodel.graph.EdgeDistance;
 import de.manetmodel.graph.Path;
 import de.manetmodel.network.unit.DataRate;
-import de.manetmodel.network.unit.Unit;
+import de.manetmodel.network.unit.DataUnit;
 import de.manetmodel.util.Tuple;
 
 public class IntereferenceTest {
@@ -45,7 +45,7 @@ public class IntereferenceTest {
     public void gridNetworkTestOneFlow() {
 	List<Flow<Node<EdgeDistance>, Link<EdgeDistance>, EdgeDistance>> flows = new ArrayList<Flow<Node<EdgeDistance>, Link<EdgeDistance>, EdgeDistance>>();
 	Flow<Node<EdgeDistance>, Link<EdgeDistance>, EdgeDistance> f = new Flow<Node<EdgeDistance>, Link<EdgeDistance>, EdgeDistance>(
-		manet.getVertex(0), manet.getVertex(4), new DataRate(1d, Unit.Type.bit));
+		manet.getVertex(0), manet.getVertex(4), new DataRate(1d, DataUnit.Type.bit));
 
 	Path<Node<EdgeDistance>, Link<EdgeDistance>> p = sp.compute(manet.getVertex(0), manet.getVertex(4), metric);
 
@@ -67,9 +67,9 @@ public class IntereferenceTest {
 
 	List<Flow<Node<EdgeDistance>, Link<EdgeDistance>, EdgeDistance>> flows = new ArrayList<Flow<Node<EdgeDistance>, Link<EdgeDistance>, EdgeDistance>>();
 	Flow<Node<EdgeDistance>, Link<EdgeDistance>, EdgeDistance> f1 = new Flow<Node<EdgeDistance>, Link<EdgeDistance>, EdgeDistance>(
-		manet.getVertex(0), manet.getVertex(4), new DataRate(1, Unit.Type.bit));
+		manet.getVertex(0), manet.getVertex(4), new DataRate(1, DataUnit.Type.bit));
 	Flow<Node<EdgeDistance>, Link<EdgeDistance>, EdgeDistance> f2 = new Flow<Node<EdgeDistance>, Link<EdgeDistance>, EdgeDistance>(
-		manet.getVertex(5), manet.getVertex(9), new DataRate(1, Unit.Type.bit));
+		manet.getVertex(5), manet.getVertex(9), new DataRate(1, DataUnit.Type.bit));
 
 	Path<Node<EdgeDistance>, Link<EdgeDistance>> p1 = sp.compute(manet.getVertex(0), manet.getVertex(4), metric);
 

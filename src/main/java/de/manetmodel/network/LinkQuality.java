@@ -1,6 +1,10 @@
 package de.manetmodel.network;
 
+import java.util.List;
+
 import de.jgraphlib.graph.EdgeDistance;
+import de.jgraphlib.util.Tuple;
+import de.manetmodel.network.mobility.MovementPattern;
 import de.manetmodel.network.unit.DataRate;
 
 public class LinkQuality extends EdgeDistance {
@@ -25,6 +29,16 @@ public class LinkQuality extends EdgeDistance {
     // Number of actively and passively utilized links inclusive own (in
     // interference range)
     private int numUtilizedLinks;
+
+    Tuple<List<MovementPattern>, List<MovementPattern>> sinkAndSourceMobility;
+
+    public Tuple<List<MovementPattern>, List<MovementPattern>> getSinkAndSourceMobility() {
+	return sinkAndSourceMobility;
+    }
+
+    public void setSinkAndSourceMobility(Tuple<List<MovementPattern>, List<MovementPattern>> sinkAndSourceMobility) {
+	this.sinkAndSourceMobility = sinkAndSourceMobility;
+    }
 
     public double getReceptionPower() {
 	return receptionPower;
