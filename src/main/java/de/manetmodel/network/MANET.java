@@ -121,6 +121,7 @@ public class MANET<N extends Node, L extends Link<W>, W extends LinkQuality, F e
     public L addEdge(N source, N target, W weight) {
 	L link = super.addEdge(source, target, weight);
 
+
 	for (L l : this.getEdges()) {
 	    Tuple<N, N> lt = this.getVerticesOf(l);
 	    N s1 = lt.getFirst();
@@ -147,6 +148,7 @@ public class MANET<N extends Node, L extends Link<W>, W extends LinkQuality, F e
 
 	    l.getWeight().setNumUtilizedLinks(l.getUtilizedLinkIds().size());
 	}
+	
 	return link;
     }
 

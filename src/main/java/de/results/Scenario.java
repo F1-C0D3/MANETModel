@@ -4,7 +4,6 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 
 import de.jgraphlib.graph.generator.NetworkGraphProperties;
-import de.manetmodel.generator.MANETProperties;
 import de.manetmodel.network.mobility.MobilityModel;
 import de.manetmodel.network.radio.IRadioModel;
 

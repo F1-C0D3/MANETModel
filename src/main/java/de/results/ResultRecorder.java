@@ -13,7 +13,7 @@ import de.manetmodel.network.LinkQuality;
 import de.manetmodel.network.MANET;
 import de.manetmodel.network.Node;
 
-public class ResultRecorder<N extends Node, L extends Link<W>, W extends LinkQuality, F extends Flow<N, L, W>, R  extends RunResult> {
+public class ResultRecorder<N extends Node, L extends Link<W>, W extends LinkQuality, F extends Flow<N, L, W>, R extends RunResult> {
 
     List<List<R>> resultRuns;
     ParameterRecorder<W, R> runRecorder;
@@ -22,11 +22,11 @@ public class ResultRecorder<N extends Node, L extends Link<W>, W extends LinkQua
     CSVExporter<R> exporter;
     ColumnPositionMappingStrategy<R> mappingStrategy;
 
-    public ResultRecorder(Class<? extends MANET<N, L, W, F>> resultClass, ParameterRecorder<W, R> runRecorder,
+    public ResultRecorder(String  resultFileName, ParameterRecorder<W, R> runRecorder,
 	    ColumnPositionMappingStrategy<R> mappingStrategy) {
 	this.runRecorder = runRecorder;
 	this.resultRuns = new ArrayList<List<R>>();
-	this.exporter = new CSVExporter<R>(resultClass.getSimpleName());
+	this.exporter = new CSVExporter<R>(resultFileName);
 	this.mappingStrategy = mappingStrategy;
     }
 
@@ -34,13 +34,13 @@ public class ResultRecorder<N extends Node, L extends Link<W>, W extends LinkQua
 	List<R> individualRun = new ArrayList<R>();
 	for (L l : manet.getEdges()) {
 	    Tuple<N, N> sourceAndSink = manet.getVerticesOf(l);
-
 	    R runResult = runRecorder.toResultFormatR(sourceAndSink.getFirst().getID(),
 		    sourceAndSink.getSecond().getID(), l.getID(), l.getWeight());
 	    individualRun.add(runResult);
 	}
 	resultRuns.add(individualRun);
-	mappingStrategy.setColumnMapping("lId", "n1Id");
+	mappingStrategy.setColumnMapping("lId", "n1Id", "n2Id", "overUtilization", "utilization", "isPathParticipant",
+		"connectionStability");
 	exporter.write(individualRun, mappingStrategy, runRecorder.getScenario(),
 		new StringBuffer().append(resultRuns.size() - 1).toString());
 
@@ -50,7 +50,7 @@ public class ResultRecorder<N extends Node, L extends Link<W>, W extends LinkQua
 	R mean = runRecorder.toMean(resultRuns);
 	List<R> r = new ArrayList<R>();
 	r.add(mean);
-	mappingStrategy.setColumnMapping("lId");
+	mappingStrategy.setColumnMapping("overUtilization", "utilization", "connectionStability");
 	exporter.write(r, mappingStrategy, runRecorder.getScenario(), "average");
     }
 

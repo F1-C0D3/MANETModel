@@ -1,6 +1,7 @@
 package de.results;
 
 import com.opencsv.bean.CsvBindByName;
+import com.opencsv.bean.CsvBindByPosition;
 
 public class RunResult {
 
@@ -9,7 +10,7 @@ public class RunResult {
 
     @CsvBindByName(column = "n1Id")
     int n1Id;
-
+    
     @CsvBindByName(column = "n2Id")
     int n2Id;
 

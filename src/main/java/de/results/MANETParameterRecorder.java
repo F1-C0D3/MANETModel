@@ -87,11 +87,13 @@ public class MANETParameterRecorder<W extends LinkQuality, R extends MANETRunRes
 	    for (R r : run) {
 		result.setOverUtilization(result.getOverUtilization() + r.getOverUtilization());
 		result.setUtilization(result.getUtilization() + r.getUtilization());
+		result.setConnectionStability(result.getConnectionStability() + r.getConnectionStability());
 	    }
 	}
 
 	result.setOverUtilization(result.getOverUtilization() / runs.size());
 	result.setUtilization(result.getUtilization() / runs.size());
+	result.setConnectionStability(result.getConnectionStability() / runs.size());
 
 	return result;
     }
