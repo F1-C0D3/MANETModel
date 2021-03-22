@@ -15,7 +15,7 @@ import com.opencsv.bean.StatefulBeanToCsvBuilder;
 import com.opencsv.exceptions.CsvDataTypeMismatchException;
 import com.opencsv.exceptions.CsvRequiredFieldEmptyException;
 
-public class CSVExporter<R extends RunResult> {
+public class CSVExporter<R extends ResultParameter> {
 //    FileWriter csvWriter;
 
     private Path individualResults;

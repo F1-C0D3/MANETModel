@@ -34,4 +34,24 @@ public class DataRate {
 	Type type = DataUnit.getNextLowerType(bits);
 	return new StringBuffer().append(bits / (double) DataUnit.getFactor(type)).append(" ").append(type).toString();
     }
+
+    public static class DataRateRange {
+
+	private DataRate min;
+	private DataRate max;
+
+	public DataRateRange(long min, long max, DataUnit.Type type) {
+	    this.min = new DataRate(min, type);
+	    this.max = new DataRate(max, type);
+
+	}
+
+	public DataRate min() {
+	    return min;
+	}
+
+	public DataRate max() {
+	    return max;
+	}
+    }
 }
