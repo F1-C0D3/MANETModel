@@ -2,7 +2,7 @@ package de.results;
 
 import com.opencsv.bean.CsvBindByName;
 
-public class MANETRunResult extends RunResult {
+public class MANETResultParameter extends ResultParameter {
 
     @CsvBindByName(column = "overUtilization")
     private double overUtilization;
@@ -16,7 +16,7 @@ public class MANETRunResult extends RunResult {
     @CsvBindByName(column = "connectionStability")
     private double connectionStability;
 
-    public MANETRunResult() {
+    public MANETResultParameter() {
 	overUtilization = 0d;
 	isPathParticipant = false;
     }

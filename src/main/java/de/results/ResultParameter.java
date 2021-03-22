@@ -3,7 +3,7 @@ package de.results;
 import com.opencsv.bean.CsvBindByName;
 import com.opencsv.bean.CsvBindByPosition;
 
-public class RunResult {
+public class ResultParameter {
 
     @CsvBindByName(column = "lId")
     int lId;
