@@ -119,9 +119,9 @@ public class MANET<N extends Node, L extends Link<W>, W extends LinkQuality, F e
 
     @Override
     public L addEdge(N source, N target, W weight) {
+	weight = edgeWeightSupplier.get();
+	weight.setDistance(0d);
 	L link = super.addEdge(source, target, weight);
-
-
 	for (L l : this.getEdges()) {
 	    Tuple<N, N> lt = this.getVerticesOf(l);
 	    N s1 = lt.getFirst();
@@ -148,7 +148,12 @@ public class MANET<N extends Node, L extends Link<W>, W extends LinkQuality, F e
 
 	    l.getWeight().setNumUtilizedLinks(l.getUtilizedLinkIds().size());
 	}
-	
+
+	Tuple<N, N> sourceAndSink = getVerticesOf(link);
+
+	link.getWeight().setSinkAndSourceMobility(new Tuple<List<MovementPattern>, List<MovementPattern>>(
+		sourceAndSink.getFirst().getPrevMobility(), sourceAndSink.getSecond().getPrevMobility()));
+
 	return link;
     }
 
