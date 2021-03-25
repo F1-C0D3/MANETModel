@@ -1,5 +1,6 @@
 package de.manetmodel.network;
 
+import java.util.Comparator;
 import java.util.Iterator;
 
 import de.jgraphlib.graph.Path2D;
@@ -69,6 +70,15 @@ public class Flow<N extends Vertex<Position2D>, L extends WeightedEdge<W>, W ext
 
     public Integer getId() {
 	return id;
+    }
+
+    public static class FlowDataRateComparator<N extends Node,L extends Link<W>, W extends LinkQuality> implements Comparator<Flow<N, L, W>> {
+
+	@Override
+	public int compare(Flow<N, L, W> o1, Flow<N, L, W> o2) {
+	    return Long.compare(o1.getDataRate().get(), o2.getDataRate().get());
+	}
+
     }
 
 }

@@ -6,9 +6,9 @@ import de.jgraphlib.util.RandomNumbers;
 import de.jgraphlib.util.Tuple;
 import de.manetmodel.network.unit.Speed;
 import de.manetmodel.network.unit.Speed.SpeedRange;
-import de.manetmodel.network.unit.Speed.Time;
-import de.manetmodel.network.unit.VelocityUnits;
-import de.manetmodel.network.unit.VelocityUnits.DistanceUnit;
+import de.manetmodel.network.unit.Time;
+import de.manetmodel.network.unit.Unit;
+import de.manetmodel.network.unit.Unit.Distance;
 import sun.jvmstat.monitor.Units;
 
 public class PedestrianMobilityModel extends MobilityModel {
@@ -45,8 +45,8 @@ public class PedestrianMobilityModel extends MobilityModel {
 	    prevSpeed.value = random.getRandom((prevSpeed.value - deviation.value),
 		    (prevSpeed.value + deviation.value));
 	}
-	Speed newSpeed = new Speed(prevSpeed.value * timeStamp.value, DistanceUnit.meter,
-		VelocityUnits.TimeUnit.second);
+	Speed newSpeed = new Speed(prevSpeed.value * timeStamp.value, Distance.meter,
+		Unit.Time.second);
 	Tuple<Position2D, Double> nextPos = nextPosition(newSpeed, prevAngle, prevPosition);
 	newSpeed.value = newSpeed.value / timeStamp.value;
 	MovementPattern pattern = new MovementPattern(newSpeed, nextPos.getFirst(), nextPos.getSecond());

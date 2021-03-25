@@ -1,6 +1,5 @@
 package de.runprovider;
 
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Supplier;
@@ -27,28 +26,29 @@ import de.manetmodel.network.unit.DataRate;
 import de.manetmodel.network.unit.DataRate.DataRateRange;
 import de.manetmodel.network.unit.DataUnit;
 import de.manetmodel.network.unit.Speed;
-import de.manetmodel.network.unit.VelocityUnits;
+import de.manetmodel.network.unit.Unit;
 import de.manetmodel.network.unit.Speed.SpeedRange;
-import de.manetmodel.network.unit.Speed.Time;
-import de.results.MANETRunResultMapper;
+import de.manetmodel.network.unit.Time;
 import de.results.RunResultMapper;
-import de.results.MANETResultRunSupplier;
-import de.results.MANETResultParameter;
+import de.results.ResultParameter;
+import de.results.MANETRunResultMapper;
+import de.results.RunResultParameter;
+import de.results.RunResultParameterSupplier;
+import de.results.AverageResultParameter;
+import de.results.MANETAverageResultMapper;
 import de.results.MANETResultRecorder;
 import de.results.Scenario;
 
-public class Program<N extends Node, L extends Link<W>, W extends LinkQuality, F extends Flow<N, L, W>, R extends MANETResultParameter> {
+public class Program<N extends Node, L extends Link<W>, W extends LinkQuality, F extends Flow<N, L, W>> {
 
     Supplier<N> nodeSupplier;
     Supplier<L> linkSupplier;
     Supplier<F> flowSupplier;
-    Supplier<R> resultParameterSupplier;
     Supplier<W> linkQualitysupplier;
 
     public Program(Supplier<N> nodeSupplier, Supplier<L> linkSupplier, Supplier<W> linkQualitySupplier,
-	    Supplier<F> flowSupplier, Supplier<R> resultSupplier) {
+	    Supplier<F> flowSupplier) {
 	this.nodeSupplier = nodeSupplier;
-	this.resultParameterSupplier = resultSupplier;
 	this.linkSupplier = linkSupplier;
 	this.flowSupplier = flowSupplier;
 	this.linkQualitysupplier = linkQualitySupplier;
@@ -59,8 +59,8 @@ public class Program<N extends Node, L extends Link<W>, W extends LinkQuality, F
 	    DataRateRange range, int runs) {
 	List<Integer> exclusionList = new ArrayList<Integer>();
 	List<Triple<Integer, Integer, DataRate>> flowSourceTargetPairs = new ArrayList<Triple<Integer, Integer, DataRate>>();
-	for (int i = 0; i < (numFlows*2); i++) {
-	    int randomNodeId = new RandomNumbers(runs).getRandomNotInE(0, numNodes, exclusionList);
+	for (int i = 0; i < (numFlows * 2); i++) {
+	    int randomNodeId = RandomNumbers.getInstance(runs).getRandomNotInE(0, numNodes, exclusionList);
 	    exclusionList.add(randomNodeId);
 	}
 	Triple<Integer, Integer, DataRate> stTuple = null;
@@ -71,7 +71,8 @@ public class Program<N extends Node, L extends Link<W>, W extends LinkQuality, F
 		stTuple.setFirst(exclusionList.get(i));
 	    } else {
 		stTuple.setSecond(exclusionList.get(i));
-		int dataRate = new RandomNumbers(runs).getRandom((int) range.min().get(), (int) range.max().get());
+		int dataRate = RandomNumbers.getInstance(runs).getRandom((int) range.min().get(),
+			(int) range.max().get());
 		stTuple.setThird(new DataRate(dataRate));
 		flowSourceTargetPairs.add(stTuple);
 	    }
@@ -89,18 +90,18 @@ public class Program<N extends Node, L extends Link<W>, W extends LinkQuality, F
     public NetworkGraphProperties generateNetwork(MANET<N, L, W, F> manet, int runs, int numNodes) {
 	NetworkGraphProperties properties = new NetworkGraphProperties(/* width */ 1000, /* height */ 1000,
 		/* vertices */ new IntRange(numNodes, numNodes), /* vertex distance */ new DoubleRange(55d, 100d),
-		/* edge distance */ 100);
-	new NetworkGraphGenerator<N, L, W>(manet, new RandomNumbers(runs)).generate(properties);
+		/* edge distance */ new DoubleRange(95d, 125d));
+	new NetworkGraphGenerator<N, L, W>(manet, RandomNumbers.getInstance(runs)).generate(properties);
 
 	return properties;
     }
 
     public MobilityModel setMobilityModel(int runs) {
 	/* Mobility model to include movement of nodes based on velocity and pattern */
-	return new PedestrianMobilityModel(new RandomNumbers(runs),
-		new SpeedRange(4d, 40d, VelocityUnits.TimeUnit.hour, VelocityUnits.DistanceUnit.kilometer),
-		new Time(VelocityUnits.TimeUnit.second, 30d),
-		new Speed(4d, VelocityUnits.DistanceUnit.kilometer, VelocityUnits.TimeUnit.hour), 10);
+	return new PedestrianMobilityModel(RandomNumbers.getInstance(runs),
+		new SpeedRange(4d, 40d, Unit.Time.hour, Unit.Distance.kilometer),
+		new Time(Unit.Time.second, 30l),
+		new Speed(4d, Unit.Distance.kilometer, Unit.Time.hour), 10);
 
     }
 
@@ -117,7 +118,9 @@ public class Program<N extends Node, L extends Link<W>, W extends LinkQuality, F
 	return manet;
     }
 
-    public MANETResultRecorder<N, L, W, F, R> setResultRecorder(String resultFileName) {
+    public <R extends AverageResultParameter> MANETAverageResultMapper<R> setTotalResultMapper(
+	    Supplier<R> resultParameterSupplier, String resultFileName, int numNodes, int numFlows,
+	    DataRate meantransmissionRate) {
 
 	/* Result recording options for further evaluation */
 	ColumnPositionMappingStrategy<R> mappingStrategy = new ColumnPositionMappingStrategy<R>() {
@@ -126,17 +129,36 @@ public class Program<N extends Node, L extends Link<W>, W extends LinkQuality, F
 		return this.getColumnMapping();
 	    }
 	};
-	mappingStrategy.setType((Class<? extends R>) MANETResultParameter.class);
-	return new MANETResultRecorder<N, L, W, F, R>(resultFileName, mappingStrategy);
+	mappingStrategy.setColumnMapping("overUtilization", "utilization", "activePathParticipants", "connectionStability",
+		"simulationTime");
+	return new MANETAverageResultMapper<R>(resultParameterSupplier, mappingStrategy,
+		new Scenario(resultFileName, numFlows, numNodes, meantransmissionRate));
 
     }
 
-    public MANETRunResultMapper<W, R> setResultMapper(NetworkGraphProperties networkProperties,
-	    MobilityModel mobilityModel, IRadioModel radioModel, MANETResultRecorder<N, L, W, F, R> resultRecorder,
-	    String resultFileName, int numNodes, int numFlows) {
-	MANETRunResultMapper<W, R> resultMapper = new MANETRunResultMapper<W, R>(resultParameterSupplier,
-		new Scenario(resultFileName, numFlows, numNodes), networkProperties, radioModel, mobilityModel);
-	resultRecorder.setRunRecorder(resultMapper);
+    public <R extends RunResultParameter> MANETResultRecorder<R> setResultRecorder(String resultFileName) {
+
+	/* Result recording options for further evaluation */
+	return new MANETResultRecorder<R>(resultFileName);
+
+    }
+
+    public <R extends RunResultParameter> MANETRunResultMapper<R> setIndividualRunResultMapper(
+	    Supplier<R> resultParameterSupplier, NetworkGraphProperties networkProperties, MobilityModel mobilityModel,
+	    IRadioModel radioModel, String resultFileName, int numNodes, int numFlows, DataRate meantransmissionRate) {
+
+	ColumnPositionMappingStrategy<R> mappingStrategy = new ColumnPositionMappingStrategy<R>() {
+	    @Override
+	    public String[] generateHeader(R bean) throws CsvRequiredFieldEmptyException {
+		return this.getColumnMapping();
+	    }
+	};
+
+	mappingStrategy.setColumnMapping("lId", "n1Id", "n2Id", "overUtilization", "utilization", "isPathParticipant",
+		"connectionStability");
+	MANETRunResultMapper<R> resultMapper = new MANETRunResultMapper<R>(resultParameterSupplier, mappingStrategy,
+		new Scenario(resultFileName, numFlows, numNodes, meantransmissionRate), networkProperties, radioModel,
+		mobilityModel);
 	return resultMapper;
     }
 

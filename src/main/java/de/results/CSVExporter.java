@@ -15,16 +15,20 @@ import com.opencsv.bean.StatefulBeanToCsvBuilder;
 import com.opencsv.exceptions.CsvDataTypeMismatchException;
 import com.opencsv.exceptions.CsvRequiredFieldEmptyException;
 
-public class CSVExporter<R extends ResultParameter> {
+public class CSVExporter {
 //    FileWriter csvWriter;
+    enum RecordType {
+	individualRun, averageRun, total
+    }
 
     private Path individualResults;
     private Path normalizedResults;
     private final String csvSuffix = ".csv";
 
-    public CSVExporter(String optName) {
+    public CSVExporter(String optName, RecordType type) {
 	Path tmpDir = FileSystems.getDefault().getPath("").toAbsolutePath();
-	Path[] paths = { Paths.get("results"), Paths.get(optName), Paths.get("individual") };
+	String recordTypeToFolderName = type.toString();
+	Path[] paths = { Paths.get("results"), Paths.get(optName), Paths.get(recordTypeToFolderName) };
 	try {
 	    for (int i = 0; i < paths.length; i++) {
 
@@ -34,9 +38,8 @@ public class CSVExporter<R extends ResultParameter> {
 		    if (i == 1) {
 			normalizedResults = Files.createDirectories(tmpDir.resolve(paths[i]));
 			tmpDir = normalizedResults;
-		    } else if (i == 2) {
+		    } else if (i == 2 || i == 3 || i == 4) {
 			individualResults = Files.createDirectories(tmpDir.resolve(paths[i]));
-			tmpDir = individualResults;
 		    } else {
 			tmpDir = Files.createDirectories(tmpDir.resolve(paths[i]));
 		    }
@@ -45,9 +48,8 @@ public class CSVExporter<R extends ResultParameter> {
 		    if (i == 1) {
 			normalizedResults = tmpDir.resolve(paths[i]);
 			tmpDir = normalizedResults;
-		    } else if (i == 2) {
+		    } else if (i == 2 || i == 3 || i == 4) {
 			individualResults = tmpDir.resolve(paths[i]);
-			tmpDir = individualResults;
 		    } else {
 			tmpDir = tmpDir.resolve(paths[i]);
 		    }
@@ -78,7 +80,8 @@ public class CSVExporter<R extends ResultParameter> {
 
     }
 
-    public void write(List<R> result, ColumnPositionMappingStrategy<R> mappingStrategy, Scenario scenario, String run) {
+    public <R extends ResultParameter>void write(List<R> result, ColumnPositionMappingStrategy<R> mappingStrategy, Scenario scenario,
+	    String run) {
 	try {
 	    Path resFile = createResultFile(
 		    new StringBuffer().append(run).append("_").append(scenario.getResultFile()).toString());
@@ -90,12 +93,10 @@ public class CSVExporter<R extends ResultParameter> {
 		    beanToCsv.write(res);
 		}
 	    } catch (CsvDataTypeMismatchException | CsvRequiredFieldEmptyException e) {
-		// TODO Auto-generated catch block
 		e.printStackTrace();
 	    }
 	    writer.close();
 	} catch (IOException e) {
-	    // TODO Auto-generated catch block
 	    e.printStackTrace();
 	}
 

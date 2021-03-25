@@ -3,39 +3,29 @@ package de.results;
 import java.util.List;
 import java.util.function.Supplier;
 
+import com.opencsv.bean.ColumnPositionMappingStrategy;
+
 import de.manetmodel.network.LinkQuality;
 
-public class RunResultMapper<W extends LinkQuality, R extends ResultParameter> {
+public abstract class RunResultMapper<R extends ResultParameter> extends ResultMapper<R> {
+    protected Supplier<R> resultParameterSupplier;
+    ColumnPositionMappingStrategy<R> mappingStrategy;
 
-    public Supplier<R> supplier;
-    private Scenario scenario;
-
-    public RunResultMapper(Supplier<R> supplier, Scenario scenario) {
-	this.supplier = supplier;
-	this.scenario = scenario;
+    public RunResultMapper(Supplier<R> resultParameterSupplier, ColumnPositionMappingStrategy<R> mappingStrategy,
+	    Scenario scenario) {
+	super(resultParameterSupplier, mappingStrategy, scenario);
+	this.mappingStrategy = mappingStrategy;
+	this.resultParameterSupplier = resultParameterSupplier;
     }
 
-    public RunResultMapper(Supplier<R> supplier) {
-	this.supplier = supplier;
+    public ColumnPositionMappingStrategy<R> getMappingStrategy() {
+	return mappingStrategy;
     }
 
-    public R singleRunResultMapper(int n1Id, int n2Id, int lId, W w) {
-	R r = supplier.get();
-	r.setlId(lId);
-	r.setN1Id(n1Id);
-	r.setN2Id(n2Id);
-	return r;
+    public void setMappingStrategy(ColumnPositionMappingStrategy<R> mappingStrategy) {
+	this.mappingStrategy = mappingStrategy;
     }
 
-    public R toMeanMapper(List<List<R>> runs) {
-	return null;
-    }
+    public abstract <W extends LinkQuality> R individualRunResultMapper(int n1Id, int n2Id, int lId, W w);
 
-    public void setScenario(Scenario scenario) {
-	this.scenario = scenario;
-    }
-
-    public Scenario getScenario() {
-	return scenario;
-    }
 }

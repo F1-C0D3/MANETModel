@@ -8,8 +8,8 @@ import de.jgraphlib.util.RandomNumbers;
 import de.manetmodel.network.unit.DataUnit;
 import de.manetmodel.network.unit.Speed;
 import de.manetmodel.network.unit.Speed.SpeedRange;
-import de.manetmodel.network.unit.Speed.Time;
-import de.manetmodel.network.unit.VelocityUnits;
+import de.manetmodel.network.unit.Time;
+import de.manetmodel.network.unit.Unit;
 
 public abstract class MobilityModel {
 
@@ -29,11 +29,11 @@ public abstract class MobilityModel {
 	}
 
 	if (recordDuration == null || recordDuration.value == 0) {
-	    this.recordDuration = new Time(VelocityUnits.TimeUnit.second, 30);
+	    this.recordDuration = new Time(Unit.Time.second, 30);
 	} else {
 	    this.recordDuration = recordDuration;
 	}
-	this.timeStamp = new Time(VelocityUnits.TimeUnit.second, recordDuration.value / (double) segments);
+	this.timeStamp = new Time(Unit.Time.second, recordDuration.getMillis() / (long) segments);
 
     }
 
@@ -43,20 +43,20 @@ public abstract class MobilityModel {
 	this.speedRange = speedRange;
 
 	if (recordDuration == null || recordDuration.value == 0) {
-	    this.recordDuration = new Time(VelocityUnits.TimeUnit.second, 30);
+	    this.recordDuration = new Time(Unit.Time.second, 30);
 	} else {
 	    this.recordDuration = recordDuration;
 	}
 
-	this.timeStamp = new Time(VelocityUnits.TimeUnit.second, recordDuration.value / (double) segments);
+	this.timeStamp = new Time(Unit.Time.second, recordDuration.value / (long) segments);
     }
 
     public MobilityModel(RandomNumbers random, SpeedRange speedRange) {
 	this.segments = 3;
-	this.recordDuration = new Time(VelocityUnits.TimeUnit.second, 30);
+	this.recordDuration = new Time(Unit.Time.second, 30);
 	this.random = random;
 	this.speedRange = speedRange;
-	this.timeStamp = new Time(VelocityUnits.TimeUnit.second, recordDuration.value / (double) segments);
+	this.timeStamp = new Time(Unit.Time.second, recordDuration.value / (long) segments);
     }
 
     public int getSegments() {

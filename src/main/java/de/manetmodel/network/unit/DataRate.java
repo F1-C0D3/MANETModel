@@ -1,8 +1,10 @@
 package de.manetmodel.network.unit;
 
+import java.util.Comparator;
+
 import de.manetmodel.network.unit.DataUnit.Type;
 
-public class DataRate {
+public class DataRate implements Comparator<DataRate> {
     private long bits;
 
     public DataRate(double value, DataUnit.Type type) {
@@ -53,5 +55,10 @@ public class DataRate {
 	public DataRate max() {
 	    return max;
 	}
+    }
+
+    @Override
+    public int compare(DataRate o1, DataRate o2) {
+	return (int) (o1.get() - o2.get());
     }
 }
