@@ -8,6 +8,7 @@ import java.util.ListIterator;
 import java.util.Set;
 import java.util.function.Supplier;
 
+import de.jgraphlib.graph.DirectedWeighted2DGraph;
 import de.jgraphlib.graph.UndirectedWeighted2DGraph;
 import de.jgraphlib.util.RandomNumbers;
 import de.jgraphlib.util.Tuple;
@@ -19,7 +20,7 @@ import de.manetmodel.network.unit.Speed;
 import de.manetmodel.network.unit.Unit;
 
 public class MANET<N extends Node, L extends Link<W>, W extends LinkQuality, F extends Flow<N, L, W>>
-	extends UndirectedWeighted2DGraph<N, L, W> {
+	extends DirectedWeighted2DGraph<N, L, W> {
     private int flowCount;
     private List<F> flows;
     private IRadioModel radioModel;
