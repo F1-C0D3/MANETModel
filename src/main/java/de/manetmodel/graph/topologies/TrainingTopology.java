@@ -1,4 +1,4 @@
-package de.manetmodel.graph.SampleTopologies;
+package de.manetmodel.graph.topologies;
 
 import de.manetmodel.network.Flow;
 import de.manetmodel.network.Link;
@@ -7,6 +7,7 @@ import de.manetmodel.network.MANET;
 import de.manetmodel.network.Node;
 
 public class TrainingTopology {
+    
     MANET<Node, Link<LinkQuality>, LinkQuality, Flow<Node, Link<LinkQuality>, LinkQuality>> manet;
 
     public TrainingTopology(

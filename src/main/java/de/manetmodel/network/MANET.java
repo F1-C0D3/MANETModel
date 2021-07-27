@@ -29,9 +29,9 @@ public class MANET<N extends Node, L extends Link<W>, W extends LinkQuality, F e
     private DataRate capacity;
     protected DataRate utilization;
 
-    public MANET(Supplier<N> vertexSupplier, Supplier<L> edgeSupplier, Supplier<F> flowSupplier, IRadioModel radioModel,
+    public MANET(Supplier<N> vertexSupplier, Supplier<L> edgeSupplier, Supplier<W> edgeWeightSupplier, Supplier<F> flowSupplier, IRadioModel radioModel,
 	    MobilityModel mobilityModel) {
-	super(vertexSupplier, edgeSupplier);
+	super(vertexSupplier, edgeSupplier, edgeWeightSupplier);
 	this.flowCount = 0;
 	this.flowSupplier = flowSupplier;
 	this.radioModel = radioModel;
@@ -103,7 +103,6 @@ public class MANET<N extends Node, L extends Link<W>, W extends LinkQuality, F e
 		this.getEdge(lId).getWeight().setUtilization(cUtilization);
 		this.utilization.set(this.utilization.get() - r.get());
 	    }
-
 	}
     }
 
@@ -120,8 +119,11 @@ public class MANET<N extends Node, L extends Link<W>, W extends LinkQuality, F e
 
     @Override
     public L addEdge(N source, N target, W weight) {
-	weight = edgeWeightSupplier.get();
-	weight.setDistance(0d);
+	
+	// W wird durch Generator oder XMLImporter erzeugt
+	//weight = edgeWeightSupplier.get();
+	//weight.setDistance(getDistance(source.getPosition(), target.getPosition()));
+	
 	L link = super.addEdge(source, target, weight);
 	for (L l : this.getEdges()) {
 	    Tuple<N, N> lt = this.getVerticesOf(l);
