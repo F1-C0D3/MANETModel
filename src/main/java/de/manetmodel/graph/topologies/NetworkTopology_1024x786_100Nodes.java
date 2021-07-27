@@ -25,9 +25,9 @@ import de.manetmodel.network.unit.Speed.SpeedRange;
 
 //@formatter:off
 
-public class NetworkTopology_1024x786_N100 {
+public class NetworkTopology_1024x786_100Nodes {
     
-    NetworkTopology_1024x786_N100(){}
+    NetworkTopology_1024x786_100Nodes(){}
     
     public void create() {
 	
@@ -61,15 +61,15 @@ public class NetworkTopology_1024x786_N100 {
 		manet, 
 		new VertextPosition2DMapper());
 
-	exporter.exportGraph(String.format("%s.xml", NetworkTopology_1024x786_N100.class.getSimpleName()));	
+	exporter.exportGraph(String.format("%s.xml", NetworkTopology_1024x786_100Nodes.class.getSimpleName()));	
     }
     
     public static void main(String args[]) {
 
-	NetworkTopology_1024x786_N100 topology = new NetworkTopology_1024x786_N100();
+	NetworkTopology_1024x786_100Nodes topology = new NetworkTopology_1024x786_100Nodes();
 	
 	topology.create();
-	
+		
 	MANET<Node, Link<LinkQuality>, LinkQuality, Flow<Node, Link<LinkQuality>, LinkQuality>> manet = 
 		new MANET<Node, Link<LinkQuality>, LinkQuality, Flow<Node, Link<LinkQuality>, LinkQuality>>(
 			new ManetSupplier().getNodeSupplier(), 
@@ -86,10 +86,8 @@ public class NetworkTopology_1024x786_N100 {
 		manet, 
 		new VertextPosition2DMapper());
 	
-	importer.importGraph(String.format("%s.xml", NetworkTopology_1024x786_N100.class.getSimpleName()));
+	importer.importGraph(String.format("%s.xml", NetworkTopology_1024x786_100Nodes.class.getSimpleName()));
 	
-	VisualGraphApp<Node, Link<LinkQuality>, LinkQuality> visualGraphApp = new VisualGraphApp<Node, Link<LinkQuality>, LinkQuality>(manet, null);	
-
-		
+	VisualGraphApp<Node, Link<LinkQuality>, LinkQuality> visualGraphApp = new VisualGraphApp<Node, Link<LinkQuality>, LinkQuality>(manet, null);			
     }   
 }
