@@ -50,7 +50,7 @@ public class GridTopology_1024x786 {
 	XMLExporter<Node, Position2D, Link<LinkQuality>, LinkQuality> exporter = new XMLExporter<Node, Position2D, Link<LinkQuality>, LinkQuality>(
 		manet, new VertextPosition2DMapper());
 
-	exporter.exportGraph(String.format("%s.xml", NetworkTopology_1024x786_100Nodes.class.getSimpleName()));
+	exporter.exportGraph(String.format("%s.xml", GridTopology_1024x786.class.getSimpleName()));
     }
 
     public static void main(String args[]) {
@@ -70,7 +70,7 @@ public class GridTopology_1024x786 {
 	XMLImporter<Node, Position2D, Link<LinkQuality>, LinkQuality> importer = new XMLImporter<Node, Position2D, Link<LinkQuality>, LinkQuality>(
 		manet, new VertextPosition2DMapper());
 
-	importer.importGraph(String.format("%s.xml", NetworkTopology_1024x786_100Nodes.class.getSimpleName()));
+	importer.importGraph(String.format("%s.xml", GridTopology_1024x786.class.getSimpleName()));
 
 	VisualGraphApp<Node, Link<LinkQuality>, LinkQuality> visualGraphApp = new VisualGraphApp<Node, Link<LinkQuality>, LinkQuality>(
 		manet, null);
