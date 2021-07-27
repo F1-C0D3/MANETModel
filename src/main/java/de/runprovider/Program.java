@@ -112,9 +112,9 @@ public class Program<N extends Node, L extends Link<W>, W extends LinkQuality, F
 
     public MANET<N, L, W, F> createMANET(MobilityModel mobilityModel, IRadioModel radioModel) {
 
-	MANET<N, L, W, F> manet = new MANET<N, L, W, F>(nodeSupplier, linkSupplier, flowSupplier, radioModel,
+	MANET<N, L, W, F> manet = new MANET<N, L, W, F>(nodeSupplier, linkSupplier, linkQualitysupplier, flowSupplier, radioModel,
 		mobilityModel);
-	manet.setEdgeWeightSupplier(linkQualitysupplier);
+	
 	return manet;
     }
 
