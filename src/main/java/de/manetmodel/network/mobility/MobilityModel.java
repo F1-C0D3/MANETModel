@@ -2,7 +2,7 @@ package de.manetmodel.network.mobility;
 
 import java.util.List;
 
-import de.jgraphlib.graph.Position2D;
+import de.jgraphlib.graph.elements.Position2D;
 import de.jgraphlib.graph.generator.GraphProperties.DoubleRange;
 import de.jgraphlib.util.RandomNumbers;
 import de.manetmodel.network.unit.DataUnit;

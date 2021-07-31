@@ -5,7 +5,7 @@ import java.util.function.Supplier;
 
 import com.opencsv.bean.ColumnPositionMappingStrategy;
 
-import de.jgraphlib.graph.Position2D;
+import de.jgraphlib.graph.elements.Position2D;
 import de.jgraphlib.graph.generator.NetworkGraphProperties;
 import de.jgraphlib.util.RandomNumbers;
 import de.jgraphlib.util.Tuple;
@@ -44,7 +44,7 @@ public class MANETRunResultMapper<R extends RunResultParameter> extends RunResul
 	long transmissionrate = w.getTransmissionRate().get();
 	long utilization = w.getUtilization().get();
 
-	if (w.getIsActive()) {
+	if (w.isActive()) {
 	    result.setPathParticipant(true);
 	    if (transmissionrate < utilization)
 		result.setOverUtilization(utilization - transmissionrate);

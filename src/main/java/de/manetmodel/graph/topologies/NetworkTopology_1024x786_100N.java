@@ -1,6 +1,9 @@
 package de.manetmodel.graph.topologies;
 
-import de.jgraphlib.graph.Position2D;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
+import de.jgraphlib.graph.elements.Position2D;
 import de.jgraphlib.graph.generator.NetworkGraphGenerator;
 import de.jgraphlib.graph.generator.NetworkGraphProperties;
 import de.jgraphlib.graph.generator.GraphProperties.DoubleRange;
@@ -14,7 +17,7 @@ import de.manetmodel.network.Flow;
 import de.manetmodel.network.Link;
 import de.manetmodel.network.LinkQuality;
 import de.manetmodel.network.MANET;
-import de.manetmodel.network.ManetSupplier;
+import de.manetmodel.network.MANETSupplier;
 import de.manetmodel.network.Node;
 import de.manetmodel.network.mobility.PedestrianMobilityModel;
 import de.manetmodel.network.radio.ScalarRadioModel;
@@ -25,18 +28,20 @@ import de.manetmodel.network.unit.Speed.SpeedRange;
 
 //@formatter:off
 
-public class NetworkTopology_1024x786_100Nodes {
+public class NetworkTopology_1024x786_100N {
     
-    NetworkTopology_1024x786_100Nodes(){}
+    public static String xmlFilePath;
     
-    public void create() {
+    NetworkTopology_1024x786_100N(){}
+    
+    public Boolean create() {
 	
 	MANET<Node, Link<LinkQuality>, LinkQuality, Flow<Node, Link<LinkQuality>, LinkQuality>> manet = 
 		new MANET<Node, Link<LinkQuality>, LinkQuality, Flow<Node, Link<LinkQuality>, LinkQuality>>(
-			new ManetSupplier().getNodeSupplier(), 
-			new ManetSupplier().getLinkSupplier(),
-			new ManetSupplier().getLinkQualitySupplier(),
-			new ManetSupplier().getFlowSupplier(),
+			new MANETSupplier().getNodeSupplier(), 
+			new MANETSupplier().getLinkSupplier(),
+			new MANETSupplier().getLinkQualitySupplier(),
+			new MANETSupplier().getFlowSupplier(),
 			new ScalarRadioModel(0.002d, 1e-11, 2000000d, 2412000000d), 
 			new PedestrianMobilityModel(RandomNumbers.getInstance(10),
 				new SpeedRange(4d, 40d, Unit.Time.hour, Unit.Distance.kilometer),
@@ -52,7 +57,7 @@ public class NetworkTopology_1024x786_100Nodes {
 
 	NetworkGraphGenerator<Node, Link<LinkQuality>, LinkQuality> generator = new NetworkGraphGenerator<Node, Link<LinkQuality>, LinkQuality>(
 		manet, 
-		new ManetSupplier().getLinkQualitySupplier(), 
+		new MANETSupplier().getLinkQualitySupplier(), 
 		new RandomNumbers());
 
 	generator.generate(properties);
@@ -61,21 +66,26 @@ public class NetworkTopology_1024x786_100Nodes {
 		manet, 
 		new VertextPosition2DMapper());
 
-	exporter.exportGraph(String.format("%s.xml", NetworkTopology_1024x786_100Nodes.class.getSimpleName()));	
+	xmlFilePath = String.format(
+		"xml/%s_%s.xml", 
+		NetworkTopology_1024x786_100N.class.getSimpleName(), 
+		new SimpleDateFormat("yyyy-MM-dd'_'HH:mm:ss.SSS").format(new Date(System.currentTimeMillis())));
+	
+	return exporter.exportGraph(xmlFilePath);
     }
     
     public static void main(String args[]) {
 
-	NetworkTopology_1024x786_100Nodes topology = new NetworkTopology_1024x786_100Nodes();
+	NetworkTopology_1024x786_100N topology = new NetworkTopology_1024x786_100N();
 	
 	topology.create();
 		
 	MANET<Node, Link<LinkQuality>, LinkQuality, Flow<Node, Link<LinkQuality>, LinkQuality>> manet = 
 		new MANET<Node, Link<LinkQuality>, LinkQuality, Flow<Node, Link<LinkQuality>, LinkQuality>>(
-			new ManetSupplier().getNodeSupplier(), 
-			new ManetSupplier().getLinkSupplier(), 
-			new ManetSupplier().getLinkQualitySupplier(),
-			new ManetSupplier().getFlowSupplier(),
+			new MANETSupplier().getNodeSupplier(), 
+			new MANETSupplier().getLinkSupplier(), 
+			new MANETSupplier().getLinkQualitySupplier(),
+			new MANETSupplier().getFlowSupplier(),
 			new ScalarRadioModel(0.002d, 1e-11, 2000000d, 2412000000d), 
 			new PedestrianMobilityModel(RandomNumbers.getInstance(10),
 				new SpeedRange(4d, 40d, Unit.Time.hour, Unit.Distance.kilometer),
@@ -86,7 +96,7 @@ public class NetworkTopology_1024x786_100Nodes {
 		manet, 
 		new VertextPosition2DMapper());
 	
-	importer.importGraph(String.format("%s.xml", NetworkTopology_1024x786_100Nodes.class.getSimpleName()));
+	importer.importGraph(xmlFilePath);
 	
 	VisualGraphApp<Node, Link<LinkQuality>, LinkQuality> visualGraphApp = new VisualGraphApp<Node, Link<LinkQuality>, LinkQuality>(manet, null);			
     }   
