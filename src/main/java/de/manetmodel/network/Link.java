@@ -10,5 +10,4 @@ public class Link<W extends LinkQuality> extends WeightedEdge<W> {
     public String toString() {
 	return new StringBuffer("ID: ").append(getID()).toString();
     }
-
 }

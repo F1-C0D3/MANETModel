@@ -18,21 +18,17 @@ public class Flow<N extends Vertex<Position2D>, L extends WeightedEdge<W>, W ext
     private static final long serialVersionUID = 1L;
     private DataRate dataRate;
 
-    public Flow() {
-
-    }
-
     public Flow(int ID, N source, N target, DataRate bitrate) {
 	super(source, target);
 	this.dataRate = bitrate;
-	this.add(new Tuple<L,N>(null, source));
     }
     
     public Flow(N source, N target, DataRate bitrate) {
 	super(source, target);
 	this.dataRate = bitrate;
-	this.add(new Tuple<L,N>(null, source));
     }
+    
+    public Flow() {}
     
     public void set(int ID, N source, N target, DataRate dataRate) {
 	setID(ID);

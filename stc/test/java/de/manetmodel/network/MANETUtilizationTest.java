@@ -5,10 +5,18 @@ import java.util.List;
 
 import org.junit.Test;
 
+import de.jgraphlib.graph.elements.EdgeDistance;
+import de.jgraphlib.graph.elements.Position2D;
+import de.jgraphlib.graph.elements.Vertex;
+import de.jgraphlib.graph.elements.WeightedEdge;
+import de.jgraphlib.graph.generator.GridGraphGenerator;
+import de.jgraphlib.graph.generator.GridGraphProperties;
 import de.jgraphlib.graph.generator.NetworkGraphGenerator;
 import de.jgraphlib.graph.generator.NetworkGraphProperties;
 import de.jgraphlib.graph.generator.GraphProperties.DoubleRange;
 import de.jgraphlib.graph.generator.GraphProperties.IntRange;
+import de.jgraphlib.graph.suppliers.EdgeDistanceSupplier;
+import de.jgraphlib.gui.EdgeIDPrinter;
 import de.jgraphlib.gui.VisualGraphApp;
 import de.jgraphlib.util.RandomNumbers;
 import de.manetmodel.gui.LinkQualityPrinter;
@@ -22,7 +30,7 @@ import de.manetmodel.network.unit.Speed.SpeedRange;
 public class MANETUtilizationTest {
 
     @Test
-    public void copyTest() throws IOException {
+    public void utilizationTest() throws IOException {
 
 	MANET<Node, Link<LinkQuality>, LinkQuality, Flow<Node, Link<LinkQuality>, LinkQuality>> manet = new MANET<Node, Link<LinkQuality>, LinkQuality, Flow<Node, Link<LinkQuality>, LinkQuality>>(
 		new MANETSupplier().getNodeSupplier(), new MANETSupplier().getLinkSupplier(),
@@ -32,25 +40,22 @@ public class MANETUtilizationTest {
 			new SpeedRange(4d, 40d, Unit.Time.hour, Unit.Distance.kilometer),
 			new Time(Unit.Time.second, 30l), new Speed(4d, Unit.Distance.kilometer, Unit.Time.hour), 10));
 
-	NetworkGraphProperties properties = new NetworkGraphProperties(/* playground width */ 1024,
-		/* playground height */ 768, /* number of vertices */ new IntRange(100, 200),
-		/* distance between vertices */ new DoubleRange(50d, 100d),
-		/* edge distance */ new DoubleRange(100d, 100d));
+	GridGraphProperties properties = new GridGraphProperties(/* playground width */ 1024,
+		/* playground height */ 768, /* distance between vertices */ 100, /* length of edges */ 100);
 
-	NetworkGraphGenerator<Node, Link<LinkQuality>, LinkQuality> generator = new NetworkGraphGenerator<Node, Link<LinkQuality>, LinkQuality>(
+	GridGraphGenerator<Node, Link<LinkQuality>, LinkQuality> generator = new GridGraphGenerator<Node, Link<LinkQuality>, LinkQuality>(
 		manet, new MANETSupplier().getLinkQualitySupplier(), new RandomNumbers());
-	
-	generator.generate(properties);
-	
-	manet.initialize();
-	
-	//VisualGraphApp<Node, Link<LinkQuality>, LinkQuality> visualGraphApp = new VisualGraphApp<Node, Link<LinkQuality>, LinkQuality>(manet, new LinkQualityPrinter());			
 
-	List<Link<LinkQuality>> links = manet.getEdgesOf(manet.getVertex(5));
-	
-	List<Link<LinkQuality>> outgoingLinks = manet.getOutgoingEdgesOf(manet.getVertex(5));
-	
+	generator.generate(properties);
+
+	manet.initialize();
+
+	VisualGraphApp<Node, Link<LinkQuality>, LinkQuality> visualGraphApp = new VisualGraphApp<Node, Link<LinkQuality>, LinkQuality>(
+		manet, new EdgeIDPrinter<Link<LinkQuality>, LinkQuality>());
+
+	System.out.println(manet.getUtilizedLinksOf(manet.getEdge(100)));
+
 	System.in.read();
     }
-  
+
 }
