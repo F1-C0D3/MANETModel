@@ -3,8 +3,7 @@ package de.manetmodel.network;
 import java.util.Comparator;
 import java.util.Iterator;
 
-import de.jgraphlib.graph.elements.Path;
-import de.jgraphlib.graph.elements.Path2D;
+import de.jgraphlib.graph.algorithms.DijkstraShortestPath;
 import de.jgraphlib.graph.elements.Position2D;
 import de.jgraphlib.graph.elements.Vertex;
 import de.jgraphlib.graph.elements.WeightedEdge;
@@ -12,7 +11,7 @@ import de.jgraphlib.util.Tuple;
 import de.manetmodel.network.unit.DataRate;
 
 public class Flow<N extends Vertex<Position2D>, L extends WeightedEdge<W>, W extends LinkQuality>
-	extends Path2D<N, L, W> {
+	extends DijkstraShortestPath<N, L, W> {
 
     private int ID;
     private static final long serialVersionUID = 1L;
@@ -50,7 +49,6 @@ public class Flow<N extends Vertex<Position2D>, L extends WeightedEdge<W>, W ext
 	return this.dataRate;
     }
  
-    @Override
     public double getDistance() {
 	double distance = 0;
 	for (Tuple<L, N> tuple : this)
