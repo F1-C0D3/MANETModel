@@ -149,6 +149,7 @@ public class MANET<N extends Node, L extends Link<W>, W extends LinkQuality, F e
 
 	double distance = this.getDistance(source.getPosition(), target.getPosition());
 
+	newLink.getWeight().setDistance(distance);
 	newLink.getWeight().setTransmissionRate(radioModel.transmissionBitrate(distance));
 	newLink.getWeight().setReceptionPower(radioModel.receptionPower(distance));
 	newLink.getWeight().setUtilization(new DataRate(0));
