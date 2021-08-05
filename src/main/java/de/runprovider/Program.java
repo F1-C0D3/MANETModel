@@ -7,6 +7,7 @@ import java.util.function.Supplier;
 import com.opencsv.bean.ColumnPositionMappingStrategy;
 import com.opencsv.exceptions.CsvRequiredFieldEmptyException;
 
+import de.jgraphlib.graph.generator.GraphProperties;
 import de.jgraphlib.graph.generator.GraphProperties.DoubleRange;
 import de.jgraphlib.graph.generator.GraphProperties.IntRange;
 import de.jgraphlib.graph.generator.NetworkGraphGenerator;
@@ -36,6 +37,7 @@ import de.results.RunResultParameter;
 import de.results.RunResultParameterSupplier;
 import de.results.AverageResultParameter;
 import de.results.MANETAverageResultMapper;
+import de.results.MANETIdealRadioRunResultMapper;
 import de.results.MANETResultRecorder;
 import de.results.Scenario;
 
@@ -55,30 +57,7 @@ public class Program<N extends Node, L extends Link<W>, W extends LinkQuality, F
 
     }
 
-    public List<Triple<Integer, Integer, DataRate>> generateFlowSourceTargetPairs(int numNodes, int numFlows,
-	    DataRateRange range, int runs) {
-	List<Integer> exclusionList = new ArrayList<Integer>();
-	List<Triple<Integer, Integer, DataRate>> flowSourceTargetPairs = new ArrayList<Triple<Integer, Integer, DataRate>>();
-	for (int i = 0; i < (numFlows * 2); i++) {
-	    int randomNodeId = RandomNumbers.getInstance(runs).getRandomNotInE(0, numNodes, exclusionList);
-	    exclusionList.add(randomNodeId);
-	}
-	Triple<Integer, Integer, DataRate> stTuple = null;
-	for (int i = 0; i < exclusionList.size(); i++) {
 
-	    if (i % 2 == 0) {
-		stTuple = new Triple<Integer, Integer, DataRate>();
-		stTuple.setFirst(exclusionList.get(i));
-	    } else {
-		stTuple.setSecond(exclusionList.get(i));
-		int dataRate = RandomNumbers.getInstance(runs).getRandom((int) range.min().get(),
-			(int) range.max().get());
-		stTuple.setThird(new DataRate(dataRate));
-		flowSourceTargetPairs.add(stTuple);
-	    }
-	}
-	return flowSourceTargetPairs;
-    }
 
     public void addFlows(MANET<N, L, W, F> manet, List<Triple<Integer, Integer, DataRate>> flowSourceTargetIds,
 	    int runs) {
@@ -88,9 +67,10 @@ public class Program<N extends Node, L extends Link<W>, W extends LinkQuality, F
     }
 
     public NetworkGraphProperties generateNetwork(MANET<N, L, W, F> manet, int runs, int numNodes) {
-	NetworkGraphProperties properties = new NetworkGraphProperties(/* width */ 1000, /* height */ 1000,
-		/* vertices */ new IntRange(numNodes, numNodes), /* vertex distance */ new DoubleRange(55d, 100d),
-		/* edge distance */ new DoubleRange(95d, 125d));
+	NetworkGraphProperties properties = new NetworkGraphProperties( /* playground width */ 1024,
+		/* playground height */ 768, /* number of vertices */ new IntRange(100, 150),
+		/* distance between vertices */ new DoubleRange(50d, 100d),
+		/* edge distance */ new DoubleRange(100, 100));
 	new NetworkGraphGenerator<N, L, W>(manet, RandomNumbers.getInstance(runs)).generate(properties);
 
 	return properties;
@@ -99,8 +79,7 @@ public class Program<N extends Node, L extends Link<W>, W extends LinkQuality, F
     public MobilityModel setMobilityModel(int runs) {
 	/* Mobility model to include movement of nodes based on velocity and pattern */
 	return new PedestrianMobilityModel(RandomNumbers.getInstance(runs),
-		new SpeedRange(4d, 40d, Unit.Time.hour, Unit.Distance.kilometer),
-		new Time(Unit.Time.second, 30l),
+		new SpeedRange(4d, 40d, Unit.Time.hour, Unit.Distance.kilometer), new Time(Unit.Time.second, 30l),
 		new Speed(4d, Unit.Distance.kilometer, Unit.Time.hour), 10);
 
     }
@@ -129,8 +108,8 @@ public class Program<N extends Node, L extends Link<W>, W extends LinkQuality, F
 		return this.getColumnMapping();
 	    }
 	};
-	mappingStrategy.setColumnMapping("overUtilization", "utilization", "activePathParticipants", "connectionStability",
-		"simulationTime");
+	mappingStrategy.setColumnMapping("overUtilization", "utilization", "activePathParticipants",
+		"connectionStability", "simulationTime");
 	return new MANETAverageResultMapper<R>(resultParameterSupplier, mappingStrategy,
 		new Scenario(resultFileName, numFlows, numNodes, meantransmissionRate));
 
@@ -143,8 +122,8 @@ public class Program<N extends Node, L extends Link<W>, W extends LinkQuality, F
 
     }
 
-    public <R extends RunResultParameter> MANETRunResultMapper<R> setIndividualRunResultMapper(
-	    Supplier<R> resultParameterSupplier, NetworkGraphProperties networkProperties, MobilityModel mobilityModel,
+    public <R extends RunResultParameter> RunResultMapper<R> setIndividualRunResultMapper(
+	    Supplier<R> resultParameterSupplier, GraphProperties networkProperties, MobilityModel mobilityModel,
 	    IRadioModel radioModel, String resultFileName, int numNodes, int numFlows, DataRate meantransmissionRate) {
 
 	ColumnPositionMappingStrategy<R> mappingStrategy = new ColumnPositionMappingStrategy<R>() {
@@ -156,9 +135,9 @@ public class Program<N extends Node, L extends Link<W>, W extends LinkQuality, F
 
 	mappingStrategy.setColumnMapping("lId", "n1Id", "n2Id", "overUtilization", "utilization", "isPathParticipant",
 		"connectionStability");
-	MANETRunResultMapper<R> resultMapper = new MANETRunResultMapper<R>(resultParameterSupplier, mappingStrategy,
-		new Scenario(resultFileName, numFlows, numNodes, meantransmissionRate), networkProperties, radioModel,
-		mobilityModel);
+	RunResultMapper<R> resultMapper = new MANETIdealRadioRunResultMapper<R>(resultParameterSupplier,
+		mappingStrategy, new Scenario(resultFileName, numFlows, numNodes, meantransmissionRate),
+		networkProperties, radioModel, mobilityModel);
 	return resultMapper;
     }
 

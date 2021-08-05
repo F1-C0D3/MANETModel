@@ -6,6 +6,7 @@ import java.util.function.Supplier;
 import com.opencsv.bean.ColumnPositionMappingStrategy;
 
 import de.jgraphlib.graph.Position2D;
+import de.jgraphlib.graph.generator.GraphProperties;
 import de.jgraphlib.graph.generator.NetworkGraphProperties;
 import de.jgraphlib.util.RandomNumbers;
 import de.jgraphlib.util.Tuple;
@@ -15,12 +16,12 @@ import de.manetmodel.network.mobility.MovementPattern;
 import de.manetmodel.network.radio.IRadioModel;
 
 public class MANETRunResultMapper<R extends RunResultParameter> extends RunResultMapper<R> {
-    private NetworkGraphProperties networkProperties;
+    private GraphProperties networkProperties;
     private IRadioModel radioModel;
     private MobilityModel mobilityModel;
 
     public MANETRunResultMapper(Supplier<R> resultParameterSupplier, ColumnPositionMappingStrategy<R> mappingStrategy,
-	    Scenario scenario, NetworkGraphProperties networkProperties, IRadioModel radioModel,
+	    Scenario scenario, GraphProperties networkProperties, IRadioModel radioModel,
 	    MobilityModel mobilityModel) {
 	super(resultParameterSupplier, mappingStrategy, scenario);
 
