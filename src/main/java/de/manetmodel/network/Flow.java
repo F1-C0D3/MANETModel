@@ -34,31 +34,16 @@ public class Flow<N extends Vertex<Position2D>, L extends WeightedEdge<W>, W ext
 	return this.rate;
     }
 
+    public void setDataRate(DataRate rate) {
+	this.rate = rate;
+    }
+
     @Override
     public double getDistance() {
 	double distance = 0;
 	for (Tuple<L, N> tuple : this)
 	    distance += tuple.getFirst().getWeight().getNumUtilizedLinks() * rate.get();
 	return distance;
-    }
-
-    @Override
-    public String toString() {
-	StringBuffer meta = new StringBuffer("(s,t): ").append("(").append(this.getSource().getID()).append(",")
-		.append(this.getTarget().getID()).append(")");
-	StringBuffer pathString = new StringBuffer().append("[");
-	Iterator<Tuple<L, N>> iter = this.iterator();
-
-	while (iter.hasNext()) {
-	    Tuple<L, N> ln = iter.next();
-	    pathString.append(ln.getSecond().getID());
-
-	    if (iter.hasNext()) {
-		pathString.append(", ");
-	    }
-	}
-
-	return meta.append(pathString.append("]")).toString();
     }
 
     public void setProperties(N source, N target, DataRate r) {
@@ -72,13 +57,29 @@ public class Flow<N extends Vertex<Position2D>, L extends WeightedEdge<W>, W ext
 	return id;
     }
 
-    public static class FlowDataRateComparator<N extends Node,L extends Link<W>, W extends LinkQuality> implements Comparator<Flow<N, L, W>> {
+    public static class FlowDataRateComparator<N extends Node, L extends Link<W>, W extends LinkQuality>
+	    implements Comparator<Flow<N, L, W>> {
 
 	@Override
 	public int compare(Flow<N, L, W> o1, Flow<N, L, W> o2) {
 	    return Long.compare(o1.getDataRate().get(), o2.getDataRate().get());
 	}
 
+    }
+
+    @Override
+    public String toString() {
+	// TODO Auto-generated method stub
+	StringBuilder path = new StringBuilder();
+	Iterator<Tuple<L, N>> it = this.iterator();
+
+	while (it.hasNext()) {
+	    path.append(it.next().getSecond().getID());
+
+	    if (it.hasNext())
+		path.append(" -> ");
+	}
+	return path.toString();
     }
 
 }
