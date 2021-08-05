@@ -1,10 +1,10 @@
 package de.manetmodel.network;
 
 import java.util.function.Supplier;
+import de.jgraphlib.graph.suppliers.EdgeWeightSupplier;
 
-import de.jgraphlib.graph.EdgeWeightSupplier;
 
-public class ManetSupplier {
+public class MANETSupplier {
 
     public NodeSupplier getNodeSupplier() {
 	return new NodeSupplier();

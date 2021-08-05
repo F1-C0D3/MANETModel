@@ -2,36 +2,32 @@ package de.manetmodel.network;
 
 import java.util.List;
 
-import de.jgraphlib.graph.EdgeDistance;
+import de.jgraphlib.graph.elements.EdgeDistance;
 import de.jgraphlib.util.Tuple;
 import de.manetmodel.network.mobility.MovementPattern;
 import de.manetmodel.network.unit.DataRate;
 
 public class LinkQuality extends EdgeDistance {
 
-    public LinkQuality() {
-	transmissionRate = new DataRate(0L);
-	utilization = new DataRate(0L);
-	isActive = false;
-    }
-
     boolean isActive;
 
     // Reception power in dB
     private double receptionPower;
 
-    // Rate as unit (bits,kbits,mbits,...)
+    // Rate as unit (bits, kbits, mbits,...)
     private DataRate transmissionRate;
 
-    // Rate as unit (bits,kbits,mbits,...)
+    // Rate as unit (bits, kbits, mbits,...)
     private DataRate utilization;
 
     // Number of actively and passively utilized links inclusive own (in
     // interference range)
-    private int numUtilizedLinks;
+    private int numberOfUtilizedLinks;
 
     Tuple<List<MovementPattern>, List<MovementPattern>> sinkAndSourceMobility;
-
+    
+    public LinkQuality() {}
+      
     public Tuple<List<MovementPattern>, List<MovementPattern>> getSinkAndSourceMobility() {
 	return sinkAndSourceMobility;
     }
@@ -48,12 +44,12 @@ public class LinkQuality extends EdgeDistance {
 	this.receptionPower = receptionPower;
     }
 
-    public int getNumUtilizedLinks() {
-	return numUtilizedLinks;
+    public int getNumberOfUtilizedLinks() {
+	return numberOfUtilizedLinks;
     }
 
-    public void setNumUtilizedLinks(int utilizedLinks) {
-	this.numUtilizedLinks = utilizedLinks;
+    public void setNumberOfUtilizedLinks(int numberOfUtilizedLinks) {
+	this.numberOfUtilizedLinks = numberOfUtilizedLinks;
     }
 
     public DataRate getTransmissionRate() {
@@ -71,14 +67,20 @@ public class LinkQuality extends EdgeDistance {
     public void setUtilization(DataRate u) {
 	this.utilization = u;
     }
-
-    public void setIsActive(boolean isParticipant) {
-	this.isActive = isParticipant;
-
+    
+    public void setActive() {
+	this.isActive = true;
     }
+    
+    public void setPassive() {
+   	this.isActive = false;
+      }
 
-    public boolean getIsActive() {
+    public boolean isActive() {
 	return this.isActive;
     }
-
+    
+    public String toString() {
+	return String.format("%s", utilization.toString());
+    }
 }

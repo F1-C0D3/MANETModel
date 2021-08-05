@@ -3,58 +3,54 @@ package de.manetmodel.network;
 import java.util.Comparator;
 import java.util.Iterator;
 
-import de.jgraphlib.graph.Path2D;
-import de.jgraphlib.graph.Position2D;
-import de.jgraphlib.graph.Vertex;
-import de.jgraphlib.graph.WeightedEdge;
+import de.jgraphlib.graph.algorithms.DijkstraShortestPath;
+import de.jgraphlib.graph.elements.Position2D;
+import de.jgraphlib.graph.elements.Vertex;
+import de.jgraphlib.graph.elements.WeightedEdge;
 import de.jgraphlib.util.Tuple;
 import de.manetmodel.network.unit.DataRate;
 
 public class Flow<N extends Vertex<Position2D>, L extends WeightedEdge<W>, W extends LinkQuality>
-	extends Path2D<N, L, W> {
+	extends DijkstraShortestPath<N, L, W> {
 
-    private int id;
+    private int ID;
     private static final long serialVersionUID = 1L;
-    private DataRate rate;
+    private DataRate dataRate;
 
-    public Flow() {
-
+    public Flow(int ID, N source, N target, DataRate bitrate) {
+	super(source, target);
+	this.dataRate = bitrate;
     }
-
-    public void setId(int id) {
-	this.id = id;
-    }
-
+    
     public Flow(N source, N target, DataRate bitrate) {
 	super(source, target);
-	this.rate = bitrate;
+	this.dataRate = bitrate;
+    }
+    
+    public Flow() {}
+    
+    public void set(int ID, N source, N target, DataRate dataRate) {
+	setID(ID);
+	setSource(source);
+	setTarget(target);
+	setDataRate(dataRate);
+	this.add(new Tuple<L,N>(null, source));
     }
 
+    public void setID(int ID) {
+	this.ID = ID;
+    }
+       
+    public void setDataRate(DataRate dataRate) {
+	this.dataRate = dataRate;
+    }
+    
     public DataRate getDataRate() {
-	return this.rate;
+	return this.dataRate;
     }
 
-    public void setDataRate(DataRate rate) {
-	this.rate = rate;
-    }
-
-    @Override
-    public double getDistance() {
-	double distance = 0;
-	for (Tuple<L, N> tuple : this)
-	    distance += tuple.getFirst().getWeight().getNumUtilizedLinks() * rate.get();
-	return distance;
-    }
-
-    public void setProperties(N source, N target, DataRate r) {
-	this.rate = r;
-	super.source = source;
-	super.target = target;
-	super.add(new Tuple<L, N>(null, source));
-    }
-
-    public Integer getId() {
-	return id;
+    public Integer getID() {
+	return ID;
     }
 
     public static class FlowDataRateComparator<N extends Node, L extends Link<W>, W extends LinkQuality>

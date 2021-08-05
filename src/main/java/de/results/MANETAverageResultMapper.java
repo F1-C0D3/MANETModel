@@ -5,7 +5,7 @@ import java.util.function.Supplier;
 
 import com.opencsv.bean.ColumnPositionMappingStrategy;
 
-import de.jgraphlib.graph.Position2D;
+import de.jgraphlib.graph.elements.Position2D;
 import de.jgraphlib.graph.generator.NetworkGraphProperties;
 import de.jgraphlib.util.RandomNumbers;
 import de.jgraphlib.util.Tuple;
