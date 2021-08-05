@@ -30,7 +30,7 @@ public class MANETAverageResultMapper<K extends AverageResultParameter> extends 
 	int numOverUtilization = 0;
 	long averageUtilization = 0l;
 	int activeLinks = 0;
-	int averageConnectivityStability = 0;
+	double averageConnectivityStability = 0d;
 	for (RunResultParameter run : runs) {
 
 	    if (run.isPathParticipant()) {

@@ -17,7 +17,7 @@ public class AverageResultParameter extends ResultParameter {
     private double activePathParticipants;
 
     @CsvBindByName(column = "connectionStability")
-    private int connectionStability;
+    private double connectionStability;
 
     @CsvBindByName(column = "simulationTime")
     private Time simulationTime;
@@ -58,11 +58,11 @@ public class AverageResultParameter extends ResultParameter {
 	return this.overUtilization;
     }
 
-    public int getConnectionStability() {
+    public double getConnectionStability() {
 	return connectionStability;
     }
 
-    public void setConnectionStability(int connectionStability) {
+    public void setConnectionStability(double connectionStability) {
 	this.connectionStability = connectionStability;
     }
 

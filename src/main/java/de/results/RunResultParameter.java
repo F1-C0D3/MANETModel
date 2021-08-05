@@ -23,7 +23,7 @@ public class RunResultParameter extends ResultParameter {
     private boolean isPathParticipant;
 
     @CsvBindByName(column = "connectionStability")
-    private int connectionStability;
+    private double connectionStability;
 
     public void setIndividualRunResultParameter(int lId, int n1Id, int n2Id) {
 	this.lId = lId;
@@ -84,11 +84,11 @@ public class RunResultParameter extends ResultParameter {
 	return this.overUtilization;
     }
 
-    public int getConnectionStability() {
+    public double getConnectionStability() {
 	return connectionStability;
     }
 
-    public void setConnectionStability(int connectionStability) {
+    public void setConnectionStability(double connectionStability) {
 	this.connectionStability = connectionStability;
     }
 
