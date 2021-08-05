@@ -41,8 +41,7 @@ public class Node extends Vertex<Position2D> {
 
     @Override
     public String toString() {
-	return new StringBuffer().append("ID: ").append(this.getID()).append(", #iLinks: ")
-		.append(interferredLinks.size()).toString();
+	return new StringBuffer().append("Node id: ").append(this.getID()).toString();
     }
 
 }
