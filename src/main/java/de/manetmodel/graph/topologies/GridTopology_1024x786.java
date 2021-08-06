@@ -38,7 +38,7 @@ public class GridTopology_1024x786 {
 
 	MANET<Node, Link<LinkQuality>, LinkQuality, Flow<Node, Link<LinkQuality>, LinkQuality>> manet = new MANET<Node, Link<LinkQuality>, LinkQuality, Flow<Node, Link<LinkQuality>, LinkQuality>>(
 		new MANETSupplier().getNodeSupplier(), new MANETSupplier().getLinkSupplier(),
-		new MANETSupplier().getLinkQualitySupplier(), new MANETSupplier().getFlowSupplier(),
+		new MANETSupplier().getLinkPropertySupplier(), new MANETSupplier().getFlowSupplier(),
 		new ScalarRadioModel(0.002d, 1e-11, 2000000d, 2412000000d),
 		new PedestrianMobilityModel(RandomNumbers.getInstance(10),
 			new SpeedRange(4d, 40d, Unit.Time.hour, Unit.Distance.kilometer),
@@ -48,7 +48,7 @@ public class GridTopology_1024x786 {
 		/* playground height */ 768, /* distance between vertices */ 100, /* length of edges */ 100);
 
 	GridGraphGenerator<Node, Link<LinkQuality>, LinkQuality> generator = new GridGraphGenerator<Node, Link<LinkQuality>, LinkQuality>(
-		manet, new MANETSupplier().getLinkQualitySupplier(), new RandomNumbers());
+		manet, new MANETSupplier().getLinkPropertySupplier(), new RandomNumbers());
 
 	generator.generate(properties);
 
@@ -71,7 +71,7 @@ public class GridTopology_1024x786 {
 
 	MANET<Node, Link<LinkQuality>, LinkQuality, Flow<Node, Link<LinkQuality>, LinkQuality>> manet = new MANET<Node, Link<LinkQuality>, LinkQuality, Flow<Node, Link<LinkQuality>, LinkQuality>>(
 		new MANETSupplier().getNodeSupplier(), new MANETSupplier().getLinkSupplier(),
-		new MANETSupplier().getLinkQualitySupplier(), new MANETSupplier().getFlowSupplier(),
+		new MANETSupplier().getLinkPropertySupplier(), new MANETSupplier().getFlowSupplier(),
 		new ScalarRadioModel(0.002d, 1e-11, 2000000d, 2412000000d),
 		new PedestrianMobilityModel(RandomNumbers.getInstance(10),
 			new SpeedRange(4d, 40d, Unit.Time.hour, Unit.Distance.kilometer),
