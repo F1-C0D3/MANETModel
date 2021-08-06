@@ -9,7 +9,7 @@ import de.manetmodel.network.unit.DataRate;
 
 public class LinkQuality extends EdgeDistance {
 
-    boolean isActive;
+    private boolean isActive;
 
     // Reception power in dB
     private double receptionPower;
@@ -25,9 +25,10 @@ public class LinkQuality extends EdgeDistance {
     private int numberOfUtilizedLinks;
 
     Tuple<List<MovementPattern>, List<MovementPattern>> sinkAndSourceMobility;
-    
-    public LinkQuality() {}
-      
+
+    public LinkQuality() {
+    }
+
     public Tuple<List<MovementPattern>, List<MovementPattern>> getSinkAndSourceMobility() {
 	return sinkAndSourceMobility;
     }
@@ -67,19 +68,19 @@ public class LinkQuality extends EdgeDistance {
     public void setUtilization(DataRate u) {
 	this.utilization = u;
     }
-    
+
     public void setActive() {
 	this.isActive = true;
     }
-    
+
     public void setPassive() {
-   	this.isActive = false;
-      }
+	this.isActive = false;
+    }
 
     public boolean isActive() {
 	return this.isActive;
     }
-    
+
     public String toString() {
 	return String.format("%s", utilization.toString());
     }
