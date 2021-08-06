@@ -23,7 +23,7 @@ public class MANETCopyTest {
 
 	MANET<Node, Link<LinkQuality>, LinkQuality, Flow<Node, Link<LinkQuality>, LinkQuality>> manet = new MANET<Node, Link<LinkQuality>, LinkQuality, Flow<Node, Link<LinkQuality>, LinkQuality>>(
 		new MANETSupplier().getNodeSupplier(), new MANETSupplier().getLinkSupplier(),
-		new MANETSupplier().getLinkQualitySupplier(), new MANETSupplier().getFlowSupplier(),
+		new MANETSupplier().getLinkPropertySupplier(), new MANETSupplier().getFlowSupplier(),
 		new ScalarRadioModel(0.002d, 1e-11, 2000000d, 2412000000d),
 		new PedestrianMobilityModel(RandomNumbers.getInstance(10),
 			new SpeedRange(4d, 40d, Unit.Time.hour, Unit.Distance.kilometer),
@@ -35,10 +35,8 @@ public class MANETCopyTest {
 		/* edge distance */ new DoubleRange(100d, 100d));
 
 	NetworkGraphGenerator<Node, Link<LinkQuality>, LinkQuality> generator = new NetworkGraphGenerator<Node, Link<LinkQuality>, LinkQuality>(
-		manet, new MANETSupplier().getLinkQualitySupplier(), new RandomNumbers());
+		manet, new MANETSupplier().getLinkPropertySupplier(), new RandomNumbers());
 	
-	MANET<Node, Link<LinkQuality>, LinkQuality, Flow<Node, Link<LinkQuality>, LinkQuality>> copy = new MANET<Node, Link<LinkQuality>, LinkQuality, Flow<Node, Link<LinkQuality>, LinkQuality>>(manet);
-	
+	MANET<Node, Link<LinkQuality>, LinkQuality, Flow<Node, Link<LinkQuality>, LinkQuality>> copy = new MANET<Node, Link<LinkQuality>, LinkQuality, Flow<Node, Link<LinkQuality>, LinkQuality>>(manet);	
     }
-
 }

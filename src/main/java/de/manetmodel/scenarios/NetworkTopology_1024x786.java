@@ -28,7 +28,7 @@ public class NetworkTopology_1024x786 {
 
 	MANET<Node, Link<LinkQuality>, LinkQuality, Flow<Node, Link<LinkQuality>, LinkQuality>> manet = new MANET<Node, Link<LinkQuality>, LinkQuality, Flow<Node, Link<LinkQuality>, LinkQuality>>(
 		new MANETSupplier().getNodeSupplier(), new MANETSupplier().getLinkSupplier(),
-		new MANETSupplier().getLinkQualitySupplier(), new MANETSupplier().getFlowSupplier(),
+		new MANETSupplier().getLinkPropertySupplier(), new MANETSupplier().getFlowSupplier(),
 		new ScalarRadioModel(0.002d, 1e-11, 2000000d, 2412000000d),
 		new PedestrianMobilityModel(RandomNumbers.getInstance(10),
 			new SpeedRange(4d, 40d, Unit.Time.hour, Unit.Distance.kilometer),
