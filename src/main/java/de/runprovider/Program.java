@@ -7,6 +7,7 @@ import java.util.function.Supplier;
 import com.opencsv.bean.ColumnPositionMappingStrategy;
 import com.opencsv.exceptions.CsvRequiredFieldEmptyException;
 
+import de.app.HighUtilizedMANETSecenario;
 import de.jgraphlib.graph.generator.GraphProperties;
 import de.jgraphlib.graph.generator.GraphProperties.DoubleRange;
 import de.jgraphlib.graph.generator.GraphProperties.IntRange;
@@ -29,6 +30,7 @@ import de.manetmodel.network.unit.DataUnit;
 import de.manetmodel.network.unit.Speed;
 import de.manetmodel.network.unit.Unit;
 import de.manetmodel.network.unit.Speed.SpeedRange;
+import de.manetmodel.scenarios.Scenario;
 import de.manetmodel.network.unit.Time;
 import de.results.RunResultMapper;
 import de.results.ResultParameter;
@@ -39,7 +41,6 @@ import de.results.AverageResultParameter;
 import de.results.MANETAverageResultMapper;
 import de.results.MANETIdealRadioRunResultMapper;
 import de.results.MANETResultRecorder;
-import de.results.Scenario;
 
 public class Program<N extends Node, L extends Link<W>, W extends LinkQuality, F extends Flow<N, L, W>> {
 
@@ -57,8 +58,6 @@ public class Program<N extends Node, L extends Link<W>, W extends LinkQuality, F
 
     }
 
-
-
     public void addFlows(MANET<N, L, W, F> manet, List<Triple<Integer, Integer, DataRate>> flowSourceTargetIds,
 	    int runs) {
 	for (Triple<Integer, Integer, DataRate> triple : flowSourceTargetIds) {
@@ -72,7 +71,7 @@ public class Program<N extends Node, L extends Link<W>, W extends LinkQuality, F
 		/* distance between vertices */ new DoubleRange(50d, 100d),
 		/* edge distance */ new DoubleRange(100, 100));
 	new NetworkGraphGenerator<N, L, W>(manet, RandomNumbers.getInstance(runs)).generate(properties);
-
+	manet.initialize();
 	return properties;
     }
 
@@ -91,15 +90,14 @@ public class Program<N extends Node, L extends Link<W>, W extends LinkQuality, F
 
     public MANET<N, L, W, F> createMANET(MobilityModel mobilityModel, IRadioModel radioModel) {
 
-	MANET<N, L, W, F> manet = new MANET<N, L, W, F>(nodeSupplier, linkSupplier, linkQualitysupplier, flowSupplier, radioModel,
-		mobilityModel);
-	
+	MANET<N, L, W, F> manet = new MANET<N, L, W, F>(nodeSupplier, linkSupplier, linkQualitysupplier, flowSupplier,
+		radioModel, mobilityModel);
+
 	return manet;
     }
 
     public <R extends AverageResultParameter> MANETAverageResultMapper<R> setTotalResultMapper(
-	    Supplier<R> resultParameterSupplier, String resultFileName, int numNodes, int numFlows,
-	    DataRate meantransmissionRate) {
+	    Supplier<R> resultParameterSupplier, Scenario scenario) {
 
 	/* Result recording options for further evaluation */
 	ColumnPositionMappingStrategy<R> mappingStrategy = new ColumnPositionMappingStrategy<R>() {
@@ -110,8 +108,7 @@ public class Program<N extends Node, L extends Link<W>, W extends LinkQuality, F
 	};
 	mappingStrategy.setColumnMapping("overUtilization", "utilization", "activePathParticipants",
 		"connectionStability", "simulationTime");
-	return new MANETAverageResultMapper<R>(resultParameterSupplier, mappingStrategy,
-		new Scenario(resultFileName, numFlows, numNodes, meantransmissionRate));
+	return new MANETAverageResultMapper<R>(resultParameterSupplier, mappingStrategy, scenario);
 
     }
 
@@ -124,7 +121,7 @@ public class Program<N extends Node, L extends Link<W>, W extends LinkQuality, F
 
     public <R extends RunResultParameter> RunResultMapper<R> setIndividualRunResultMapper(
 	    Supplier<R> resultParameterSupplier, GraphProperties networkProperties, MobilityModel mobilityModel,
-	    IRadioModel radioModel, String resultFileName, int numNodes, int numFlows, DataRate meantransmissionRate) {
+	    IRadioModel radioModel, Scenario scenario) {
 
 	ColumnPositionMappingStrategy<R> mappingStrategy = new ColumnPositionMappingStrategy<R>() {
 	    @Override
@@ -136,8 +133,7 @@ public class Program<N extends Node, L extends Link<W>, W extends LinkQuality, F
 	mappingStrategy.setColumnMapping("lId", "n1Id", "n2Id", "overUtilization", "utilization", "isPathParticipant",
 		"connectionStability");
 	RunResultMapper<R> resultMapper = new MANETIdealRadioRunResultMapper<R>(resultParameterSupplier,
-		mappingStrategy, new Scenario(resultFileName, numFlows, numNodes, meantransmissionRate),
-		networkProperties, radioModel, mobilityModel);
+		mappingStrategy, scenario, networkProperties, radioModel, mobilityModel);
 	return resultMapper;
     }
 

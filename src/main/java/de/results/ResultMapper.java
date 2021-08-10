@@ -4,6 +4,8 @@ import java.util.function.Supplier;
 
 import com.opencsv.bean.ColumnPositionMappingStrategy;
 
+import de.manetmodel.scenarios.Scenario;
+
 public abstract class ResultMapper<R> {
     protected Supplier<R> resultParameterSupplier;
     protected ColumnPositionMappingStrategy<R> mappingStrategy;

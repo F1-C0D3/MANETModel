@@ -6,6 +6,7 @@ import java.util.function.Supplier;
 import com.opencsv.bean.ColumnPositionMappingStrategy;
 
 import de.manetmodel.network.LinkQuality;
+import de.manetmodel.scenarios.Scenario;
 
 public abstract class RunResultMapper<R extends ResultParameter> extends ResultMapper<R> {
     protected Supplier<R> resultParameterSupplier;
