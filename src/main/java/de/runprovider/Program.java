@@ -7,7 +7,6 @@ import java.util.function.Supplier;
 import com.opencsv.bean.ColumnPositionMappingStrategy;
 import com.opencsv.exceptions.CsvRequiredFieldEmptyException;
 
-import de.app.HighUtilizedMANETSecenario;
 import de.jgraphlib.graph.generator.GraphProperties;
 import de.jgraphlib.graph.generator.GraphProperties.DoubleRange;
 import de.jgraphlib.graph.generator.GraphProperties.IntRange;
