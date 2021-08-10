@@ -244,16 +244,10 @@ public class MANET<N extends Node, L extends Link<W>, W extends LinkQuality, F e
 	n.setPrevMobility(patternList);
 	return n;
     }
-
-<<<<<<< HEAD
  
     // DURCH getOverUtilizedLinks und getOverulization ersetzt
     /* 
     public DataRate getOverUtilizedLinks() {
-	
-=======
-    public DataRate getOverUtilization() {
->>>>>>> refs/remotes/origin/master
 	DataRate overUtilization = new DataRate(0L);
 	
 	for (L l : this.getEdges()) {
