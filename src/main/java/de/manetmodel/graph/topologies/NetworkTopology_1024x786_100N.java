@@ -98,6 +98,8 @@ public class NetworkTopology_1024x786_100N {
 	
 	importer.importGraph(xmlFilePath);
 	
+	manet.initialize();
+	
 	VisualGraphApp<Node, Link<LinkQuality>, LinkQuality> visualGraphApp = new VisualGraphApp<Node, Link<LinkQuality>, LinkQuality>(manet, null);			
     }   
 }

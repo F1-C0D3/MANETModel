@@ -7,6 +7,7 @@ import com.opencsv.bean.ColumnPositionMappingStrategy;
 
 import de.jgraphlib.util.Tuple;
 import de.manetmodel.network.unit.Time;
+import de.manetmodel.scenarios.Scenario;
 
 public abstract class AverageResultMapper<K extends ResultParameter> extends ResultMapper<K> {
 

@@ -5,14 +5,13 @@ import java.util.function.Supplier;
 
 import com.opencsv.bean.ColumnPositionMappingStrategy;
 
+import de.jgraphlib.graph.elements.Position2D;
 import de.jgraphlib.graph.generator.GraphProperties;
-import de.jgraphlib.graph.generator.NetworkGraphProperties;
-import de.jgraphlib.util.RandomNumbers;
-import de.jgraphlib.util.Tuple;
 import de.manetmodel.network.LinkQuality;
 import de.manetmodel.network.mobility.MobilityModel;
 import de.manetmodel.network.mobility.MovementPattern;
 import de.manetmodel.network.radio.IRadioModel;
+import de.manetmodel.scenarios.Scenario;
 
 public class MANETIdealRadioRunResultMapper<R extends RunResultParameter> extends RunResultMapper<R> {
     private GraphProperties networkProperties;
@@ -44,7 +43,7 @@ public class MANETIdealRadioRunResultMapper<R extends RunResultParameter> extend
 	long transmissionrate = w.getTransmissionRate().get();
 	long utilization = w.getUtilization().get();
 
-	if (w.getIsActive()) {
+	if (w.isActive()) {
 	    result.setPathParticipant(true);
 	    if (transmissionrate < utilization)
 		result.setOverUtilization(utilization - transmissionrate);

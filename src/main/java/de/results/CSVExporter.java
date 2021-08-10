@@ -15,6 +15,8 @@ import com.opencsv.bean.StatefulBeanToCsvBuilder;
 import com.opencsv.exceptions.CsvDataTypeMismatchException;
 import com.opencsv.exceptions.CsvRequiredFieldEmptyException;
 
+import de.manetmodel.scenarios.Scenario;
+
 public class CSVExporter {
 //    FileWriter csvWriter;
     enum RecordType {

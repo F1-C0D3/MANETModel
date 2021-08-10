@@ -27,6 +27,10 @@ public class DataRate implements Comparator<DataRate> {
 	this.bits = bits;
     }
 
+    public void set(double value, DataUnit.Type type) {
+	this.bits = toBits(value, type);
+    }
+
     public final long get() {
 	return bits;
     }

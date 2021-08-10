@@ -13,6 +13,7 @@ import de.manetmodel.network.LinkQuality;
 import de.manetmodel.network.mobility.MobilityModel;
 import de.manetmodel.network.mobility.MovementPattern;
 import de.manetmodel.network.radio.IRadioModel;
+import de.manetmodel.scenarios.Scenario;
 
 public class MANETRunResultMapper<R extends RunResultParameter> extends RunResultMapper<R> {
     private GraphProperties networkProperties;

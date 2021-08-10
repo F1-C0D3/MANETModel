@@ -3,6 +3,7 @@ package de.manetmodel.network;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.ListIterator;
 import java.util.Set;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
@@ -91,14 +92,14 @@ public class MANET<N extends Node, L extends Link<W>, W extends LinkQuality, F e
     }
 
     @Override
-    public F copyPath(int i) {	
+    public F copyPath(int i) {
 	F pathCopy = super.copyPath(i);
-	
-	//System.out.println(super.getPaths().get(i).toString());
-	
+
+	// System.out.println(super.getPaths().get(i).toString());
+
 	pathCopy.setDataRate(paths.get(i).getDataRate());
-	
-	//System.out.println(pathCopy.toString());
+
+	// System.out.println(pathCopy.toString());
 
 	return pathCopy;
     }
@@ -133,12 +134,12 @@ public class MANET<N extends Node, L extends Link<W>, W extends LinkQuality, F e
     }
 
     public List<L> getUtilizedLinksOf(L link) {
-	
+
 	List<L> utilizedLinks = new ArrayList<L>();
-	
+
 	for (Integer ID : utilizationAdjacencies.get(link.getID()))
 	    utilizedLinks.add(getEdge(ID));
-	
+
 	return utilizedLinks;
     }
 
@@ -205,20 +206,20 @@ public class MANET<N extends Node, L extends Link<W>, W extends LinkQuality, F e
     }
 
     public void undeployFlow(F flow) {
-	for (Tuple<L, N> linkNodeTuple : flow) {
-	    L activeUtilizedLink = linkNodeTuple.getFirst();
-	    activeUtilizedLink.getWeight().setPassive();
-	    for (L passiveUtilizedLink : getUtilizedLinksOf(activeUtilizedLink)) {
-		DataRate utilization = getEdge(passiveUtilizedLink).getWeight().getUtilization();
-		utilization.set(utilization.get() - flow.getDataRate().get());
-		getEdge(passiveUtilizedLink).getWeight().setUtilization(utilization);
-		utilization.set(this.utilization.get() - flow.getDataRate().get());
+	ListIterator<Tuple<L, N>> flowIterator = flow.listIterator(1);
+	while (flowIterator.hasNext()) {
+	    Tuple<L, N> linkAndNode = flowIterator.next();
+	    L l = linkAndNode.getFirst();
+	    l.getWeight().setPassive();
+	    DataRate r = flow.getDataRate();
+	    for (L ul : getUtilizedLinksOf(l)) {
+		DataRate cUtilization = this.getEdge(ul).getWeight().getUtilization();
+		cUtilization.set(cUtilization.get() - r.get());
+		this.getEdge(ul).getWeight().setUtilization(cUtilization);
+		this.utilization.set(this.utilization.get() - r.get());
 	    }
-	}
-    }
 
-    public void clearFlows() {
-	this.paths = new ArrayList<F>();
+	}
     }
 
     public void increaseUtilizationBy(L activeUtilizedLink, DataRate dataRate) {
@@ -244,11 +245,15 @@ public class MANET<N extends Node, L extends Link<W>, W extends LinkQuality, F e
 	return n;
     }
 
+<<<<<<< HEAD
  
     // DURCH getOverUtilizedLinks und getOverulization ersetzt
     /* 
     public DataRate getOverUtilizedLinks() {
 	
+=======
+    public DataRate getOverUtilization() {
+>>>>>>> refs/remotes/origin/master
 	DataRate overUtilization = new DataRate(0L);
 	
 	for (L l : this.getEdges()) {

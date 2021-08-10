@@ -14,6 +14,7 @@ import de.manetmodel.network.mobility.MobilityModel;
 import de.manetmodel.network.mobility.MovementPattern;
 import de.manetmodel.network.radio.IRadioModel;
 import de.manetmodel.network.unit.Time;
+import de.manetmodel.scenarios.Scenario;
 
 public class MANETAverageResultMapper<K extends AverageResultParameter> extends AverageResultMapper<K> {
 

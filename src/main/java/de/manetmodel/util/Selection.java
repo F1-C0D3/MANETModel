@@ -1,4 +1,4 @@
-package de.algorithmhelper;
+package de.manetmodel.util;
 
 import java.util.ArrayList;
 import java.util.List;
