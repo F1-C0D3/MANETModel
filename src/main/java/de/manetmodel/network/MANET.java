@@ -244,17 +244,71 @@ public class MANET<N extends Node, L extends Link<W>, W extends LinkQuality, F e
 	return n;
     }
 
+ 
+    // DURCH getOverUtilizedLinks und getOverulization ersetzt
+    /* 
     public DataRate getOverUtilizedLinks() {
+	
 	DataRate overUtilization = new DataRate(0L);
+	
 	for (L l : this.getEdges()) {
+	    
 	    if (l.getWeight().isActive()) {
 		DataRate tRate = l.getWeight().getTransmissionRate();
+		
 		DataRate utilization = l.getWeight().getUtilization();
+		
 		double oU = tRate.get() - utilization.get();
+		
 		overUtilization.set(oU < 0 ? overUtilization.get() + (long) Math.abs(oU) : overUtilization.get());
 	    }
 	}
 	return overUtilization;
+    }
+   */
+    
+    public DataRate getOverUtilization() {
+	
+	DataRate overUtilzation = new DataRate(0);
+	
+	for(L link : getOverUtilizedLinks())
+	    overUtilzation = new DataRate(overUtilzation.get() + link.getOverUtilization().get());
+	
+	return overUtilzation;
+    }
+    
+    public DataRate getOverUtilizationOf(F flow) {
+	
+	DataRate overUtilzation = new DataRate(0);
+	
+	for(Tuple<L, N> linkNodeTuple : flow)
+	    overUtilzation = new DataRate(overUtilzation.get() + linkNodeTuple.getFirst().getOverUtilization().get());
+	
+	return overUtilzation;
+    }
+    
+    public List<L> getOverUtilizedLinks() {
+		
+	List<L> overutilizedLinks = new ArrayList<L>();
+
+	for (L link : this.getEdges())     
+	    if (link.getWeight().isActive()) 			
+		if(link.getWeight().getUtilization().get() > link.getWeight().getTransmissionRate().get())
+		    overutilizedLinks.add(link);
+	    	
+	return overutilizedLinks;
+    }    
+    
+    public List<L> getOverUtilizedLinksOf(F flow) {
+	
+	List<L> overutilizedLinks = new ArrayList<L>();
+
+	for (Tuple<L, N> linkeNodeTuple : flow)     
+	    if (linkeNodeTuple.getFirst().getWeight().isActive()) 			
+		if(linkeNodeTuple.getFirst().getWeight().getUtilization().get() > linkeNodeTuple.getFirst().getWeight().getTransmissionRate().get())
+		    overutilizedLinks.add(linkeNodeTuple.getFirst());
+	    	
+	return overutilizedLinks;
     }
 
     public List<L> getActiveUtilizedLinks() {
@@ -272,7 +326,7 @@ public class MANET<N extends Node, L extends Link<W>, W extends LinkQuality, F e
 
 	Set<L> activeUtilizedLinks = new HashSet<L>();
 
-	// (1) Add all links that utilized by link to the set
+	// (1) Add all links that are utilized by link to the set
 	activeUtilizedLinks.addAll(getUtilizedLinksOf(link));
 
 	// (2) Build intersection with all active utilized links
