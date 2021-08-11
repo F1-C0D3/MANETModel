@@ -51,7 +51,7 @@ public class MANETUtilizationTest {
 	manet.initialize();
 
 	VisualGraphApp<Node, Link<LinkQuality>, LinkQuality> visualGraphApp = new VisualGraphApp<Node, Link<LinkQuality>, LinkQuality>(
-		manet, new EdgeIDPrinter<Link<LinkQuality>, LinkQuality>());
+		manet, null, new EdgeIDPrinter<Link<LinkQuality>, LinkQuality>());
 
 	System.out.println(manet.getUtilizedLinksOf(manet.getEdge(100)));
 

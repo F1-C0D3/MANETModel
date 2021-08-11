@@ -100,6 +100,6 @@ public class NetworkTopology_1024x786_100N {
 	
 	manet.initialize();
 	
-	VisualGraphApp<Node, Link<LinkQuality>, LinkQuality> visualGraphApp = new VisualGraphApp<Node, Link<LinkQuality>, LinkQuality>(manet, null);			
+	VisualGraphApp<Node, Link<LinkQuality>, LinkQuality> visualGraphApp = new VisualGraphApp<Node, Link<LinkQuality>, LinkQuality>(manet);			
     }   
 }
