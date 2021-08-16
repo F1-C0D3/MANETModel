@@ -5,10 +5,10 @@ import java.util.function.Supplier;
 import de.manetmodel.network.mobility.MobilityModel;
 import de.manetmodel.network.radio.IRadioModel;
 
-public class myMANET extends MANET<Node, Link<LinkQuality>, LinkQuality, Flow<Node,Link<LinkQuality>, LinkQuality>>{
+public class myMANET extends MANET<Node, Link<LinkQuality>, LinkQuality, myFlow>{
 
     public myMANET(Supplier<Node> vertexSupplier, Supplier<Link<LinkQuality>> edgeSupplier,
-	    Supplier<LinkQuality> edgeWeightSupplier, Supplier<Flow<Node, Link<LinkQuality>, LinkQuality>> flowSupplier,
+	    Supplier<LinkQuality> edgeWeightSupplier, Supplier<myFlow> flowSupplier,
 	    IRadioModel radioModel, MobilityModel mobilityModel) {
 	super(vertexSupplier, edgeSupplier, edgeWeightSupplier, flowSupplier, radioModel, mobilityModel);
     }
