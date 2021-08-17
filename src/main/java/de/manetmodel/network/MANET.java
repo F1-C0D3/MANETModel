@@ -165,6 +165,7 @@ public class MANET<N extends Node, L extends Link<W>, W extends LinkQuality, F e
     }
 
     public void addFlow(F flow) {
+	flow.setID(paths.size());
 	paths.add(flow);
     }
 
@@ -197,7 +198,7 @@ public class MANET<N extends Node, L extends Link<W>, W extends LinkQuality, F e
 	}
     }
 
-    public void eraseFlows() {
+    public void undeployFlows() {
 	for (L link : getEdges()) {
 	    link.getWeight().setUtilization(new DataRate(0L));
 	    link.getWeight().setPassive();
