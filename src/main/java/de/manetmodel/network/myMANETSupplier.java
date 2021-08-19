@@ -18,7 +18,7 @@ public class myMANETSupplier {
 	return new LinkQualitySupplier();
     }
 
-    public myFlowSupplier getFlowSupplier() {
+    public myFlowSupplier getMyFlowSupplier() {
 	return new myFlowSupplier();
     }
 
@@ -43,7 +43,7 @@ public class myMANETSupplier {
 	}
     }
 
-    public class myFlowSupplier implements Supplier<Flow<Node, Link<LinkQuality>, LinkQuality>> {
+    public class myFlowSupplier implements Supplier<myFlow> {
 	@Override
 	public myFlow get() {
 	    return new myFlow();

@@ -24,6 +24,7 @@ public class MANET<N extends Node, L extends Link<W>, W extends LinkQuality, F e
     protected DataRate utilization;
     protected DataRate capacity;
     protected List<List<Integer>> utilizationAdjacencies;
+    protected Set<Integer> activeUtilizedLinks;
 
     public MANET(Supplier<N> vertexSupplier, Supplier<L> edgeSupplier, Supplier<W> edgeWeightSupplier, Supplier<F> flowSupplier, IRadioModel radioModel, MobilityModel mobilityModel) {
 	super(vertexSupplier, edgeSupplier, edgeWeightSupplier, flowSupplier);
@@ -32,32 +33,40 @@ public class MANET<N extends Node, L extends Link<W>, W extends LinkQuality, F e
 	this.capacity = new DataRate(0L);
 	this.utilization = new DataRate(0L);
 	this.utilizationAdjacencies = new ArrayList<List<Integer>>();
+	this.activeUtilizedLinks = new HashSet<Integer>();
     }
 
     public MANET(MANET<N, L, W, F> manet) {
-	super(manet.vertexSupplier, manet.edgeSupplier, manet.edgeWeightSupplier, manet.pathSupplier);
-	// Shallow copy non-manipulated attributes
-	this.edgeWeightSupplier = manet.edgeWeightSupplier;
-	this.pathSupplier = manet.pathSupplier;
+	super(manet.vertexSupplier, manet.edgeSupplier, manet.edgeWeightSupplier, manet.pathSupplier);	
 	this.vertices = manet.vertices;
-	this.sourceTargetAdjacencies = manet.sourceTargetAdjacencies;
-	this.targetSourceAdjacencies = manet.targetSourceAdjacencies;
-	this.edgeAdjacencies = manet.edgeAdjacencies;
-	this.utilizationAdjacencies = manet.utilizationAdjacencies;
-	this.capacity = manet.capacity;
-	this.radioModel = manet.radioModel;
-	this.mobilityModel = manet.mobilityModel;
-	// Deep copy edges & flows (so that manipulations on the copy doesn't change the
-	// original version while runtime)
 	this.edges = manet.copyEdges();
 	this.paths = manet.copyPaths(manet);
-	this.utilization = new DataRate(manet.utilization.get());
+	this.utilization = new DataRate(manet.utilization.get());	
+	this.capacity = new DataRate(manet.capacity.get());
+	this.radioModel = manet.radioModel;
+	this.mobilityModel = manet.mobilityModel;
+	this.sourceTargetAdjacencies = new ArrayList<ArrayList<Tuple<Integer,Integer>>>(manet.sourceTargetAdjacencies);
+	this.targetSourceAdjacencies = new ArrayList<ArrayList<Tuple<Integer,Integer>>>(manet.targetSourceAdjacencies);
+	this.edgeAdjacencies = new ArrayList<Tuple<Integer,Integer>>(manet.edgeAdjacencies);
+	this.utilizationAdjacencies = new ArrayList<List<Integer>>(manet.utilizationAdjacencies);
+	this.activeUtilizedLinks = new HashSet<Integer>(manet.activeUtilizedLinks);
     }
-
+    
     public MANET<N, L, W, F> copy() {
 	return new MANET<N, L, W, F>(this);
     }
 
+    public List<N> copyVertices(){	
+	List<N> nodeCopies = new ArrayList<N>();
+	for (N node : getVertices()) {
+	    N nodeCopy = vertexSupplier.get();
+	    nodeCopy.setID(node.getID());
+	    nodeCopy.setPosition(node.getPosition());
+	    nodeCopies.add(nodeCopy);
+	}
+	return nodeCopies;
+    }
+    
     public List<L> copyEdges() {
 	List<L> linkCopies = new ArrayList<L>();
 	for (L link : getEdges()) {
@@ -88,7 +97,13 @@ public class MANET<N extends Node, L extends Link<W>, W extends LinkQuality, F e
 	}
 	return flowCopies;
     }
-
+    
+    public F copyPath(int i) {	
+	F path = super.copyPath(i);
+	path.setDataRate(getFlows().get(i).getDataRate());
+	return path;
+    }
+    
     @Override
     public L addEdge(N source, N target) {
 	return addEdge(source, target, edgeWeightSupplier.get());
@@ -164,8 +179,8 @@ public class MANET<N extends Node, L extends Link<W>, W extends LinkQuality, F e
 	return paths;
     }
 
-    public F getFlow(int id) {
-	return paths.get(id);
+    public F getFlow(int i) {
+	return paths.get(i);
     }
 
     public List<Integer> getFlowIDs() {
@@ -203,30 +218,44 @@ public class MANET<N extends Node, L extends Link<W>, W extends LinkQuality, F e
 		this.getEdge(ul).getWeight().setUtilization(cUtilization);
 		this.utilization.set(this.utilization.get() - r.get());
 	    }
-
 	}
     }
 
     public void increaseUtilizationBy(L activeUtilizedLink, DataRate dataRate) {
-	for (L link : getUtilizedLinksOf(activeUtilizedLink)) {
+	
+	activeUtilizedLink.getWeight().setActive();
+	activeUtilizedLinks.add(activeUtilizedLink.getID());
+	
+	for (L passiveUtilizedLink : getUtilizedLinksOf(activeUtilizedLink)) {
+	    
 	    utilization.set(this.utilization.get() + dataRate.get());
-	    link.getWeight().setUtilization(new DataRate(link.getWeight().getUtilization().get() + dataRate.get()));
+	    
+	    passiveUtilizedLink.getWeight().setUtilization(
+		    new DataRate(passiveUtilizedLink.getWeight().getUtilization().get() + dataRate.get()));	    
 	}
     }
 
     @Override
     public N addVertex(double x, double y) {
+	
 	N n = super.addVertex(x, y);
+	
 	Speed initialSpeed = new Speed(mobilityModel.speedRange.max().value / 2d, Unit.Distance.meter,
 		Unit.Time.second);
+	
 	List<MovementPattern> patternList = new ArrayList<MovementPattern>();
+	
 	MovementPattern movementPattern = new MovementPattern(initialSpeed, n.getPosition(), 0d);
+	
 	patternList.add(movementPattern);
+	
 	for (int i = 0; i < mobilityModel.getSegments() - 1; i++) {
 	    movementPattern = mobilityModel.computeNextMovementPattern(movementPattern);
 	    patternList.add(movementPattern);
 	}
+	
 	n.setPrevMobility(patternList);
+	
 	return n;
     }
  
@@ -297,12 +326,7 @@ public class MANET<N extends Node, L extends Link<W>, W extends LinkQuality, F e
 
     public List<L> getActiveUtilizedLinks() {
 
-	Set<L> activeUtilizedLinks = new HashSet<L>();
-
-	for (F flow : paths)
-	    activeUtilizedLinks.addAll(flow.getEdges());
-
-	return activeUtilizedLinks.stream().collect(Collectors.toList());
+	return activeUtilizedLinks.stream().map(i->getEdge(i)).collect(Collectors.toList());
     }
 
     // Returns all active utilized links of flows that are utilized by given link
