@@ -193,6 +193,7 @@ public class MANET<N extends Node, L extends Link<W>, W extends LinkQuality, F e
 
     public void deployFlow(F flow) {
 	for (L link : flow.getEdges()) {
+
 	    link.getWeight().setActive();
 	    increaseUtilizationBy(link, flow.getDataRate());
 	}
@@ -207,26 +208,53 @@ public class MANET<N extends Node, L extends Link<W>, W extends LinkQuality, F e
     }
 
     public void undeployFlow(F flow) {
-	ListIterator<Tuple<L, N>> flowIterator = flow.listIterator(1);
-	while (flowIterator.hasNext()) {
-	    Tuple<L, N> linkAndNode = flowIterator.next();
-	    L l = linkAndNode.getFirst();
-	    l.getWeight().setPassive();
-	    DataRate r = flow.getDataRate();
-	    for (L ul : getUtilizedLinksOf(l)) {
-		DataRate cUtilization = this.getEdge(ul).getWeight().getUtilization();
-		cUtilization.set(cUtilization.get() - r.get());
-		this.getEdge(ul).getWeight().setUtilization(cUtilization);
-		this.utilization.set(this.utilization.get() - r.get());
+
+	for (L l : flow.getEdges()) {
+
+	    if (isFlowRegistered(flow)) {
+		if (getFlowsContainingLink(l).size() <= 1)
+		    l.getWeight().setPassive();
+	    } else {
+		if (getFlowsContainingLink(l).size() < 1)
+		    l.getWeight().setPassive();
 	    }
+	    decreaseUtilizationBy(l, flow.getDataRate());
 
 	}
+    }
+
+    private boolean isFlowRegistered(F f) {
+	return paths.stream().map(F::getID).collect(Collectors.toList()).contains(f.getID());
+    }
+
+    private List<F> getFlowsContainingLink(L l) {
+
+	List<F> fContainingl = new ArrayList<F>();
+
+	for (F f : paths) {
+
+	    if (f.contains(l))
+		fContainingl.add(f);
+	}
+
+	return fContainingl;
     }
 
     public void increaseUtilizationBy(L activeUtilizedLink, DataRate dataRate) {
 	for (L link : getUtilizedLinksOf(activeUtilizedLink)) {
 	    utilization.set(this.utilization.get() + dataRate.get());
 	    link.getWeight().setUtilization(new DataRate(link.getWeight().getUtilization().get() + dataRate.get()));
+	}
+    }
+
+    public void decreaseUtilizationBy(L activeUtilizedLink, DataRate dataRate) {
+
+	for (L ul : getUtilizedLinksOf(activeUtilizedLink)) {
+
+	    DataRate cUtilization = ul.getWeight().getUtilization();
+	    cUtilization.set(cUtilization.get() - dataRate.get());
+	    ul.getWeight().setUtilization(cUtilization);
+	    this.utilization.set(this.utilization.get() - dataRate.get());
 	}
     }
 
@@ -282,22 +310,6 @@ public class MANET<N extends Node, L extends Link<W>, W extends LinkQuality, F e
 
 	return activeUtilizedLinks.stream().collect(Collectors.toList());
     }
-
-    /*
-     * Method detects links which are interfered due to eventually overlapping
-     * transmissions. Is not considered to be used during evaluations
-     * 
-     * private void setLinksInterferedByL(N n) { Iterator<L> iterator =
-     * this.getEdges().iterator();
-     * 
-     * while (iterator.hasNext()) { L le = iterator.next(); N se =
-     * this.getVerticesOf(le).getFirst(); N sk = this.getVerticesOf(le).getSecond();
-     * 
-     * if (radioModel.interferencePresent(this.getDistance(n.getPosition(),
-     * se.getPosition())) &&
-     * radioModel.interferencePresent(this.getDistance(n.getPosition(),
-     * sk.getPosition()))) { n.setInterferedLink(le); } } }
-     */
 
     public DataRate getUtilization() {
 	return this.utilization;
