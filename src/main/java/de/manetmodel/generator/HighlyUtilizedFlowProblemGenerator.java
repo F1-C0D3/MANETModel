@@ -52,7 +52,7 @@ public class HighlyUtilizedFlowProblemGenerator<N extends Node, L extends Link<W
 	    if(manet.getOverUtilization().get() >= highliyUtilizedNetworkProperties.overUtilization.get())
 		return flowProblems;	
 	    
-	    manet.eraseFlows();
+	    manet.undeployFlows();
 	}
 	
 	return null;		

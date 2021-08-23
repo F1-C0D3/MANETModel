@@ -45,7 +45,7 @@ public class MANETUtilizationTest {
 
 	GridGraphGenerator<Node, Link<LinkQuality>, LinkQuality> generator = 
 		new GridGraphGenerator<Node, Link<LinkQuality>, LinkQuality>(
-			manet, new MANETSupplier().getLinkPropertySupplier(), new RandomNumbers());
+			manet, new RandomNumbers());
 
 	generator.generate(properties);
 
