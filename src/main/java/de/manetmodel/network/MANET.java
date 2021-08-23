@@ -156,10 +156,6 @@ public class MANET<N extends Node, L extends Link<W>, W extends LinkQuality, F e
 	newLink.getWeight().setTransmissionRate(radioModel.transmissionBitrate(distance));
 	newLink.getWeight().setReceptionPower(radioModel.receptionPower(distance));
 	newLink.getWeight().setUtilization(new DataRate(0));
-	newLink.getWeight()
-		.setSinkAndSourceMobility(new Tuple<List<MovementPattern>, List<MovementPattern>>(
-			getVerticesOf(newLink).getFirst().getPrevMobility(),
-			getVerticesOf(newLink).getSecond().getPrevMobility()));
 
 	capacity.set(capacity.get() + radioModel.transmissionBitrate(distance).get());
 
@@ -282,7 +278,7 @@ public class MANET<N extends Node, L extends Link<W>, W extends LinkQuality, F e
 
 	patternList.add(movementPattern);
 
-	for (int i = 0; i < mobilityModel.getSegments() - 1; i++) {
+	for (int i = 0; i < mobilityModel.getTicks() - 1; i++) {
 	    movementPattern = mobilityModel.computeNextMovementPattern(movementPattern);
 	    patternList.add(movementPattern);
 	}

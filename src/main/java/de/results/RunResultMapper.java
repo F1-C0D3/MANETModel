@@ -6,6 +6,7 @@ import java.util.function.Supplier;
 import com.opencsv.bean.ColumnPositionMappingStrategy;
 
 import de.manetmodel.network.LinkQuality;
+import de.manetmodel.network.Node;
 import de.manetmodel.scenarios.Scenario;
 
 public abstract class RunResultMapper<R extends ResultParameter> extends ResultMapper<R> {
@@ -27,6 +28,6 @@ public abstract class RunResultMapper<R extends ResultParameter> extends ResultM
 	this.mappingStrategy = mappingStrategy;
     }
 
-    public abstract <W extends LinkQuality> R individualRunResultMapper(int n1Id, int n2Id, int lId, W w);
+    public abstract <W extends LinkQuality, N extends Node> R individualRunResultMapper(N source, N sink, int lId, W w);
 
 }

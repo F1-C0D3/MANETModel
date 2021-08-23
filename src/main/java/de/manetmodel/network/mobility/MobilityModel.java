@@ -13,19 +13,19 @@ import de.manetmodel.network.unit.Unit;
 
 public abstract class MobilityModel {
 
-    public final int segments;
+    public final int ticks;
     public final Time recordDuration;
     public final Time timeStamp;
     public RandomNumbers random;
     public SpeedRange speedRange;
 
-    public MobilityModel(RandomNumbers random, SpeedRange speedRange, Time recordDuration, int segments) {
+    public MobilityModel(RandomNumbers random, SpeedRange speedRange, Time recordDuration, int ticks) {
 	this.random = random;
 	this.speedRange = speedRange;
-	if (segments == 0) {
-	    this.segments = 3;
+	if (ticks == 0) {
+	    this.ticks = 3;
 	} else {
-	    this.segments = segments;
+	    this.ticks = ticks;
 	}
 
 	if (recordDuration == null || recordDuration.value == 0) {
@@ -33,12 +33,12 @@ public abstract class MobilityModel {
 	} else {
 	    this.recordDuration = recordDuration;
 	}
-	this.timeStamp = new Time(Unit.Time.second, recordDuration.getMillis() / (long) segments);
+	this.timeStamp = new Time(Unit.Time.second, recordDuration.getMillis() / (long) ticks);
 
     }
 
     public MobilityModel(RandomNumbers random, SpeedRange speedRange, Time recordDuration) {
-	this.segments = 3;
+	this.ticks = 3;
 	this.random = random;
 	this.speedRange = speedRange;
 
@@ -48,19 +48,19 @@ public abstract class MobilityModel {
 	    this.recordDuration = recordDuration;
 	}
 
-	this.timeStamp = new Time(Unit.Time.second, recordDuration.value / (long) segments);
+	this.timeStamp = new Time(Unit.Time.second, recordDuration.value / (long) ticks);
     }
 
     public MobilityModel(RandomNumbers random, SpeedRange speedRange) {
-	this.segments = 3;
+	this.ticks = 3;
 	this.recordDuration = new Time(Unit.Time.second, 30);
 	this.random = random;
 	this.speedRange = speedRange;
-	this.timeStamp = new Time(Unit.Time.second, recordDuration.value / (long) segments);
+	this.timeStamp = new Time(Unit.Time.second, recordDuration.value / (long) ticks);
     }
 
-    public int getSegments() {
-	return segments;
+    public int getTicks() {
+	return ticks;
     }
 
     public RandomNumbers getRandom() {

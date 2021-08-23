@@ -8,6 +8,7 @@ import com.opencsv.bean.ColumnPositionMappingStrategy;
 import de.jgraphlib.graph.elements.Position2D;
 import de.jgraphlib.graph.generator.GraphProperties;
 import de.manetmodel.network.LinkQuality;
+import de.manetmodel.network.Node;
 import de.manetmodel.network.mobility.MobilityModel;
 import de.manetmodel.network.mobility.MovementPattern;
 import de.manetmodel.network.radio.IRadioModel;
@@ -34,11 +35,11 @@ public class MANETIdealRadioRunResultMapper<R extends RunResultParameter> extend
     }
 
     @Override
-    public <W extends LinkQuality> R individualRunResultMapper(int n1Id, int n2Id, int lId, W w) {
+    public <W extends LinkQuality, N extends Node> R individualRunResultMapper(N source, N sink, int lId, W w) {
 	R result = resultParameterSupplier.get();
 	result.setlId(lId);
-	result.setN1Id(n1Id);
-	result.setN2Id(n2Id);
+	result.setN1Id(source.getID());
+	result.setN2Id(sink.getID());
 
 	long transmissionrate = w.getTransmissionRate().get();
 	long utilization = w.getUtilization().get();
@@ -47,8 +48,9 @@ public class MANETIdealRadioRunResultMapper<R extends RunResultParameter> extend
 	    result.setPathParticipant(true);
 	    if (transmissionrate < utilization)
 		result.setOverUtilization(utilization - transmissionrate);
-	    MovementPattern nodeOneMobilityPattern = w.getSinkAndSourceMobility().getFirst().get(0);
-	    MovementPattern nodeTwoMobilityPattern = w.getSinkAndSourceMobility().getSecond().get(0);
+
+	    MovementPattern nodeOneMobilityPattern = source.getPrevMobility().get(0);
+	    MovementPattern nodeTwoMobilityPattern = sink.getPrevMobility().get(0);
 	    double linkQuality = radioModel.receptionPower(
 		    nodeDistance(nodeOneMobilityPattern.getPostion(), nodeTwoMobilityPattern.getPostion()));
 	    result.setConnectionStability(linkQuality);

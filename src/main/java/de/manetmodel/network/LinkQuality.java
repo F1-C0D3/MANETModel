@@ -24,17 +24,7 @@ public class LinkQuality extends EdgeDistance {
     // interference range)
     private int numberOfUtilizedLinks;
 
-    Tuple<List<MovementPattern>, List<MovementPattern>> sinkAndSourceMobility;
-
     public LinkQuality() {
-    }
-
-    public Tuple<List<MovementPattern>, List<MovementPattern>> getSinkAndSourceMobility() {
-	return sinkAndSourceMobility;
-    }
-
-    public void setSinkAndSourceMobility(Tuple<List<MovementPattern>, List<MovementPattern>> sinkAndSourceMobility) {
-	this.sinkAndSourceMobility = sinkAndSourceMobility;
     }
 
     public double getReceptionPower() {
