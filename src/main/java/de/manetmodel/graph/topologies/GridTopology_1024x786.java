@@ -82,8 +82,7 @@ public class GridTopology_1024x786 {
 
 	importer.importGraph(xmlFilePath);
 
-	VisualGraphApp<Node, Link<LinkQuality>, LinkQuality> visualGraphApp = new VisualGraphApp<Node, Link<LinkQuality>, LinkQuality>(
-		manet, null);
+	VisualGraphApp<Node, Link<LinkQuality>, LinkQuality> visualGraphApp = new VisualGraphApp<Node, Link<LinkQuality>, LinkQuality>(manet);
     }
 
 }

@@ -71,6 +71,7 @@ public class NetworkTopology_1024x786 {
 	manet.addFlow(flow4);
 	manet.deployFlow(flow4);
 			
-	VisualGraphApp<Node, Link<LinkQuality>, LinkQuality> visualGraphApp = new VisualGraphApp<Node, Link<LinkQuality>, LinkQuality>(manet, new LinkQualityPrinter());					
+	VisualGraphApp<Node, Link<LinkQuality>, LinkQuality> visualGraphApp = 
+		new VisualGraphApp<Node, Link<LinkQuality>, LinkQuality>(manet, new LinkQualityPrinter());					
     }
 }
