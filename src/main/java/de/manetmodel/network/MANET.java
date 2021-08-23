@@ -292,24 +292,6 @@ public class MANET<N extends Node, L extends Link<W>, W extends LinkQuality, F e
 	return n;
     }
 
-    // DURCH getOverUtilizedLinks und getOverulization ersetzt
-    /*
-     * public DataRate getOverUtilizedLinks() { DataRate overUtilization = new
-     * DataRate(0L);
-     * 
-     * for (L l : this.getEdges()) {
-     * 
-     * if (l.getWeight().isActive()) { DataRate tRate =
-     * l.getWeight().getTransmissionRate();
-     * 
-     * DataRate utilization = l.getWeight().getUtilization();
-     * 
-     * double oU = tRate.get() - utilization.get();
-     * 
-     * overUtilization.set(oU < 0 ? overUtilization.get() + (long) Math.abs(oU) :
-     * overUtilization.get()); } } return overUtilization; }
-     */
-
     public DataRate getOverUtilization() {
 
 	DataRate overUtilzation = new DataRate(0);
