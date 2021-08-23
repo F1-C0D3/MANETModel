@@ -1,8 +1,11 @@
-package de.manetmodel.network;
+package de.manetmodel.network.example;
 
 import java.util.function.Supplier;
 
 import de.jgraphlib.graph.suppliers.EdgeWeightSupplier;
+import de.manetmodel.network.Link;
+import de.manetmodel.network.LinkQuality;
+import de.manetmodel.network.Node;
 
 public class myMANETSupplier {
 

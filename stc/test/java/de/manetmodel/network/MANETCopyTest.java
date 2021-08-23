@@ -1,7 +1,5 @@
 package de.manetmodel.network;
 
-import java.io.IOException;
-
 import org.junit.Test;
 
 import de.jgraphlib.graph.generator.NetworkGraphGenerator;
