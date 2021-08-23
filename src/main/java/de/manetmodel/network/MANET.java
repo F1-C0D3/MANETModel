@@ -351,11 +351,11 @@ public class MANET<N extends Node, L extends Link<W>, W extends LinkQuality, F e
 
 	return activeUtilizedLinks.stream().collect(Collectors.toList());
     }
-<<<<<<< HEAD
-    
-=======
 
->>>>>>> branch 'master' of https://github.com/eikeviehmann/MANETModel.git
+    public Supplier<F> getFlowSupplier(){
+	return this.pathSupplier;
+    }
+    
     public DataRate getUtilization() {
 	return this.utilization;
     }
