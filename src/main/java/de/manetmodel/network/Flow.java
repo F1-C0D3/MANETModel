@@ -3,7 +3,6 @@ package de.manetmodel.network;
 import java.util.Comparator;
 import java.util.Iterator;
 
-import de.jgraphlib.graph.algorithms.DijkstraShortestPath;
 import de.jgraphlib.graph.elements.Path;
 import de.jgraphlib.graph.elements.Position2D;
 import de.jgraphlib.graph.elements.Vertex;
@@ -20,6 +19,7 @@ public class Flow<N extends Vertex<Position2D>, L extends WeightedEdge<W>, W ext
 
     public Flow(int ID, N source, N target, DataRate bitrate) {
 	super(source, target);
+	setID(ID);
 	this.dataRate = bitrate;
     }
 
@@ -70,13 +70,15 @@ public class Flow<N extends Vertex<Position2D>, L extends WeightedEdge<W>, W ext
 	// TODO Auto-generated method stub
 	StringBuilder path = new StringBuilder();
 	Iterator<Tuple<L, N>> it = this.iterator();
-
+	path.append(String.format("ID: %d, ", this.getID()));
+	
 	while (it.hasNext()) {
 	    path.append(it.next().getSecond().getID());
 
 	    if (it.hasNext())
 		path.append(" -> ");
 	}
+	path.append(String.format(" : Data rate: %s", this.dataRate.toString()));
 	return path.toString();
     }
 

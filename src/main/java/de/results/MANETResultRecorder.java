@@ -34,8 +34,8 @@ public class MANETResultRecorder<R extends RunResultParameter> {
 	List<R> individualRun = new ArrayList<R>();
 	for (L l : manet.getEdges()) {
 	    Tuple<N, N> sourceAndSink = manet.getVerticesOf(l);
-	    R runResult = resultMapper.individualRunResultMapper(sourceAndSink.getFirst().getID(),
-		    sourceAndSink.getSecond().getID(), l.getID(), l.getWeight());
+	    R runResult = resultMapper.individualRunResultMapper(sourceAndSink.getFirst(),
+		    sourceAndSink.getSecond(), l.getID(), l.getWeight());
 	    individualRun.add(runResult);
 	}
 

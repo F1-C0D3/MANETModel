@@ -25,22 +25,44 @@ public class Scenario {
     protected int numFlows;
     protected int numNodes;
     private String indivdualName;
+    protected List<Tuple<Integer, Integer>> flowSourceTargetPairs;
 
-    public Scenario(String indivdualName, int flows, int nodes) {
+    public Scenario(String indivdualName, int numFlows, int numNodes, int runs) {
 	this.indivdualName = indivdualName;
-	this.numNodes = nodes;
-	this.numFlows = flows;
+	this.numNodes = numNodes;
+	this.numFlows = numFlows;
+	this.flowSourceTargetPairs = new ArrayList<Tuple<Integer, Integer>>(numFlows);
+
+	this.generateSourceTargetPairs(runs);
     }
 
-    public Scenario(int flows, int nodes) {
+    public Scenario(int flows, int nodes, int runs) {
 	this.indivdualName = new String();
 	this.numNodes = nodes;
 	this.numFlows = flows;
+
+	this.flowSourceTargetPairs = new ArrayList<Tuple<Integer, Integer>>(numFlows);
+
+	this.generateSourceTargetPairs(runs);
     }
 
-    public Scenario() {
+    public Scenario(int runs) {
 	this.numFlows = -1;
 	this.numNodes = -1;
+
+	this.flowSourceTargetPairs = new ArrayList<Tuple<Integer, Integer>>(numFlows);
+
+	this.generateSourceTargetPairs(runs);
+    }
+
+    protected void generateSourceTargetPairs(int runs) {
+
+	RandomNumbers instance = RandomNumbers.getInstance(runs);
+
+	for (int i = 0; i < numFlows; i++) {
+	    flowSourceTargetPairs
+		    .add(new Tuple<Integer, Integer>(instance.getRandom(0, numNodes), instance.getRandom(0, numNodes)));
+	}
     }
 
     public String getScenarioName() {
@@ -51,8 +73,9 @@ public class Scenario {
 	return numNodes;
     }
 
-    public List<Flow<Node, Link<LinkQuality>, LinkQuality>> generateFlows(
-	    MANET<Node, Link<LinkQuality>, LinkQuality, Flow<Node, Link<LinkQuality>, LinkQuality>> manet, int runs) {
+    public List<Flow<Node, Link<LinkQuality>, LinkQuality>> generatePaths(
+	    MANET<Node, Link<LinkQuality>, LinkQuality, Flow<Node, Link<LinkQuality>, LinkQuality>> manet, int runs,
+	    DataRate step) {
 	return null;
     }
 

@@ -12,7 +12,7 @@ public class Node extends Vertex<Position2D> {
 
     private Set<Link<?>> interferredLinks;
 
-    List<MovementPattern> prevMobility;
+    List<MovementPattern> mobility;
 
     public Node() {
 	interferredLinks = new HashSet<Link<?>>();
@@ -32,11 +32,11 @@ public class Node extends Vertex<Position2D> {
     }
 
     public List<MovementPattern> getPrevMobility() {
-	return prevMobility;
+	return mobility;
     }
 
     public void setPrevMobility(List<MovementPattern> prevMobility) {
-	this.prevMobility = prevMobility;
+	this.mobility = prevMobility;
     }
 
     @Override

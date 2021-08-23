@@ -8,10 +8,10 @@ import de.manetmodel.network.Link;
 import de.manetmodel.network.LinkQuality;
 import de.manetmodel.network.Node;
 
-public class ExecutionCallable<F extends Flow<N,L,W>,N extends Node, L extends Link<W>, W extends LinkQuality> implements Callable<List<F>> {
+public class ExecutionCallable<F extends Flow<N,L,W>,N extends Node, L extends Link<W>, W extends LinkQuality> implements Callable<Void> {
 
     @Override
-    public List<F> call() throws Exception {
+    public Void call() throws Exception {
 	// TODO Auto-generated method stub
 	return null;
     }

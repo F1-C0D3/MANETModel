@@ -1,6 +1,5 @@
 package de.runprovider;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Supplier;
 
@@ -24,22 +23,17 @@ import de.manetmodel.network.mobility.PedestrianMobilityModel;
 import de.manetmodel.network.radio.IRadioModel;
 import de.manetmodel.network.radio.ScalarRadioModel;
 import de.manetmodel.network.unit.DataRate;
-import de.manetmodel.network.unit.DataRate.DataRateRange;
-import de.manetmodel.network.unit.DataUnit;
 import de.manetmodel.network.unit.Speed;
-import de.manetmodel.network.unit.Unit;
 import de.manetmodel.network.unit.Speed.SpeedRange;
-import de.manetmodel.scenarios.Scenario;
 import de.manetmodel.network.unit.Time;
-import de.results.RunResultMapper;
-import de.results.ResultParameter;
-import de.results.MANETRunResultMapper;
-import de.results.RunResultParameter;
-import de.results.RunResultParameterSupplier;
+import de.manetmodel.network.unit.Unit;
+import de.manetmodel.scenarios.Scenario;
 import de.results.AverageResultParameter;
 import de.results.MANETAverageResultMapper;
 import de.results.MANETIdealRadioRunResultMapper;
 import de.results.MANETResultRecorder;
+import de.results.RunResultMapper;
+import de.results.RunResultParameter;
 
 public class Program<N extends Node, L extends Link<W>, W extends LinkQuality, F extends Flow<N, L, W>> {
 
@@ -57,16 +51,9 @@ public class Program<N extends Node, L extends Link<W>, W extends LinkQuality, F
 
     }
 
-    public void addFlows(MANET<N, L, W, F> manet, List<Triple<Integer, Integer, DataRate>> flowSourceTargetIds,
-	    int runs) {
-	for (Triple<Integer, Integer, DataRate> triple : flowSourceTargetIds) {
-	    manet.addFlow(manet.getVertex(triple.getFirst()), manet.getVertex(triple.getSecond()), triple.getThird());
-	}
-    }
-
     public NetworkGraphProperties generateNetwork(MANET<N, L, W, F> manet, int runs, int numNodes) {
 	NetworkGraphProperties properties = new NetworkGraphProperties( /* playground width */ 1024,
-		/* playground height */ 768, /* number of vertices */ new IntRange(100, 150),
+		/* playground height */ 768, /* number of vertices */ new IntRange(numNodes, numNodes),
 		/* distance between vertices */ new DoubleRange(50d, 100d),
 		/* edge distance */ new DoubleRange(100, 100));
 	new NetworkGraphGenerator<N, L, W>(manet, RandomNumbers.getInstance(runs)).generate(properties);

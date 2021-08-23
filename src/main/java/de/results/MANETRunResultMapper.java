@@ -10,6 +10,7 @@ import de.jgraphlib.graph.elements.Position2D;
 import de.jgraphlib.util.RandomNumbers;
 import de.jgraphlib.util.Tuple;
 import de.manetmodel.network.LinkQuality;
+import de.manetmodel.network.Node;
 import de.manetmodel.network.mobility.MobilityModel;
 import de.manetmodel.network.mobility.MovementPattern;
 import de.manetmodel.network.radio.IRadioModel;
@@ -21,8 +22,7 @@ public class MANETRunResultMapper<R extends RunResultParameter> extends RunResul
     private MobilityModel mobilityModel;
 
     public MANETRunResultMapper(Supplier<R> resultParameterSupplier, ColumnPositionMappingStrategy<R> mappingStrategy,
-	    Scenario scenario, GraphProperties networkProperties, IRadioModel radioModel,
-	    MobilityModel mobilityModel) {
+	    Scenario scenario, GraphProperties networkProperties, IRadioModel radioModel, MobilityModel mobilityModel) {
 	super(resultParameterSupplier, mappingStrategy, scenario);
 
 	this.networkProperties = networkProperties;
@@ -36,11 +36,11 @@ public class MANETRunResultMapper<R extends RunResultParameter> extends RunResul
     }
 
     @Override
-    public <W extends LinkQuality> R individualRunResultMapper(int n1Id, int n2Id, int lId, W w) {
+    public <W extends LinkQuality, N extends Node> R individualRunResultMapper(N source, N sink, int lId, W w) {
 	R result = resultParameterSupplier.get();
 	result.setlId(lId);
-	result.setN1Id(n1Id);
-	result.setN2Id(n2Id);
+	result.setN1Id(source.getID());
+	result.setN2Id(sink.getID());
 
 	long transmissionrate = w.getTransmissionRate().get();
 	long utilization = w.getUtilization().get();
@@ -49,16 +49,16 @@ public class MANETRunResultMapper<R extends RunResultParameter> extends RunResul
 	    result.setPathParticipant(true);
 	    if (transmissionrate < utilization)
 		result.setOverUtilization(utilization - transmissionrate);
-	    result.setConnectionStability(getLinkStability(w.getSinkAndSourceMobility()));
+	    result.setConnectionStability(getLinkStability(source.getPrevMobility(), sink.getPrevMobility()));
 	}
 	result.setUtilization(w.getUtilization().get());
 	return result;
     }
 
-    private int getLinkStability(Tuple<List<MovementPattern>, List<MovementPattern>> linkMovementPattern) {
+    private int getLinkStability(List<MovementPattern> mobilitySource, List<MovementPattern> mobilitySink) {
 	double max = networkProperties.getEdgeDistance().max;
-	MovementPattern nodeOneMobilityPattern = linkMovementPattern.getFirst().get(0);
-	MovementPattern nodeTwoMobilityPattern = linkMovementPattern.getSecond().get(0);
+	MovementPattern nodeOneMobilityPattern = mobilitySource.get(0);
+	MovementPattern nodeTwoMobilityPattern = mobilitySink.get(0);
 	double currentDistance = nodeDistance(nodeOneMobilityPattern.getPostion(), nodeTwoMobilityPattern.getPostion());
 	double requiredReceptionPower = radioModel
 		.receptionPower(RandomNumbers.getInstance(1).getRandom(currentDistance, max));
