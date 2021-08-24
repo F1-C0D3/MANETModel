@@ -48,7 +48,7 @@ public class GridTopology_1024x786 {
 		/* playground height */ 768, /* distance between vertices */ 100, /* length of edges */ 100);
 
 	GridGraphGenerator<Node, Link<LinkQuality>, LinkQuality> generator = new GridGraphGenerator<Node, Link<LinkQuality>, LinkQuality>(
-		manet, new MANETSupplier().getLinkPropertySupplier(), new RandomNumbers());
+		manet, new RandomNumbers());
 
 	generator.generate(properties);
 
@@ -84,5 +84,4 @@ public class GridTopology_1024x786 {
 
 	VisualGraphApp<Node, Link<LinkQuality>, LinkQuality> visualGraphApp = new VisualGraphApp<Node, Link<LinkQuality>, LinkQuality>(manet);
     }
-
 }

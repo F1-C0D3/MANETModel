@@ -67,19 +67,16 @@ public class Flow<N extends Vertex<Position2D>, L extends WeightedEdge<W>, W ext
 
     @Override
     public String toString() {
-	// TODO Auto-generated method stub
-	StringBuilder path = new StringBuilder();
-	Iterator<Tuple<L, N>> it = this.iterator();
-	path.append(String.format("ID: %d, ", this.getID()));
 	
-	while (it.hasNext()) {
-	    path.append(it.next().getSecond().getID());
-
-	    if (it.hasNext())
-		path.append(" -> ");
+	StringBuilder stringBuilder = new StringBuilder();
+	
+	for(int i=0; i < getVertices().size(); i++) {
+	    if(i>0)
+		stringBuilder.append(String.format("-%d-[%d]", getEdges().get(i-1).getID(), getVertices().get(i).getID()));    
+	    else
+		stringBuilder.append(String.format("[%d]", getVertices().get(i).getID()));
 	}
-	path.append(String.format(" : Data rate: %s", this.dataRate.toString()));
-	return path.toString();
+	
+	return stringBuilder.toString();
     }
-
 }

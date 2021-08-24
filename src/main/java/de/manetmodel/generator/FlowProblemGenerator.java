@@ -28,4 +28,17 @@ public class FlowProblemGenerator<N extends Vertex<Position2D>, L extends Weight
 	    
 	return flowProblems;
     }  
+    
+    public void printFlowProblems(List<F> flowProblems) {
+	
+	System.out.println("FlowProblems:");
+	
+	for(int i=0; i < flowProblems.size(); i++) {
+	    System.out.println(
+		    String.format("source %d, target %d, dataRate: %d", 
+			    flowProblems.get(i).getSource().getID(), 
+			    flowProblems.get(i).getTarget().getID(), 
+			    flowProblems.get(i).getDataRate().get()));	
+	}
+    }
 }
