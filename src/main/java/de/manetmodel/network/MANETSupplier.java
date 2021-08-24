@@ -22,28 +22,28 @@ public class MANETSupplier {
 	return new FlowSupplier();
     }
 
-    private class NodeSupplier implements Supplier<Node> {
+    public static class NodeSupplier implements Supplier<Node> {
 	@Override
 	public Node get() {
 	    return new Node();
 	}
     }
 
-    private class LinkSupplier implements Supplier<Link<LinkQuality>> {
+    public static class LinkSupplier implements Supplier<Link<LinkQuality>> {
 	@Override
 	public Link<LinkQuality> get() {
 	    return new Link<LinkQuality>();
 	}
     }
 
-    private class LinkPopertiesSupplier extends EdgeWeightSupplier<LinkQuality> {
+    public static class LinkPopertiesSupplier extends EdgeWeightSupplier<LinkQuality> {
 	@Override
 	public LinkQuality get() {
 	    return new LinkQuality();
 	}
     }
 
-    public class FlowSupplier implements Supplier<Flow<Node, Link<LinkQuality>, LinkQuality>> {
+    public static class FlowSupplier implements Supplier<Flow<Node, Link<LinkQuality>, LinkQuality>> {
 	@Override
 	public Flow<Node, Link<LinkQuality>, LinkQuality> get() {
 	    // TODO Auto-generated method stub
