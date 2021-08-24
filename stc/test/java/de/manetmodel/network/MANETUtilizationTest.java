@@ -43,8 +43,9 @@ public class MANETUtilizationTest {
 	GridGraphProperties properties = new GridGraphProperties(/* playground width */ 1024,
 		/* playground height */ 768, /* distance between vertices */ 100, /* length of edges */ 100);
 
-	GridGraphGenerator<Node, Link<LinkQuality>, LinkQuality> generator = new GridGraphGenerator<Node, Link<LinkQuality>, LinkQuality>(
-		manet, new MANETSupplier().getLinkPropertySupplier(), new RandomNumbers());
+	GridGraphGenerator<Node, Link<LinkQuality>, LinkQuality> generator = 
+		new GridGraphGenerator<Node, Link<LinkQuality>, LinkQuality>(
+			manet, new RandomNumbers());
 
 	generator.generate(properties);
 

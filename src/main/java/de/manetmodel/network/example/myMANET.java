@@ -1,7 +1,11 @@
-package de.manetmodel.network;
+package de.manetmodel.network.example;
 
 import java.util.function.Supplier;
 
+import de.manetmodel.network.Link;
+import de.manetmodel.network.LinkQuality;
+import de.manetmodel.network.MANET;
+import de.manetmodel.network.Node;
 import de.manetmodel.network.mobility.MobilityModel;
 import de.manetmodel.network.radio.IRadioModel;
 

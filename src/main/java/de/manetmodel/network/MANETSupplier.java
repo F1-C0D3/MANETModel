@@ -6,19 +6,19 @@ import de.jgraphlib.graph.suppliers.EdgeWeightSupplier;
 
 public class MANETSupplier {
 
-    public NodeSupplier getNodeSupplier() {
+    public Supplier<Node> getNodeSupplier() {
 	return new NodeSupplier();
     }
 
-    public LinkSupplier getLinkSupplier() {
+    public Supplier<Link<LinkQuality>> getLinkSupplier() {
 	return new LinkSupplier();
     }
 
-    public LinkPopertiesSupplier getLinkPropertySupplier() {
+    public Supplier<LinkQuality> getLinkPropertySupplier() {
 	return new LinkPopertiesSupplier();
     }
 
-    public FlowSupplier getFlowSupplier() {
+    public Supplier<Flow<Node, Link<LinkQuality>, LinkQuality>> getFlowSupplier() {
 	return new FlowSupplier();
     }
 
