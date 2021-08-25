@@ -205,15 +205,11 @@ public class MANET<N extends Node, L extends Link<W>, W extends LinkQuality, F e
 	return flowIDs;
     }
 
-    public void deployFlow(F flow) {
-		
+    public void deployFlow(F flow) {		
 	for (L link : flow.getEdges()) {
 	    link.getWeight().setActive();
-	    System.out.println(link.getID());    
 	    increaseUtilizationBy(link, flow.getDataRate());
 	}
-	
-	System.out.println();
     }
 
     public void undeployFlows() {
@@ -347,7 +343,7 @@ public class MANET<N extends Node, L extends Link<W>, W extends LinkQuality, F e
    	DataRate capacity = new DataRate(0);
 
    	for (L link : links) {
-   	    capacity = new DataRate(overUtilization.get() + link.getWeight().getTransmissionRate().get());
+   	    capacity = new DataRate(capacity.get() + link.getWeight().getTransmissionRate().get());
    	    overUtilization = new DataRate(overUtilization.get() + link.getOverUtilization().get());
    	}
 

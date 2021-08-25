@@ -7,14 +7,9 @@ import de.manetmodel.network.LinkQuality;
 public class LinkQualityPrinter extends EdgePrinter<Link<LinkQuality>, LinkQuality>{
 
     @Override
-    public String print(Link<LinkQuality> link) {	
-		
+    public String print(Link<LinkQuality> link) {		
 	double percentage = ((double) link.getWeight().getUtilization().get() / (double) link.getWeight().getTransmissionRate().get()) * 100d;	
-	
-	if(link.getWeight().isActive())
-	    return String.format("%d: %.2f%%", link.getID(), percentage);
-	else
-	    return String.format("%d: (%.2f%%)", link.getID(), percentage);
+	return String.format("%.2f%%", percentage);
     }
 }	
  
