@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.ListIterator;
+import java.util.Objects;
 import java.util.Set;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
@@ -36,6 +37,11 @@ public class MANET<N extends Node, L extends Link<W>, W extends LinkQuality, F e
 	this.utilization = new DataRate(0L);
 	this.utilizationAdjacencies = new ArrayList<List<Integer>>();
 	this.activeUtilizedLinks = new HashSet<Integer>();
+    }
+    
+    public MANET(Supplier<N> vertexSupplier, Supplier<L> edgeSupplier, Supplier<W> edgeWeightSupplier,
+	    Supplier<F> flowSupplier, IRadioModel radioModel) {	
+	this(vertexSupplier, edgeSupplier, edgeWeightSupplier, flowSupplier, radioModel, null);
     }
 
     public MANET(MANET<N, L, W, F> manet) {
@@ -135,6 +141,11 @@ public class MANET<N extends Node, L extends Link<W>, W extends LinkQuality, F e
 
 	    utilizationAdjacencies.add(utilizedLinks.stream().map(L::getID).collect(Collectors.toList()));
 
+<<<<<<< HEAD
+=======
+	    // System.out.println(String.format("Link %d, %s", link.getID(),
+	    // utilizationAdjacencies.get(link.getID())));
+>>>>>>> 43e7d6989605fd5ebfcc316a106b759ba90f7ce2
 	}
     }
 
@@ -205,7 +216,10 @@ public class MANET<N extends Node, L extends Link<W>, W extends LinkQuality, F e
     }
 
     public void deployFlow(F flow) {
+<<<<<<< HEAD
 
+=======
+>>>>>>> 43e7d6989605fd5ebfcc316a106b759ba90f7ce2
 	for (L link : flow.getEdges()) {
 	    link.getWeight().setActive();
 	    increaseUtilizationBy(link, flow.getDataRate());
@@ -284,21 +298,24 @@ public class MANET<N extends Node, L extends Link<W>, W extends LinkQuality, F e
 
 	N n = super.addVertex(x, y);
 
-	Speed initialSpeed = new Speed(mobilityModel.speedRange.max().value / 2d, Unit.Distance.meter,
-		Unit.Time.second);
+	if (!Objects.isNull(mobilityModel)) {
 
-	List<MovementPattern> patternList = new ArrayList<MovementPattern>();
+	    Speed initialSpeed = new Speed(mobilityModel.speedRange.max().value / 2d, Unit.Distance.meter,
+		    Unit.Time.second);
 
-	MovementPattern movementPattern = new MovementPattern(initialSpeed, n.getPosition(), 0d);
+	    List<MovementPattern> patternList = new ArrayList<MovementPattern>();
 
-	patternList.add(movementPattern);
+	    MovementPattern movementPattern = new MovementPattern(initialSpeed, n.getPosition(), 0d);
 
-	for (int i = 0; i < mobilityModel.getTicks() - 1; i++) {
-	    movementPattern = mobilityModel.computeNextMovementPattern(movementPattern);
 	    patternList.add(movementPattern);
-	}
 
-	n.setPrevMobility(patternList);
+	    for (int i = 0; i < mobilityModel.getTicks() - 1; i++) {
+		movementPattern = mobilityModel.computeNextMovementPattern(movementPattern);
+		patternList.add(movementPattern);
+	    }
+
+	    n.setPrevMobility(patternList);
+	}
 
 	return n;
     }
@@ -344,7 +361,7 @@ public class MANET<N extends Node, L extends Link<W>, W extends LinkQuality, F e
 	DataRate capacity = new DataRate(0);
 
 	for (L link : links) {
-	    capacity = new DataRate(overUtilization.get() + link.getWeight().getTransmissionRate().get());
+	    capacity = new DataRate(capacity.get() + link.getWeight().getTransmissionRate().get());
 	    overUtilization = new DataRate(overUtilization.get() + link.getOverUtilization().get());
 	}
 

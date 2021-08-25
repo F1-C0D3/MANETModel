@@ -17,7 +17,7 @@ import de.jgraphlib.graph.generator.GraphProperties.DoubleRange;
 import de.jgraphlib.graph.generator.GraphProperties.IntRange;
 import de.jgraphlib.graph.suppliers.EdgeDistanceSupplier;
 import de.jgraphlib.gui.VisualGraphApp;
-import de.jgraphlib.gui.printer.EdgeIDPrinter;
+import de.jgraphlib.gui.printer.WeightedEdgeIDPrinter;
 import de.jgraphlib.util.RandomNumbers;
 import de.manetmodel.gui.LinkQualityPrinter;
 import de.manetmodel.network.mobility.PedestrianMobilityModel;
@@ -52,7 +52,7 @@ public class MANETUtilizationTest {
 	manet.initialize();
 
 	VisualGraphApp<Node, Link<LinkQuality>, LinkQuality> visualGraphApp = 
-		new VisualGraphApp<Node, Link<LinkQuality>, LinkQuality>(manet, new EdgeIDPrinter<Link<LinkQuality>, LinkQuality>());
+		new VisualGraphApp<Node, Link<LinkQuality>, LinkQuality>(manet, new WeightedEdgeIDPrinter<Link<LinkQuality>, LinkQuality>());
 
 	System.out.println(manet.getUtilizedLinksOf(manet.getEdge(100)));
 
