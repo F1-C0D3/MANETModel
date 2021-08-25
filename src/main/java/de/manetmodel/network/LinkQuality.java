@@ -1,10 +1,6 @@
 package de.manetmodel.network;
 
-import java.util.List;
-
 import de.jgraphlib.graph.elements.EdgeDistance;
-import de.jgraphlib.util.Tuple;
-import de.manetmodel.network.mobility.MovementPattern;
 import de.manetmodel.network.unit.DataRate;
 
 public class LinkQuality extends EdgeDistance {

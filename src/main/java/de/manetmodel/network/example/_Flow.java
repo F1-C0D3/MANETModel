@@ -6,13 +6,15 @@ import de.manetmodel.network.LinkQuality;
 import de.manetmodel.network.Node;
 import de.manetmodel.network.unit.DataRate;
 
-public class myFlow extends Flow<Node, Link<LinkQuality>, LinkQuality>{
+public class _Flow extends Flow<_Node, _Link, _LinkQuality>{
 
-    public myFlow(Node source, Node sink, DataRate dataRate) {
+    private static final long serialVersionUID = 1L;
+
+    public _Flow(_Node source, _Node sink, DataRate dataRate) {
 	super(source, sink, dataRate);
     }
 
-    public myFlow() {
+    public _Flow() {
     }
     
 }

@@ -20,9 +20,9 @@ import de.manetmodel.network.Link;
 import de.manetmodel.network.LinkQuality;
 import de.manetmodel.network.MANETSupplier;
 import de.manetmodel.network.Node;
-import de.manetmodel.network.example.myFlow;
-import de.manetmodel.network.example.myMANET;
-import de.manetmodel.network.example.myMANETSupplier;
+import de.manetmodel.network.example._Flow;
+import de.manetmodel.network.example._MANET;
+import de.manetmodel.network.example._MANETSupplier;
 import de.manetmodel.network.mobility.PedestrianMobilityModel;
 import de.manetmodel.network.radio.ScalarRadioModel;
 import de.manetmodel.network.unit.DataRate;
@@ -36,8 +36,8 @@ public class OverUtilzedProblemGeneratorTest {
     @Test
     public void overUtilzedProblemGeneratorTest() throws IOException, InvocationTargetException, InterruptedException {
 
-	myMANET manet = new myMANET(new myMANETSupplier().getNodeSupplier(), new myMANETSupplier().getLinkSupplier(),
-		new myMANETSupplier().getLinkQualitySupplier(), new myMANETSupplier().getMyFlowSupplier(),
+	_MANET manet = new _MANET(new _MANETSupplier().getNodeSupplier(), new _MANETSupplier().getLinkSupplier(),
+		new _MANETSupplier().getLinkQualitySupplier(), new _MANETSupplier().getMyFlowSupplier(),
 		new ScalarRadioModel(0.002d, 1e-11, 1000d, 2412000000d),
 		new PedestrianMobilityModel(RandomNumbers.getInstance(10),
 			new SpeedRange(4d, 40d, Unit.Time.hour, Unit.Distance.kilometer),
@@ -58,8 +58,8 @@ public class OverUtilzedProblemGeneratorTest {
 	    return (double) w.getUtilization().get();
 	};
 
-	OverUtilzedProblemGenerator<Node, Link<LinkQuality>, LinkQuality, myFlow> overUtilizedProblemGenerator 
-		= new OverUtilzedProblemGenerator<Node, Link<LinkQuality>, LinkQuality, myFlow>(
+	OverUtilzedProblemGenerator<Node, Link<LinkQuality>, LinkQuality, _Flow> overUtilizedProblemGenerator 
+		= new OverUtilzedProblemGenerator<Node, Link<LinkQuality>, LinkQuality, _Flow>(
 			manet, metric);
 
 	OverUtilizedProblemProperties problemProperties = new OverUtilizedProblemProperties();
@@ -70,7 +70,7 @@ public class OverUtilzedProblemGeneratorTest {
 	problemProperties.maxDemand = new DataRate(200);
 	problemProperties.overUtilizationPercentage = 5;
 
-	List<myFlow> flowProblems = overUtilizedProblemGenerator.compute(problemProperties);
+	List<_Flow> flowProblems = overUtilizedProblemGenerator.compute(problemProperties);
 	
 	SwingUtilities.invokeAndWait(new VisualGraphApp<Node, Link<LinkQuality>, LinkQuality>(manet, flowProblems, new LinkQualityPrinter()));
 	

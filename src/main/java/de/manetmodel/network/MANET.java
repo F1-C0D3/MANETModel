@@ -38,6 +38,11 @@ public class MANET<N extends Node, L extends Link<W>, W extends LinkQuality, F e
 	this.utilizationAdjacencies = new ArrayList<List<Integer>>();
 	this.activeUtilizedLinks = new HashSet<Integer>();
     }
+    
+    public MANET(Supplier<N> vertexSupplier, Supplier<L> edgeSupplier, Supplier<W> edgeWeightSupplier,
+	    Supplier<F> flowSupplier, IRadioModel radioModel) {	
+	this(vertexSupplier, edgeSupplier, edgeWeightSupplier, flowSupplier, radioModel, null);
+    }
 
     public MANET(MANET<N, L, W, F> manet) {
 	super(manet.vertexSupplier, manet.edgeSupplier, manet.edgeWeightSupplier, manet.pathSupplier);

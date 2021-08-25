@@ -7,7 +7,7 @@ import de.manetmodel.network.Link;
 import de.manetmodel.network.LinkQuality;
 import de.manetmodel.network.Node;
 
-public class myMANETSupplier {
+public class _MANETSupplier {
 
     public NodeSupplier getNodeSupplier() {
 	return new NodeSupplier();
@@ -25,31 +25,31 @@ public class myMANETSupplier {
 	return new myFlowSupplier();
     }
 
-    private class NodeSupplier implements Supplier<Node> {
+    private class NodeSupplier implements Supplier<_Node> {
 	@Override
-	public Node get() {
-	    return new Node();
+	public _Node get() {
+	    return new _Node();
 	}
     }
 
-    private class LinkSupplier implements Supplier<Link<LinkQuality>> {
+    private class LinkSupplier implements Supplier<_Link> {
 	@Override
-	public Link<LinkQuality> get() {
-	    return new Link<LinkQuality>();
+	public _Link get() {
+	    return new _Link();
 	}
     }
 
-    private class LinkQualitySupplier extends EdgeWeightSupplier<LinkQuality> {
+    private class LinkQualitySupplier extends EdgeWeightSupplier<_LinkQuality> {
 	@Override
-	public LinkQuality get() {
-	    return new LinkQuality();
+	public _LinkQuality get() {
+	    return new _LinkQuality();
 	}
     }
 
-    public class myFlowSupplier implements Supplier<myFlow> {
+    public class myFlowSupplier implements Supplier<_Flow> {
 	@Override
-	public myFlow get() {
-	    return new myFlow();
+	public _Flow get() {
+	    return new _Flow();
 	}
     }
 }
