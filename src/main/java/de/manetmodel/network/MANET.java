@@ -141,11 +141,6 @@ public class MANET<N extends Node, L extends Link<W>, W extends LinkQuality, F e
 
 	    utilizationAdjacencies.add(utilizedLinks.stream().map(L::getID).collect(Collectors.toList()));
 
-<<<<<<< HEAD
-=======
-	    // System.out.println(String.format("Link %d, %s", link.getID(),
-	    // utilizationAdjacencies.get(link.getID())));
->>>>>>> 43e7d6989605fd5ebfcc316a106b759ba90f7ce2
 	}
     }
 
@@ -216,10 +211,6 @@ public class MANET<N extends Node, L extends Link<W>, W extends LinkQuality, F e
     }
 
     public void deployFlow(F flow) {
-<<<<<<< HEAD
-
-=======
->>>>>>> 43e7d6989605fd5ebfcc316a106b759ba90f7ce2
 	for (L link : flow.getEdges()) {
 	    link.getWeight().setActive();
 	    increaseUtilizationBy(link, flow.getDataRate());
