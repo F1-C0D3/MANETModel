@@ -6,8 +6,11 @@ import de.manetmodel.network.Link;
 import de.manetmodel.network.LinkQuality;
 import de.manetmodel.network.MANET;
 import de.manetmodel.network.Node;
+import de.manetmodel.network.example.myMANETSupplier.myFlowSupplier;
 import de.manetmodel.network.mobility.MobilityModel;
 import de.manetmodel.network.radio.IRadioModel;
+import de.manetmodel.network.radio.IdealRadioModel;
+import de.manetmodel.network.radio.ScalarRadioModel;
 
 public class myMANET extends MANET<Node, Link<LinkQuality>, LinkQuality, myFlow>{
 
