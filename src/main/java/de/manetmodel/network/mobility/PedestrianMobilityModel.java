@@ -9,7 +9,6 @@ import de.manetmodel.network.unit.Speed.SpeedRange;
 import de.manetmodel.network.unit.Time;
 import de.manetmodel.network.unit.Unit;
 import de.manetmodel.network.unit.Unit.Distance;
-import sun.jvmstat.monitor.Units;
 
 public class PedestrianMobilityModel extends MobilityModel {
 
