@@ -10,6 +10,11 @@ public class Propagation {
 
     }
 
+    public static double theoreticalDistance(double radioWavePower, double transmissionPower, double waveLength) {
+	double distance = (transmissionPower * waveLength * waveLength) / (16 * Math.PI * Math.PI * radioWavePower);
+	return distance;
+    }
+
     public static double pathLoss(double distance, double waveLength) {
 	return (waveLength * waveLength) / (16 * Math.PI * Math.PI * Math.pow(distance, 2d));
     }
