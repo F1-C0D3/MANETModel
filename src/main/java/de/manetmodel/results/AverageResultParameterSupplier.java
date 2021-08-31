@@ -1,4 +1,4 @@
-package de.results;
+package de.manetmodel.results;
 
 import java.util.function.Supplier;
 

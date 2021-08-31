@@ -1,4 +1,4 @@
-package de.results;
+package de.manetmodel.results;
 
 import java.io.IOException;
 import java.io.PrintWriter;

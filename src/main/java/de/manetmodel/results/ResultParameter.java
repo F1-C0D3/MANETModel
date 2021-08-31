@@ -1,4 +1,4 @@
-package de.results;
+package de.manetmodel.results;
 
 public class ResultParameter {
 

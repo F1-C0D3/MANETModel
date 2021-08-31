@@ -1,4 +1,4 @@
-package de.results;
+package de.manetmodel.results;
 
 import com.opencsv.bean.CsvBindByName;
 
