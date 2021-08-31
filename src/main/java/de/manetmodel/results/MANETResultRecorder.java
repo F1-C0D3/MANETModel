@@ -4,14 +4,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.jgraphlib.util.Tuple;
-import de.manetmodel.elements.Link;
-import de.manetmodel.elements.LinkQuality;
-import de.manetmodel.elements.Node;
+import de.manetmodel.network.Flow;
+import de.manetmodel.network.Link;
+import de.manetmodel.network.LinkQuality;
 import de.manetmodel.network.MANET;
+import de.manetmodel.network.Node;
 import de.manetmodel.network.unit.Time;
 import de.manetmodel.results.CSVExporter.RecordType;
 
-public class MANETResultRecorder<W extends LinkQuality, R extends RunResultParameter,A extends AverageResultParameter> {
+public class MANETResultRecorder<R extends RunResultParameter,A extends AverageResultParameter> {
 
     private String resultFileName;
     private List<Tuple<List<R>, Time>> resultRuns;
@@ -21,18 +22,18 @@ public class MANETResultRecorder<W extends LinkQuality, R extends RunResultParam
 	this.resultRuns = new ArrayList<Tuple<List<R>, Time>>();
     }
 
-    public  void recordRun(
-	    MANET<W> manet, RunResultMapper<W,R> resultMapper, Time runDuration) {
+    public <N extends Node,L extends Link<W>,W extends LinkQuality, F extends Flow<N,L,W>> void recordRun(
+	    MANET<N,L,W,F> manet, RunResultMapper<R,N,L,W> resultMapper, Time runDuration) {
 	recordIndividualRun(manet, resultMapper, runDuration);
 
     }
 
     private <N extends Node,L extends Link<W>, W extends LinkQuality,F extends Flow<N,L,W>> void recordIndividualRun(
-	    MANET<N,L,W,F> manet, RunResultMapper<W,R> resultMapper, Time runDuration) {
+	    MANET<N,L,W,F> manet, RunResultMapper<R,N,L,W> resultMapper, Time runDuration) {
 	CSVExporter exporter = new CSVExporter(resultFileName, RecordType.individualRun);
 	List<R> individualRun = new ArrayList<R>();
-	for (Link<W> link : manet.getEdges()) {
-	    Tuple<Node, Node> sourceAndSink = manet.getVerticesOf(link);
+	for (L link : manet.getEdges()) {
+	    Tuple<N, N> sourceAndSink = manet.getVerticesOf(link);
 	    R runResult = resultMapper.individualRunResultMapper(sourceAndSink.getFirst(), sourceAndSink.getSecond(),
 		    link );
 	    individualRun.add(runResult);

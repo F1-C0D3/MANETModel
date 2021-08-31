@@ -2,14 +2,13 @@ package de.manetmodel.results;
 
 import com.opencsv.bean.ColumnPositionMappingStrategy;
 
-import de.manetmodel.elements.Link;
-import de.manetmodel.elements.LinkQuality;
-import de.manetmodel.elements.Node;
+import de.manetmodel.network.Link;
+import de.manetmodel.network.LinkQuality;
+import de.manetmodel.network.Node;
 import de.manetmodel.network.mobility.MobilityModel;
 import de.manetmodel.scenarios.Scenario;
-import de.manetmodel.network.radio.RadioModel;
 
-public abstract class RunResultMapper<W extends LinkQuality, R extends RunResultParameter> extends ResultMapper<R> {
+public abstract class RunResultMapper<R extends RunResultParameter,N extends Node,L extends Link<W>, W extends LinkQuality> extends ResultMapper<R> {
 
     protected ColumnPositionMappingStrategy<R> mappingStrategy;
     protected MobilityModel mobilityModel;
@@ -23,6 +22,6 @@ public abstract class RunResultMapper<W extends LinkQuality, R extends RunResult
 
     }
 
-    public abstract<N extends Node,L extends Link<W>, W extends LinkQuality> R individualRunResultMapper(N source, N sink, L link);
+    public abstract R individualRunResultMapper(N source, N sink, L link);
 
 }
