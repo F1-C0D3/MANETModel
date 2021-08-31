@@ -20,7 +20,7 @@ import de.manetmodel.network.radio.IRadioModel;
 import de.manetmodel.network.unit.DataRate;
 import de.manetmodel.network.unit.DataRate.DataRateRange;
 
-public class Scenario {
+public abstract class Scenario {
 
     protected int numFlows;
     protected int numNodes;
@@ -71,12 +71,6 @@ public class Scenario {
 
     public int getNumNodes() {
 	return numNodes;
-    }
-
-    public List<Flow<Node, Link<LinkQuality>, LinkQuality>> generatePaths(
-	    MANET<Node, Link<LinkQuality>, LinkQuality, Flow<Node, Link<LinkQuality>, LinkQuality>> manet, int runs,
-	    DataRate step) {
-	return null;
     }
 
     public Path getResultFolder() {
