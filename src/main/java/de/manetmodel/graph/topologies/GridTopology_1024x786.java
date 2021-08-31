@@ -22,10 +22,12 @@ import de.manetmodel.network.MANET;
 import de.manetmodel.network.MANETSupplier;
 import de.manetmodel.network.Node;
 import de.manetmodel.network.mobility.PedestrianMobilityModel;
-import de.manetmodel.network.radio.ScalarRadioModel;
+import de.manetmodel.network.radio.RadioModel;
+import de.manetmodel.network.unit.DataRate;
 import de.manetmodel.network.unit.Speed;
 import de.manetmodel.network.unit.Time;
 import de.manetmodel.network.unit.Unit;
+import de.manetmodel.network.unit.DataUnit.Type;
 import de.manetmodel.network.unit.Speed.SpeedRange;
 
 public class GridTopology_1024x786 {
@@ -39,7 +41,7 @@ public class GridTopology_1024x786 {
 	MANET<Node, Link<LinkQuality>, LinkQuality, Flow<Node, Link<LinkQuality>, LinkQuality>> manet = new MANET<Node, Link<LinkQuality>, LinkQuality, Flow<Node, Link<LinkQuality>, LinkQuality>>(
 		new MANETSupplier().getNodeSupplier(), new MANETSupplier().getLinkSupplier(),
 		new MANETSupplier().getLinkPropertySupplier(), new MANETSupplier().getFlowSupplier(),
-		new ScalarRadioModel(0.002d, 1e-11, 2000000d, 2412000000d),
+		new RadioModel<Node,Link<LinkQuality>,LinkQuality>(new DataRate(10,Type.megabit)),
 		new PedestrianMobilityModel(RandomNumbers.getInstance(10),
 			new SpeedRange(4d, 40d, Unit.Time.hour, Unit.Distance.kilometer),
 			new Time(Unit.Time.second, 30l), new Speed(4d, Unit.Distance.kilometer, Unit.Time.hour), 10));
@@ -72,7 +74,7 @@ public class GridTopology_1024x786 {
 	MANET<Node, Link<LinkQuality>, LinkQuality, Flow<Node, Link<LinkQuality>, LinkQuality>> manet = new MANET<Node, Link<LinkQuality>, LinkQuality, Flow<Node, Link<LinkQuality>, LinkQuality>>(
 		new MANETSupplier().getNodeSupplier(), new MANETSupplier().getLinkSupplier(),
 		new MANETSupplier().getLinkPropertySupplier(), new MANETSupplier().getFlowSupplier(),
-		new ScalarRadioModel(0.002d, 1e-11, 2000000d, 2412000000d),
+		new RadioModel<Node,Link<LinkQuality>,LinkQuality>(new DataRate(10,Type.megabit)),
 		new PedestrianMobilityModel(RandomNumbers.getInstance(10),
 			new SpeedRange(4d, 40d, Unit.Time.hour, Unit.Distance.kilometer),
 			new Time(Unit.Time.second, 30l), new Speed(4d, Unit.Distance.kilometer, Unit.Time.hour), 10));

@@ -1,8 +1,9 @@
-package de.manetmodel.graph.topologies;
+package de.example.topologies;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import de.example.radio.ScalarRadioModel;
 import de.jgraphlib.graph.elements.Position2D;
 import de.jgraphlib.graph.generator.NetworkGraphGenerator;
 import de.jgraphlib.graph.generator.NetworkGraphProperties;
@@ -20,12 +21,9 @@ import de.manetmodel.network.MANET;
 import de.manetmodel.network.MANETSupplier;
 import de.manetmodel.network.Node;
 import de.manetmodel.network.mobility.PedestrianMobilityModel;
-import de.manetmodel.network.radio.RadioModel;
-import de.manetmodel.network.unit.DataRate;
 import de.manetmodel.network.unit.Speed;
 import de.manetmodel.network.unit.Time;
 import de.manetmodel.network.unit.Unit;
-import de.manetmodel.network.unit.DataUnit.Type;
 import de.manetmodel.network.unit.Speed.SpeedRange;
 
 //@formatter:off
@@ -38,13 +36,17 @@ public class NetworkTopology_1024x786_100N {
     
     public Boolean create() {
 	
-	MANET<Node, Link<LinkQuality>, LinkQuality, Flow<Node, Link<LinkQuality>, LinkQuality>> manet = new MANET<Node, Link<LinkQuality>, LinkQuality, Flow<Node, Link<LinkQuality>, LinkQuality>>(
-		new MANETSupplier().getNodeSupplier(), new MANETSupplier().getLinkSupplier(),
-		new MANETSupplier().getLinkPropertySupplier(), new MANETSupplier().getFlowSupplier(),
-		new RadioModel<Node,Link<LinkQuality>,LinkQuality>(new DataRate(10,Type.megabit)),
-		new PedestrianMobilityModel(RandomNumbers.getInstance(10),
-			new SpeedRange(4d, 40d, Unit.Time.hour, Unit.Distance.kilometer),
-			new Time(Unit.Time.second, 30l), new Speed(4d, Unit.Distance.kilometer, Unit.Time.hour), 10));
+	MANET<Node, Link<LinkQuality>, LinkQuality, Flow<Node, Link<LinkQuality>, LinkQuality>> manet = 
+		new MANET<Node, Link<LinkQuality>, LinkQuality, Flow<Node, Link<LinkQuality>, LinkQuality>>(
+			new MANETSupplier().getNodeSupplier(), 
+			new MANETSupplier().getLinkSupplier(),
+			new MANETSupplier().getLinkPropertySupplier(),
+			new MANETSupplier().getFlowSupplier(),
+			new ScalarRadioModel(0.002d, 1e-11, 2000000d, 2412000000d), 
+			new PedestrianMobilityModel(RandomNumbers.getInstance(10),
+				new SpeedRange(4d, 40d, Unit.Time.hour, Unit.Distance.kilometer),
+				new Time(Unit.Time.second, 30l),
+				new Speed(4d, Unit.Distance.kilometer, Unit.Time.hour), 10));
 			
 	NetworkGraphProperties properties = new NetworkGraphProperties(
 		/* playground width */ 		1024,
@@ -78,13 +80,17 @@ public class NetworkTopology_1024x786_100N {
 	
 	topology.create();
 		
-	MANET<Node, Link<LinkQuality>, LinkQuality, Flow<Node, Link<LinkQuality>, LinkQuality>> manet = new MANET<Node, Link<LinkQuality>, LinkQuality, Flow<Node, Link<LinkQuality>, LinkQuality>>(
-		new MANETSupplier().getNodeSupplier(), new MANETSupplier().getLinkSupplier(),
-		new MANETSupplier().getLinkPropertySupplier(), new MANETSupplier().getFlowSupplier(),
-		new RadioModel<Node,Link<LinkQuality>,LinkQuality>(new DataRate(10,Type.megabit)),
-		new PedestrianMobilityModel(RandomNumbers.getInstance(10),
-			new SpeedRange(4d, 40d, Unit.Time.hour, Unit.Distance.kilometer),
-			new Time(Unit.Time.second, 30l), new Speed(4d, Unit.Distance.kilometer, Unit.Time.hour), 10));
+	MANET<Node, Link<LinkQuality>, LinkQuality, Flow<Node, Link<LinkQuality>, LinkQuality>> manet = 
+		new MANET<Node, Link<LinkQuality>, LinkQuality, Flow<Node, Link<LinkQuality>, LinkQuality>>(
+			new MANETSupplier().getNodeSupplier(), 
+			new MANETSupplier().getLinkSupplier(), 
+			new MANETSupplier().getLinkPropertySupplier(),
+			new MANETSupplier().getFlowSupplier(),
+			new ScalarRadioModel(0.002d, 1e-11, 2000000d, 2412000000d), 
+			new PedestrianMobilityModel(RandomNumbers.getInstance(10),
+				new SpeedRange(4d, 40d, Unit.Time.hour, Unit.Distance.kilometer),
+				new Time(Unit.Time.second, 30l),
+				new Speed(4d, Unit.Distance.kilometer, Unit.Time.hour), 10));
 	
 	XMLImporter<Node, Position2D, Link<LinkQuality>, LinkQuality> importer = new XMLImporter<Node, Position2D, Link<LinkQuality>, LinkQuality>(
 		manet, 
