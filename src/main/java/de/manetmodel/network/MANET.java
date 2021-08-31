@@ -3,7 +3,6 @@ package de.manetmodel.network;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
-import java.util.ListIterator;
 import java.util.Objects;
 import java.util.Set;
 import java.util.function.Supplier;
@@ -47,15 +46,15 @@ public class MANET<N extends Node, L extends Link<W>, W extends LinkQuality, F e
     public MANET(MANET<N, L, W, F> manet) {
 	super(manet.vertexSupplier, manet.edgeSupplier, manet.edgeWeightSupplier, manet.pathSupplier);
 	this.vertices = manet.vertices;
-	this.edges = manet.copyEdges();
+	//this.edges = manet.copyEdges();
 	this.paths = manet.copyPaths(manet);
 	this.utilization = new DataRate(manet.utilization.get());
 	this.capacity = new DataRate(manet.capacity.get());
 	this.radioModel = manet.radioModel;
 	this.mobilityModel = manet.mobilityModel;
-	this.sourceTargetAdjacencies = new ArrayList<ArrayList<Tuple<Integer, Integer>>>(manet.sourceTargetAdjacencies);
-	this.targetSourceAdjacencies = new ArrayList<ArrayList<Tuple<Integer, Integer>>>(manet.targetSourceAdjacencies);
-	this.edgeAdjacencies = new ArrayList<Tuple<Integer, Integer>>(manet.edgeAdjacencies);
+	//this.sourceTargetAdjacencies = new ArrayList<ArrayList<Tuple<Integer, Integer>>>(manet.sourceTargetAdjacencies);
+	//this.targetSourceAdjacencies = new ArrayList<ArrayList<Tuple<Integer, Integer>>>(manet.targetSourceAdjacencies);
+	//this.edgeAdjacencies = new ArrayList<Tuple<Integer, Integer>>(manet.edgeAdjacencies);
 	this.utilizationAdjacencies = new ArrayList<List<Integer>>(manet.utilizationAdjacencies);
 	this.activeUtilizedLinks = new HashSet<Integer>(manet.activeUtilizedLinks);
     }

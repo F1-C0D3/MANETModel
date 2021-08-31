@@ -10,6 +10,8 @@ import de.manetmodel.network.mobility.MovementPattern;
 
 public class Node extends Vertex<Position2D> {
 
+    double speed;
+    
     private Set<Link<?>> interferredLinks;
 
     List<MovementPattern> mobility;
@@ -37,6 +39,10 @@ public class Node extends Vertex<Position2D> {
 
     public void setPrevMobility(List<MovementPattern> prevMobility) {
 	this.mobility = prevMobility;
+    }
+    
+    public double getSpeed() {
+	return speed;
     }
 
     @Override
