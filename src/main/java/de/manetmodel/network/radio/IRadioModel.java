@@ -1,10 +1,12 @@
 package de.manetmodel.network.radio;
 
-import de.manetmodel.network.unit.DataRate;
+import de.manetmodel.network.Link;
+import de.manetmodel.network.LinkQuality;
+import de.manetmodel.network.Node;
 
-public interface IRadioModel {
+public interface IRadioModel<N extends Node, L extends Link<W>, W extends LinkQuality> {
 
-    DataRate transmissionBitrate(double distance);
+    void setLinkRadioParameters(L link, double linkDistance);
 
-    double receptionPower(double distance);
+    void setNodeRadioParameters(N node,double coverageRange);
 }
