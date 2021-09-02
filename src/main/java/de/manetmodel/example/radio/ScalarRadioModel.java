@@ -5,10 +5,11 @@ import de.manetmodel.example.elements.ScalarRadioLink;
 import de.manetmodel.example.elements.ScalarRadioNode;
 import de.manetmodel.network.LinkQuality;
 import de.manetmodel.network.radio.IRadioModel;
+import de.manetmodel.network.radio.RadioModel;
 import de.manetmodel.network.unit.DataRate;
 import de.manetmodel.network.unit.DataUnit;
 
-public class ScalarRadioModel implements IRadioModel<ScalarRadioNode, ScalarRadioLink, ScalarLinkQuality> {
+public class ScalarRadioModel  implements IRadioModel<ScalarRadioNode, ScalarRadioLink, ScalarLinkQuality> {
 
     private final double transmissionPower;
     private final double backgroundNoisePower;
@@ -22,7 +23,11 @@ public class ScalarRadioModel implements IRadioModel<ScalarRadioNode, ScalarRadi
 	this.bandwidth = bandwidth;
 	this.carrierFrequency = carrierFrequency;
     }
-
+    
+    public double getCarrierFrequency() {
+	return this.carrierFrequency;
+    }
+    
     @Override
     public void setLinkRadioParameters(ScalarRadioLink link, double linkDistance) {
 

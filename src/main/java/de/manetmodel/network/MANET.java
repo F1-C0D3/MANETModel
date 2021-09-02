@@ -9,7 +9,10 @@ import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 import de.jgraphlib.graph.DirectedWeighted2DGraph;
+import de.jgraphlib.graph.edgeevaluator.EdgeWeightEvaluator;
 import de.jgraphlib.util.Tuple;
+import de.manetmodel.linkqualityevaluator.ILinkWeightEvaluator;
+import de.manetmodel.linkqualityevaluator.LinkQualityEvaluator;
 import de.manetmodel.network.mobility.MobilityModel;
 import de.manetmodel.network.mobility.MovementPattern;
 import de.manetmodel.network.radio.IRadioModel;
@@ -26,9 +29,10 @@ public class MANET<N extends Node, L extends Link<W>, W extends LinkQuality, F e
     protected DataRate capacity;
     protected List<List<Integer>> utilizationAdjacencies;
     protected Set<Integer> activeUtilizedLinks;
+    protected ILinkWeightEvaluator<N, L,W> linkQualityEvaluator;
 
     public MANET(Supplier<N> vertexSupplier, Supplier<L> edgeSupplier, Supplier<W> edgeWeightSupplier,
-	    Supplier<F> flowSupplier, IRadioModel<N, L, W> radioModel, MobilityModel mobilityModel) {
+	    Supplier<F> flowSupplier, IRadioModel<N, L, W> radioModel, MobilityModel mobilityModel,ILinkWeightEvaluator<N, L,W> linkQualityEvaluator) {
 	super(vertexSupplier, edgeSupplier, edgeWeightSupplier, flowSupplier);
 	this.radioModel = radioModel;
 	this.mobilityModel = mobilityModel;
@@ -36,12 +40,10 @@ public class MANET<N extends Node, L extends Link<W>, W extends LinkQuality, F e
 	this.utilization = new DataRate(0L);
 	this.utilizationAdjacencies = new ArrayList<List<Integer>>();
 	this.activeUtilizedLinks = new HashSet<Integer>();
+	this.linkQualityEvaluator = linkQualityEvaluator;
+	
     }
 
-    public MANET(Supplier<N> vertexSupplier, Supplier<L> edgeSupplier, Supplier<W> edgeWeightSupplier,
-	    Supplier<F> flowSupplier, IRadioModel<N,L,W> radioModel) {
-	this(vertexSupplier, edgeSupplier, edgeWeightSupplier, flowSupplier, radioModel, null);
-    }
 
     public MANET(MANET<N, L, W, F> manet) {
 	super(manet.vertexSupplier, manet.edgeSupplier, manet.edgeWeightSupplier, manet.pathSupplier);
@@ -82,16 +84,16 @@ public class MANET<N extends Node, L extends Link<W>, W extends LinkQuality, F e
 	for (L link : getEdges()) {
 	    L linkCopy = edgeSupplier.get();
 	    linkCopy.setID(link.getID());
-	
+
 	    if (link.isActive())
-			linkCopy.setActive();
-		    else
-			linkCopy.setPassive();
-	    
+		linkCopy.setActive();
+	    else
+		linkCopy.setPassive();
+
 	    linkCopy.setUtilization(link.getUtilization());
 	    linkCopy.setNumberOfUtilizedLinks(link.getNumberOfUtilizedLinks());
 	    radioModel.setLinkRadioParameters(linkCopy, link.getWeight().getDistance());
-	    
+
 	    W linkQualityCopy = edgeWeightSupplier.get();
 	    linkQualityCopy.setDistance(link.getWeight().getDistance());
 
@@ -113,6 +115,10 @@ public class MANET<N extends Node, L extends Link<W>, W extends LinkQuality, F e
 	    flowCopies.add(flowCopy);
 	}
 	return flowCopies;
+    }
+
+    void computeLinkQuality() {
+
     }
 
     public F copyPath(int i) {
@@ -166,20 +172,18 @@ public class MANET<N extends Node, L extends Link<W>, W extends LinkQuality, F e
     @Override
     public L addEdge(N source, N target, W weight) {
 
-	L newLink = super.addEdge(source, target, weight);
+	L link = super.addEdge(source, target, weight);
 
 	double distance = this.getDistance(source.getPosition(), target.getPosition());
-
-	radioModel.setLinkRadioParameters(newLink, distance);
-	newLink.setUtilization(new DataRate(0));
 	
-	W linkQuality = edgeWeightSupplier.get();
-	linkQuality.setDistance(distance);
-	newLink.setWeight(linkQuality);
+	radioModel.setLinkRadioParameters(link, distance);
+	link.setUtilization(new DataRate(0));
 
-	capacity.set(capacity.get() + newLink.getTransmissionRate().get());
-
-	return newLink;
+	linkQualityEvaluator.computeAndSetWeight(source, target, link);
+	capacity.set(capacity.get() + link.getTransmissionRate().get());
+	// call a void method like computeWeights(N target,L newLink) of
+	// LinkQualityComputator
+	return link;
     }
 
     public void addFlow(F flow) {
@@ -275,8 +279,8 @@ public class MANET<N extends Node, L extends Link<W>, W extends LinkQuality, F e
 
 	    utilization.set(this.utilization.get() + dataRate.get());
 
-	    passiveUtilizedLink.setUtilization(
-		    new DataRate(passiveUtilizedLink.getUtilization().get() + dataRate.get()));
+	    passiveUtilizedLink
+		    .setUtilization(new DataRate(passiveUtilizedLink.getUtilization().get() + dataRate.get()));
 	}
     }
 
@@ -314,7 +318,10 @@ public class MANET<N extends Node, L extends Link<W>, W extends LinkQuality, F e
 
 	    n.setPrevMobility(patternList);
 	}
-
+	
+	//I don't know another way howto obtain the maximum distance a link can have
+	radioModel.setNodeRadioParameters(n, 100);
+	
 	return n;
     }
 

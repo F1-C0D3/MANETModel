@@ -59,6 +59,10 @@ public abstract class MobilityModel {
 	this.timeStamp = new Time(Unit.Time.second, recordDuration.value / (long) ticks);
     }
 
+    public SpeedRange getSpeedRange() {
+	return this.speedRange;
+    }
+
     public int getTicks() {
 	return ticks;
     }
