@@ -1,10 +1,8 @@
-package de.example.elements;
+package de.manetmodel.example.elements;
 
 import de.manetmodel.network.Link;
-import de.manetmodel.network.LinkQuality;
-import de.manetmodel.network.unit.DataRate;
 
-public class ScalarRadioLink extends Link<LinkQuality> {
+public class ScalarRadioLink extends Link<ScalarLinkQuality> {
 
     private double receptionPower;
 

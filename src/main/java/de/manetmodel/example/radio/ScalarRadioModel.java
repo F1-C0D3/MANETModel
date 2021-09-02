@@ -1,13 +1,14 @@
-package de.example.radio;
+package de.manetmodel.example.radio;
 
-import de.example.elements.ScalarRadioLink;
-import de.example.elements.ScalarRadioNode;
+import de.manetmodel.example.elements.ScalarLinkQuality;
+import de.manetmodel.example.elements.ScalarRadioLink;
+import de.manetmodel.example.elements.ScalarRadioNode;
 import de.manetmodel.network.LinkQuality;
 import de.manetmodel.network.radio.IRadioModel;
 import de.manetmodel.network.unit.DataRate;
 import de.manetmodel.network.unit.DataUnit;
 
-public class ScalarRadioModel implements IRadioModel<ScalarRadioNode, ScalarRadioLink, LinkQuality> {
+public class ScalarRadioModel implements IRadioModel<ScalarRadioNode, ScalarRadioLink, ScalarLinkQuality> {
 
     private final double transmissionPower;
     private final double backgroundNoisePower;
@@ -24,7 +25,7 @@ public class ScalarRadioModel implements IRadioModel<ScalarRadioNode, ScalarRadi
 
     @Override
     public void setLinkRadioParameters(ScalarRadioLink link, double linkDistance) {
-	
+
 	double power = Propagation.pathLoss(linkDistance, Propagation.waveLength(carrierFrequency));
 	DataRate transmissionRate = Propagation.upperBoundTransmissionBitrate(power, backgroundNoisePower, bandwidth);
 
@@ -49,8 +50,10 @@ public class ScalarRadioModel implements IRadioModel<ScalarRadioNode, ScalarRadi
 
     public static class Propagation {
 
-	public static double theoreticalDistance(double radioWavePower, double transmissionPower, double waveLength) {
-	    double distance = (transmissionPower * waveLength * waveLength) / (16 * Math.PI * Math.PI * radioWavePower);
+	public static double theoreticalDistance(double radioWavePower, double transmissionPower,
+		double carrierFrequency) {
+	    double distance = (transmissionPower * waveLength(carrierFrequency) * waveLength(carrierFrequency))
+		    / (16 * Math.PI * Math.PI * radioWavePower);
 	    return distance;
 	}
 

@@ -1,10 +1,10 @@
-package de.example.elements;
+package de.manetmodel.example.elements;
 
 import de.manetmodel.network.Flow;
 import de.manetmodel.network.LinkQuality;
 import de.manetmodel.network.unit.DataRate;
 
-public class ScalarRadioFlow extends Flow<ScalarRadioNode, ScalarRadioLink, LinkQuality> {
+public class ScalarRadioFlow extends Flow<ScalarRadioNode, ScalarRadioLink, ScalarLinkQuality> {
 
     private static final long serialVersionUID = 1L;
 

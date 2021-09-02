@@ -1,11 +1,12 @@
-package de.example.network;
+package de.manetmodel.example.network;
 
 import java.util.function.Supplier;
 
-import de.example.elements.ScalarRadioFlow;
-import de.example.elements.ScalarRadioLink;
-import de.example.elements.ScalarRadioNode;
 import de.jgraphlib.graph.suppliers.EdgeWeightSupplier;
+import de.manetmodel.example.elements.ScalarLinkQuality;
+import de.manetmodel.example.elements.ScalarRadioFlow;
+import de.manetmodel.example.elements.ScalarRadioLink;
+import de.manetmodel.example.elements.ScalarRadioNode;
 import de.manetmodel.network.LinkQuality;
 
 public class ScalarRadioMANETSupplier {
@@ -18,8 +19,8 @@ public class ScalarRadioMANETSupplier {
 	return new ScalarRadioLinkSupplier();
     }
 
-    public Supplier<LinkQuality> getLinkPropertySupplier() {
-	return new LinkQualitySupplier();
+    public Supplier<ScalarLinkQuality> getLinkPropertySupplier() {
+	return new ScalarLinkQualitySupplier();
     }
 
     public Supplier<ScalarRadioFlow> getFlowSupplier() {
@@ -40,10 +41,10 @@ public class ScalarRadioMANETSupplier {
 	}
     }
 
-    public static class LinkQualitySupplier extends EdgeWeightSupplier<LinkQuality> {
+    public static class ScalarLinkQualitySupplier extends EdgeWeightSupplier<ScalarLinkQuality> {
 	@Override
-	public LinkQuality get() {
-	    return new LinkQuality();
+	public ScalarLinkQuality get() {
+	    return new ScalarLinkQuality();
 	}
     }
 

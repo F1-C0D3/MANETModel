@@ -1,7 +1,7 @@
-package de.example.radio;
+package de.manetmodel.example.radio;
 
-import de.example.elements.IdealRadioLink;
-import de.example.elements.IdealRadioNode;
+import de.manetmodel.example.elements.IdealRadioLink;
+import de.manetmodel.example.elements.IdealRadioNode;
 import de.manetmodel.network.LinkQuality;
 import de.manetmodel.network.radio.IRadioModel;
 import de.manetmodel.network.unit.DataRate;

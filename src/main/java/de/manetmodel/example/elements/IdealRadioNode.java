@@ -1,4 +1,4 @@
-package de.example.elements;
+package de.manetmodel.example.elements;
 
 import de.manetmodel.network.Node;
 
