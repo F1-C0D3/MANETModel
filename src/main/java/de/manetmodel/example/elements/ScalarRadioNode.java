@@ -32,7 +32,5 @@ public class ScalarRadioNode extends Node {
     public void setCarrierFrequency(double carrierFrequency) {
         this.carrierFrequency = carrierFrequency;
     }
-    
-    
-    
+      
 }

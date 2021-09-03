@@ -45,7 +45,7 @@ public class NetworkTopology_1024x786 {
 
 	DijkstraShortestPath<Node, Link<LinkQuality>, LinkQuality> sp = new DijkstraShortestPath<Node, Link<LinkQuality>, LinkQuality>(manet);
 	
-//	Function<LinkQuality,Double> metric1 = (LinkQuality w) -> {return (double) w.getNumberOfUtilizedLinks();};
+	//Function<LinkQuality,Double> metric1 = (LinkQuality w) -> {return (double) w.getNumberOfUtilizedLinks();};
 	Function<LinkQuality,Double> metric2 = (LinkQuality w) -> {return (double) w.getDistance();};
 	
 	Flow<Node, Link<LinkQuality>, LinkQuality> flow1 = 

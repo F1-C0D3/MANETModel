@@ -9,7 +9,7 @@ import de.manetmodel.network.radio.RadioModel;
 import de.manetmodel.network.unit.DataRate;
 import de.manetmodel.network.unit.DataUnit;
 
-public class ScalarRadioModel  implements IRadioModel<ScalarRadioNode, ScalarRadioLink, ScalarLinkQuality> {
+public class ScalarRadioModel implements IRadioModel<ScalarRadioNode, ScalarRadioLink, ScalarLinkQuality> {
 
     private final double transmissionPower;
     private final double backgroundNoisePower;

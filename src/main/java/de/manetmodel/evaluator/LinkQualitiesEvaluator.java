@@ -9,25 +9,25 @@ import de.manetmodel.network.Node;
 public class LinkQualitiesEvaluator<N extends Node, L extends Link<W>, W extends LinkQuality, F extends Flow<N,L,W>> 
 	extends FlowDistributionEvaluator<N,L,W,F> {
     
-    PropertyEvaluator<LinkQuality> receptionPower;
+    PropertyEvaluator<W> receptionPower;
     PropertyEvaluator<Node> mobility;  
     PropertyEvaluator<LinkQuality> utilization;
-    PropertyEvaluator<LinkQuality> comfortZone;
+    PropertyEvaluator<LinkQuality> confidenceArea;
     
     public LinkQualitiesEvaluator(
 	    DoubleScope scoreScope, 
 	    int receptionPowerWeight,
 	    int mobilityWeight,
 	    int utilizationWeight,
-	    int comfortZoneWeight) {
+	    int confidenceArea) {
 	
 	super(scoreScope);
 	
 	    receptionPower = 
-		    new PropertyEvaluator<LinkQuality>(
-			    /*property value*/	(LinkQuality w) -> {return (double) w.getReceptionPower();}, 		
-			    /*property scope*/ 	new DoubleScope(0 /*manet.getMinReceptionPower*/,10/*manet.getMaxReceptionPower*/),
-			    /*score scope*/	new DoubleScope(0d, 10d),
+		    new PropertyEvaluator<W>(
+			    /*property value*/	(W w) -> {return (double) w.getReceptionPower();}, 		
+			    /*property scope*/ 	new DoubleScope(0 /*manet.getMinReceptionPower*/, 10/*manet.getMaxReceptionPower*/),
+			    /*score scope*/	new DoubleScope(0d, 1d),
 			    /*weight*/		receptionPowerWeight);
 	    
 	    mobility = 
@@ -45,7 +45,10 @@ public class LinkQualitiesEvaluator<N extends Node, L extends Link<W>, W extends
 			    /*score scope*/	new DoubleScope(0d, 10d),
 			    /*weight*/		utilizationWeight);  
 	    
-	    //comfortZone = 
+	    //confidenceArea = 
+	    
+	    
+	    // Eigenschaft für Bewertung von Störungen
     }
     
     public <M extends MANET<N,L,W,F>> FlowDistributionEvaluation<F> evaluate(M manet) {

@@ -9,7 +9,6 @@ import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 import de.jgraphlib.graph.DirectedWeighted2DGraph;
-import de.jgraphlib.graph.edgeevaluator.EdgeWeightEvaluator;
 import de.jgraphlib.util.Tuple;
 import de.manetmodel.linkqualityevaluator.ILinkWeightEvaluator;
 import de.manetmodel.linkqualityevaluator.LinkQualityEvaluator;
@@ -32,7 +31,7 @@ public class MANET<N extends Node, L extends Link<W>, W extends LinkQuality, F e
     protected ILinkWeightEvaluator<N, L,W> linkQualityEvaluator;
 
     public MANET(Supplier<N> vertexSupplier, Supplier<L> edgeSupplier, Supplier<W> edgeWeightSupplier,
-	    Supplier<F> flowSupplier, IRadioModel<N, L, W> radioModel, MobilityModel mobilityModel,ILinkWeightEvaluator<N, L,W> linkQualityEvaluator) {
+	    Supplier<F> flowSupplier, IRadioModel<N, L, W> radioModel, MobilityModel mobilityModel, ILinkWeightEvaluator<N, L,W> linkQualityEvaluator) {
 	super(vertexSupplier, edgeSupplier, edgeWeightSupplier, flowSupplier);
 	this.radioModel = radioModel;
 	this.mobilityModel = mobilityModel;
@@ -42,9 +41,8 @@ public class MANET<N extends Node, L extends Link<W>, W extends LinkQuality, F e
 	this.activeUtilizedLinks = new HashSet<Integer>();
 	this.linkQualityEvaluator = linkQualityEvaluator;
 	
-    }
-
-
+    }  
+    
     public MANET(MANET<N, L, W, F> manet) {
 	super(manet.vertexSupplier, manet.edgeSupplier, manet.edgeWeightSupplier, manet.pathSupplier);
 	this.vertices = manet.vertices;
@@ -179,7 +177,9 @@ public class MANET<N extends Node, L extends Link<W>, W extends LinkQuality, F e
 	radioModel.setLinkRadioParameters(link, distance);
 	link.setUtilization(new DataRate(0));
 
-	linkQualityEvaluator.computeAndSetWeight(source, target, link);
+	if(!Objects.isNull(linkQualityEvaluator))
+	    linkQualityEvaluator.computeAndSetWeight(source, target, link);
+	
 	capacity.set(capacity.get() + link.getTransmissionRate().get());
 	// call a void method like computeWeights(N target,L newLink) of
 	// LinkQualityComputator
@@ -339,6 +339,14 @@ public class MANET<N extends Node, L extends Link<W>, W extends LinkQuality, F e
 
 	return overUtilzation;
     }
+    
+    public Boolean isOverutilized() {
+	for (L link : getOverUtilizedLinks())
+	    if (link.isActive())
+		if(link.getOverUtilization().get() > 0) return true;
+	
+	return false;
+    }
 
     public DataRate getOverUtilizationOf(F flow) {
 
@@ -435,8 +443,20 @@ public class MANET<N extends Node, L extends Link<W>, W extends LinkQuality, F e
     public DataRate getUtilization() {
 	return this.utilization;
     }
-
+    
     public DataRate getCapacity() {
 	return this.capacity;
     }
+        
+    public List<F> getAllPaths(F flow){
+	
+	List<F> allPaths = new ArrayList<F>();
+	
+	allPaths = super.getAllPaths(flow.getSource(), flow.getTarget());
+	
+	for(F path : allPaths)
+	    path.setDataRate(flow.getDataRate());
+	
+	return allPaths;	
+    }  
 }
