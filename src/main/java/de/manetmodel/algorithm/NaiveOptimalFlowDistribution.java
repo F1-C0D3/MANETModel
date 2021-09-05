@@ -30,7 +30,6 @@ public class NaiveOptimalFlowDistribution<N extends Node, L extends Link<W>, W e
 	for (int i = 0; i < cartesianProducts.size(); i++) {
 
 	    for (F flow : cartesianProducts.get(i)) {
-		manet.addFlow(flow);
 		manet.deployFlow(flow);
 	    }
 
