@@ -31,48 +31,54 @@ public class NetworkTopology_1024x786 {
 	MANET<Node, Link<LinkQuality>, LinkQuality, Flow<Node, Link<LinkQuality>, LinkQuality>> manet = new MANET<Node, Link<LinkQuality>, LinkQuality, Flow<Node, Link<LinkQuality>, LinkQuality>>(
 		new MANETSupplier().getNodeSupplier(), new MANETSupplier().getLinkSupplier(),
 		new MANETSupplier().getLinkPropertySupplier(), new MANETSupplier().getFlowSupplier(),
-		new RadioModel<Node,Link<LinkQuality>,LinkQuality>(new DataRate(10,Type.megabit)),
+		new RadioModel<Node, Link<LinkQuality>, LinkQuality>(new DataRate(10, Type.megabit)),
 		new PedestrianMobilityModel(RandomNumbers.getInstance(10),
 			new SpeedRange(4d, 40d, Unit.TimeSteps.hour, Unit.Distance.kilometer),
-			new Time(Unit.TimeSteps.second, 30l), new Speed(4d, Unit.Distance.kilometer, Unit.TimeSteps.hour), 10));
+			new Time(Unit.TimeSteps.second, 30l),
+			new Speed(4d, Unit.Distance.kilometer, Unit.TimeSteps.hour), 10),
+		null);
 
 	XMLImporter<Node, Position2D, Link<LinkQuality>, LinkQuality> importer = new XMLImporter<Node, Position2D, Link<LinkQuality>, LinkQuality>(
 		manet, new VertextPosition2DMapper());
 
 	importer.importGraph("xml/NetworkTopology_1024x786_100N_2021-07-31_09:55:37.120.xml");
-	
+
 	manet.initialize();
 
-	DijkstraShortestPath<Node, Link<LinkQuality>, LinkQuality> sp = new DijkstraShortestPath<Node, Link<LinkQuality>, LinkQuality>(manet);
-	
-	//Function<LinkQuality,Double> metric1 = (LinkQuality w) -> {return (double) w.getNumberOfUtilizedLinks();};
-	Function<LinkQuality,Double> metric2 = (LinkQuality w) -> {return (double) w.getDistance();};
-	
-	Flow<Node, Link<LinkQuality>, LinkQuality> flow1 = 
-		new Flow<Node, Link<LinkQuality>, LinkQuality>(manet.getVertex(0), manet.getVertex(69), new DataRate(1500000));	
+	DijkstraShortestPath<Node, Link<LinkQuality>, LinkQuality> sp = new DijkstraShortestPath<Node, Link<LinkQuality>, LinkQuality>(
+		manet);
+
+	// Function<LinkQuality,Double> metric1 = (LinkQuality w) -> {return (double)
+	// w.getNumberOfUtilizedLinks();};
+	Function<LinkQuality, Double> metric2 = (LinkQuality w) -> {
+	    return (double) w.getDistance();
+	};
+
+	Flow<Node, Link<LinkQuality>, LinkQuality> flow1 = new Flow<Node, Link<LinkQuality>, LinkQuality>(
+		manet.getVertex(0), manet.getVertex(69), new DataRate(1500000));
 	sp.compute(flow1.getSource(), flow1.getTarget(), metric2);
 	manet.addFlow(flow1);
 	manet.deployFlow(flow1);
-	
-	Flow<Node, Link<LinkQuality>, LinkQuality> flow2 = 
-		new Flow<Node, Link<LinkQuality>, LinkQuality>(manet.getVertex(4), manet.getVertex(81), new DataRate(1500000));		
-	sp.compute(flow2.getSource(), flow2.getTarget(), metric2);	
+
+	Flow<Node, Link<LinkQuality>, LinkQuality> flow2 = new Flow<Node, Link<LinkQuality>, LinkQuality>(
+		manet.getVertex(4), manet.getVertex(81), new DataRate(1500000));
+	sp.compute(flow2.getSource(), flow2.getTarget(), metric2);
 	manet.addFlow(flow2);
 	manet.deployFlow(flow2);
-	
-	Flow<Node, Link<LinkQuality>, LinkQuality> flow3 = 
-		new Flow<Node, Link<LinkQuality>, LinkQuality>(manet.getVertex(9), manet.getVertex(79), new DataRate(1500000));		
-	sp.compute(flow3.getSource(), flow3.getTarget(), metric2);	
+
+	Flow<Node, Link<LinkQuality>, LinkQuality> flow3 = new Flow<Node, Link<LinkQuality>, LinkQuality>(
+		manet.getVertex(9), manet.getVertex(79), new DataRate(1500000));
+	sp.compute(flow3.getSource(), flow3.getTarget(), metric2);
 	manet.addFlow(flow3);
 	manet.deployFlow(flow3);
-	
-	Flow<Node, Link<LinkQuality>, LinkQuality> flow4 = 
-		new Flow<Node, Link<LinkQuality>, LinkQuality>(manet.getVertex(46), manet.getVertex(100), new DataRate(1500000));		
-	sp.compute(flow4.getSource(), flow4.getTarget(), metric2);		
+
+	Flow<Node, Link<LinkQuality>, LinkQuality> flow4 = new Flow<Node, Link<LinkQuality>, LinkQuality>(
+		manet.getVertex(46), manet.getVertex(100), new DataRate(1500000));
+	sp.compute(flow4.getSource(), flow4.getTarget(), metric2);
 	manet.addFlow(flow4);
 	manet.deployFlow(flow4);
-			
-	VisualGraphApp<Node, Link<LinkQuality>, LinkQuality> visualGraphApp = 
-		new VisualGraphApp<Node, Link<LinkQuality>, LinkQuality>(manet, new LinkQualityPrinter());					
+
+	VisualGraphApp<Node, Link<LinkQuality>, LinkQuality> visualGraphApp = new VisualGraphApp<Node, Link<LinkQuality>, LinkQuality>(
+		manet, new LinkQualityPrinter());
     }
 }
