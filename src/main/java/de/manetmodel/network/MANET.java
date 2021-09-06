@@ -27,10 +27,19 @@ public class MANET<N extends Node, L extends Link<W>, W extends LinkQuality, F e
     protected DataRate capacity;
     protected List<List<Integer>> utilizationAdjacencies;
     protected Set<Integer> activeUtilizedLinks;
+<<<<<<< HEAD
     protected LinkQualityEvaluator<N, L, W> linkQualityEvaluator;
+=======
+    protected ILinkWeightEvaluator<N, L, W> linkQualityEvaluator;
+>>>>>>> refs/remotes/origin/master
 
     public MANET(Supplier<N> vertexSupplier, Supplier<L> edgeSupplier, Supplier<W> edgeWeightSupplier,
+<<<<<<< HEAD
 	    Supplier<F> flowSupplier, IRadioModel<N, L, W> radioModel, MobilityModel mobilityModel, LinkQualityEvaluator<N, L,W> linkQualityEvaluator) {
+=======
+	    Supplier<F> flowSupplier, IRadioModel<N, L, W> radioModel, MobilityModel mobilityModel,
+	    ILinkWeightEvaluator<N, L, W> linkQualityEvaluator) {
+>>>>>>> refs/remotes/origin/master
 	super(vertexSupplier, edgeSupplier, edgeWeightSupplier, flowSupplier);
 	this.radioModel = radioModel;
 	this.mobilityModel = mobilityModel;
@@ -39,9 +48,9 @@ public class MANET<N extends Node, L extends Link<W>, W extends LinkQuality, F e
 	this.utilizationAdjacencies = new ArrayList<List<Integer>>();
 	this.activeUtilizedLinks = new HashSet<Integer>();
 	this.linkQualityEvaluator = linkQualityEvaluator;
-	
-    }  
-    
+
+    }
+
     public MANET(MANET<N, L, W, F> manet) {
 	super(manet.vertexSupplier, manet.edgeSupplier, manet.edgeWeightSupplier, manet.pathSupplier);
 	this.vertices = manet.vertices;
@@ -172,15 +181,21 @@ public class MANET<N extends Node, L extends Link<W>, W extends LinkQuality, F e
 	L link = super.addEdge(source, target, weight);
 
 	double distance = this.getDistance(source.getPosition(), target.getPosition());
-	
+
 	radioModel.setLinkRadioParameters(link, distance);
 	link.setUtilization(new DataRate(0));
 
+<<<<<<< HEAD
 	System.out.println(link.getTransmissionRate().toString());
 	
 	if(!Objects.isNull(linkQualityEvaluator))
 	    linkQualityEvaluator.compute(source, link, target);
 	
+=======
+	if (!Objects.isNull(linkQualityEvaluator))
+	    linkQualityEvaluator.computeAndSetWeight(source, target, link);
+
+>>>>>>> refs/remotes/origin/master
 	capacity.set(capacity.get() + link.getTransmissionRate().get());
 	return link;
     }
@@ -317,10 +332,10 @@ public class MANET<N extends Node, L extends Link<W>, W extends LinkQuality, F e
 
 	    n.setPrevMobility(patternList);
 	}
-	
-	//I don't know another way howto obtain the maximum distance a link can have
-	radioModel.setNodeRadioParameters(n, 100);
-	
+	if (!Objects.isNull(linkQualityEvaluator))
+	    // I don't know another way howto obtain the maximum distance a link can have
+	    radioModel.setNodeRadioParameters(n, 100);
+
 	return n;
     }
 
@@ -338,12 +353,13 @@ public class MANET<N extends Node, L extends Link<W>, W extends LinkQuality, F e
 
 	return overUtilzation;
     }
-    
+
     public Boolean isOverutilized() {
 	for (L link : getOverUtilizedLinks())
 	    if (link.isActive())
-		if(link.getOverUtilization().get() > 0) return true;
-	
+		if (link.getOverUtilization().get() > 0)
+		    return true;
+
 	return false;
     }
 
@@ -442,20 +458,20 @@ public class MANET<N extends Node, L extends Link<W>, W extends LinkQuality, F e
     public DataRate getUtilization() {
 	return this.utilization;
     }
-    
+
     public DataRate getCapacity() {
 	return this.capacity;
     }
-        
-    public List<F> getAllPaths(F flow){
-	
+
+    public List<F> getAllPaths(F flow) {
+
 	List<F> allPaths = new ArrayList<F>();
-	
+
 	allPaths = super.getAllPaths(flow.getSource(), flow.getTarget());
-	
-	for(F path : allPaths)
+
+	for (F path : allPaths)
 	    path.setDataRate(flow.getDataRate());
-	
-	return allPaths;	
-    }  
+
+	return allPaths;
+    }
 }

@@ -34,18 +34,21 @@ import de.manetmodel.network.unit.Speed.SpeedRange;
 public class GridTopology_1024x786 {
 
     public static String xmlFilePath;
-    
-    GridTopology_1024x786() {}
+
+    GridTopology_1024x786() {
+    }
 
     public Boolean create() {
 
 	MANET<Node, Link<LinkQuality>, LinkQuality, Flow<Node, Link<LinkQuality>, LinkQuality>> manet = new MANET<Node, Link<LinkQuality>, LinkQuality, Flow<Node, Link<LinkQuality>, LinkQuality>>(
 		new MANETSupplier().getNodeSupplier(), new MANETSupplier().getLinkSupplier(),
 		new MANETSupplier().getLinkPropertySupplier(), new MANETSupplier().getFlowSupplier(),
-		new RadioModel<Node, Link<LinkQuality>, LinkQuality>(new DataRate(10,Type.megabit)),
+		new RadioModel<Node, Link<LinkQuality>, LinkQuality>(new DataRate(10, Type.megabit)),
 		new PedestrianMobilityModel(RandomNumbers.getInstance(10),
 			new SpeedRange(4d, 40d, Unit.TimeSteps.hour, Unit.Distance.kilometer),
-			new Time(Unit.TimeSteps.second, 30l), new Speed(4d, Unit.Distance.kilometer, Unit.TimeSteps.hour), 10));
+			new Time(Unit.TimeSteps.second, 30l),
+			new Speed(4d, Unit.Distance.kilometer, Unit.TimeSteps.hour), 10),
+		null);
 
 	GridGraphProperties properties = new GridGraphProperties(/* playground width */ 1024,
 		/* playground height */ 768, /* distance between vertices */ 100, /* length of edges */ 100);
@@ -58,12 +61,10 @@ public class GridTopology_1024x786 {
 	XMLExporter<Node, Position2D, Link<LinkQuality>, LinkQuality> exporter = new XMLExporter<Node, Position2D, Link<LinkQuality>, LinkQuality>(
 		manet, new VertextPosition2DMapper());
 
-	xmlFilePath = String.format(
-		"xml/%s_%s.xml", 
-		GridTopology_1024x786.class.getSimpleName(), 
+	xmlFilePath = String.format("xml/%s_%s.xml", GridTopology_1024x786.class.getSimpleName(),
 		new SimpleDateFormat("yyyy-MM-dd'_'HH:mm:ss.SSS").format(new Date(System.currentTimeMillis())));
-	
-	return exporter.exportGraph(xmlFilePath);	
+
+	return exporter.exportGraph(xmlFilePath);
     }
 
     public static void main(String args[]) {
@@ -75,16 +76,19 @@ public class GridTopology_1024x786 {
 	MANET<Node, Link<LinkQuality>, LinkQuality, Flow<Node, Link<LinkQuality>, LinkQuality>> manet = new MANET<Node, Link<LinkQuality>, LinkQuality, Flow<Node, Link<LinkQuality>, LinkQuality>>(
 		new MANETSupplier().getNodeSupplier(), new MANETSupplier().getLinkSupplier(),
 		new MANETSupplier().getLinkPropertySupplier(), new MANETSupplier().getFlowSupplier(),
-		new RadioModel<Node, Link<LinkQuality>, LinkQuality>(new DataRate(10,Type.megabit)),
+		new RadioModel<Node, Link<LinkQuality>, LinkQuality>(new DataRate(10, Type.megabit)),
 		new PedestrianMobilityModel(RandomNumbers.getInstance(10),
 			new SpeedRange(4d, 40d, Unit.TimeSteps.hour, Unit.Distance.kilometer),
-			new Time(Unit.TimeSteps.second, 30l), new Speed(4d, Unit.Distance.kilometer, Unit.TimeSteps.hour), 10));
+			new Time(Unit.TimeSteps.second, 30l),
+			new Speed(4d, Unit.Distance.kilometer, Unit.TimeSteps.hour), 10),
+		null);
 
 	XMLImporter<Node, Position2D, Link<LinkQuality>, LinkQuality> importer = new XMLImporter<Node, Position2D, Link<LinkQuality>, LinkQuality>(
 		manet, new VertextPosition2DMapper());
 
 	importer.importGraph(xmlFilePath);
 
-	VisualGraphApp<Node, Link<LinkQuality>, LinkQuality> visualGraphApp = new VisualGraphApp<Node, Link<LinkQuality>, LinkQuality>(manet);
+	VisualGraphApp<Node, Link<LinkQuality>, LinkQuality> visualGraphApp = new VisualGraphApp<Node, Link<LinkQuality>, LinkQuality>(
+		manet);
     }
 }
