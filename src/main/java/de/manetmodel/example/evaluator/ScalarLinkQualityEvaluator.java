@@ -47,7 +47,7 @@ public class ScalarLinkQualityEvaluator
 	
 	scalarLinkQuality.setMobilityQuality(mobilityEvaluator.compute(source, sink));
 
-	scalarLinkQuality.setScore(scalarLinkQuality.getMobilityQuality());
+	scalarLinkQuality.setScore(scalarLinkQuality.getMobilityQuality() + scalarLinkQuality.getReceptionConfidence());
 
 	return true;
     }
