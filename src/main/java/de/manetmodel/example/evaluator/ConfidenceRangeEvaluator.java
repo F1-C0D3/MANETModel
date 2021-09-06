@@ -40,9 +40,11 @@ public class ConfidenceRangeEvaluator extends PropertyStandardization {
 	else {
 	    dBm receptionThresholddBm = receptionThreshold.todBm();
 	    confidenceValue = Math.pow(((receptionPower.get() - receptionThresholddBm.get()) / confidenceThreshold.get()
-		    - receptionThresholddBm.get()), 10d);
+		    - receptionThresholddBm.get()), 10d);	   
 	}
-
-	return confidenceValue;
+		
+	super.setPropertyScope(new DoubleScope(0d, maxConfidenceDistance));
+	
+	return getScore(confidenceValue);
     }
-}
+}	

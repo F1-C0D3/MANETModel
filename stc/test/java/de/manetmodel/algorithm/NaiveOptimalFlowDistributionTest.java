@@ -21,6 +21,7 @@ import de.manetmodel.example.network.ScalarRadioMANET;
 import de.manetmodel.example.network.ScalarRadioMANETSupplier;
 import de.manetmodel.example.radio.ScalarRadioModel;
 import de.manetmodel.network.unit.DataRate;
+import de.manetmodel.network.unit.Watt;
 
 
 public class NaiveOptimalFlowDistributionTest {
@@ -33,12 +34,12 @@ public class NaiveOptimalFlowDistributionTest {
 			new ScalarRadioMANETSupplier().getLinkSupplier(),
 			new ScalarRadioMANETSupplier().getLinkPropertySupplier(), 
 			new ScalarRadioMANETSupplier().getFlowSupplier(),
-			new ScalarRadioModel(0.002d, 1e-11, 1000d, 2412000000d), null, null);
+			new ScalarRadioModel(new Watt(0.002d), new Watt(1e-11), 1000d, 2412000000d), null, null);
 	
 	NetworkGraphProperties graphProperties = new NetworkGraphProperties(
 		/* playground width */ 		1024,
 		/* playground height */ 	768, 
-		/* number of vertices */ 	new IntRange(10,10),
+		/* number of vertices */ 	new IntRange(20,20),
 		/* distance between vertices */ new DoubleRange(50d, 100d),
 		/* edge distance */ 		new DoubleRange(100d, 100d));
 

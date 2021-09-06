@@ -1,4 +1,4 @@
-package de.manetmodel.evaluator;
+	package de.manetmodel.evaluator;
 
 import org.junit.Test;
 
@@ -23,7 +23,7 @@ public class MobilityEvaluatorTest {
 	ScalarRadioNode node1 = new ScalarRadioNode();
 	ScalarRadioNode node2 = new ScalarRadioNode();
 	
-	node1.setMobility(new MovementPattern(new Speed(5000d, Unit.Distance.meter, Unit.TimeSteps.second), new Position2D(1,1), 0d));	
+	node1.setMobility(new MovementPattern(new Speed(5d, Unit.Distance.meter, Unit.TimeSteps.second), new Position2D(1,1), 0d));	
 	node2.setMobility(new MovementPattern(new Speed(5000d, Unit.Distance.meter, Unit.TimeSteps.second), new Position2D(2,2), 0d));
 	System.out.println(String.format("Score: %.2f \n", evaluator.compute(node1, node2)));
 	

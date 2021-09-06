@@ -174,13 +174,12 @@ public class MANET<N extends Node, L extends Link<W>, W extends LinkQuality, F e
 
 	radioModel.setLinkRadioParameters(link, distance);
 	link.setUtilization(new DataRate(0));
-
-	System.out.println(link.getTransmissionRate().toString());
 	
 	if(!Objects.isNull(linkQualityEvaluator))
 	    linkQualityEvaluator.compute(source, link, target);
 
 	capacity.set(capacity.get() + link.getTransmissionRate().get());
+	
 	return link;
     }
 
