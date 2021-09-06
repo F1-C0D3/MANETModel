@@ -41,5 +41,8 @@ public class MovementPattern {
     public void setAngle(double angle) {
 	this.absoluteAngle = angle;
     }
-
+    
+    public String toString() {
+	return String.format("speed: %.2f, position: %s, angle: %.2f", speed.value, absolutePostion.toString(), absoluteAngle);
+    }
 }

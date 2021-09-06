@@ -1,34 +1,42 @@
-package de.manetmodel.example.linkqualitycomputator;
+package de.manetmodel.example.evaluator;
 
-import java.util.function.Function;
-
-import de.jgraphlib.util.Quadruple;
+import de.manetmodel.evaluator.DoubleScope;
 import de.manetmodel.example.elements.ScalarLinkQuality;
 import de.manetmodel.example.elements.ScalarRadioLink;
 import de.manetmodel.example.elements.ScalarRadioNode;
 import de.manetmodel.example.radio.ScalarRadioModel;
-import de.manetmodel.linkqualityevaluator.ILinkWeightEvaluator;
-import de.manetmodel.network.mobility.MobilityModel;
-import de.manetmodel.network.unit.Watt;
-import de.manetmodel.network.unit.dBm;
 
 public class ScalarLinkQualityEvaluator
-	implements ILinkWeightEvaluator<ScalarRadioNode, ScalarRadioLink, ScalarLinkQuality> {
+	extends LinkQualityEvaluator<ScalarRadioNode, ScalarRadioLink, ScalarLinkQuality> {
 
-    private Function<Double, Double> computeMobilityQuality;
-    private Function<Quadruple<Watt, Watt, Watt, Double>, Double> computeConfidenceRange;
-
-    private MobilityModel mobilityModel;
+    //private Function<Quadruple<Watt, Watt, Watt, Double>, Double> computeConfidenceRange;
     private ScalarRadioModel radioModel;
 
-    public ScalarLinkQualityEvaluator(MobilityModel mobilityModel, ScalarRadioModel radioModel) {
-	this.mobilityModel = mobilityModel;
+    private MobilityEvaluator<ScalarRadioNode> mobilityEvaluator;
+    private ConfidenceRangeEvaluator confidenceRangeEvaluator;
+
+    public ScalarLinkQualityEvaluator(DoubleScope scoreScope, ScalarRadioModel radioModel) {
+
+	super(scoreScope);
+
 	this.radioModel = radioModel;
 
-	this.computeConfidenceRange = (Quadruple</** transmission power **/
-		Watt, /** reception power **/
-		Watt, /** reception threshold **/
-		Watt, /** carrier frequency **/
+	this.mobilityEvaluator = new MobilityEvaluator<ScalarRadioNode>(
+		/* scoreScope */ new DoubleScope(0d, 1d),
+		/* weight */ 1);
+
+	this.confidenceRangeEvaluator = new ConfidenceRangeEvaluator(
+		/* scoreScope */ new DoubleScope(0d, 1d), 
+		/* weight */ 1);
+	
+	this.setPropertyScope(new DoubleScope(0d, mobilityEvaluator.getScoreScope().max + confidenceRangeEvaluator.getScoreScope().max));
+
+	// -> Moved to class ConfidenceRangeEvaluator
+	/*
+	this.computeConfidenceRange = (Quadruple< // transmission power 
+		Watt, // reception power 
+		Watt, // reception threshold 
+		Watt,  // carrier frequency 
 		Double> radioParameters) -> {
 
 	    double confidenceValue = 0d;
@@ -60,20 +68,26 @@ public class ScalarLinkQualityEvaluator
 				- receptionThresholddBm.get()), 10d);
 	    }
 	    return confidenceValue;
-	};
-
+	};*/
     }
 
     @Override
-    public void computeAndSetWeight(ScalarRadioNode source, ScalarRadioNode sink, ScalarRadioLink edge) {
+    public boolean compute(ScalarRadioNode source, ScalarRadioLink link, ScalarRadioNode sink) {
 
-	ScalarLinkQuality weight = edge.getWeight();
+	ScalarLinkQuality scalarLinkQuality = link.getWeight();
 
 	// compute value for receptionConfidence
-	weight.setReceptionConfidence(
+	/*scalarLinkQuality.setReceptionConfidence(
 		this.computeConfidenceRange.apply(new Quadruple<Watt, Watt, Watt, Double>(source.getTransmissionPower(),
-			edge.getReceptionPower(), sink.getReceptionThreshold(), radioModel.getCarrierFrequency())));
+			link.getReceptionPower(), sink.getReceptionThreshold(), radioModel.getCarrierFrequency())));*/
 
+	scalarLinkQuality.setReceptionConfidence(confidenceRangeEvaluator.compute(source, link, sink, radioModel));
+	
+	scalarLinkQuality.setMobilityQuality(mobilityEvaluator.compute(source, sink));
+
+	scalarLinkQuality.setScore(getScore(scalarLinkQuality.getReceptionConfidence() + scalarLinkQuality.getMobilityQuality()));
+
+	return true;
     }
 
 }

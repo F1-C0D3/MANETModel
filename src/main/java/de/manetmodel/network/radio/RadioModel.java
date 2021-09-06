@@ -24,7 +24,4 @@ public class RadioModel<N extends Node,L extends Link<W>, W extends LinkQuality>
 	// TODO Auto-generated method stub
 	
     }
-
-
-
 }

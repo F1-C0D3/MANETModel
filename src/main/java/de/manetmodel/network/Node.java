@@ -1,5 +1,6 @@
 package de.manetmodel.network;
 
+import java.util.Arrays;
 import java.util.List;
 
 import de.jgraphlib.graph.elements.Position2D;
@@ -19,6 +20,10 @@ public class Node extends Vertex<Position2D> {
 
     public void setMobility(List<MovementPattern> mobility) {
 	this.mobility = mobility;
+    }
+    
+    public void setMobility(MovementPattern mobility) {
+	this.mobility = Arrays.asList(mobility);
     }
 
     public Node(double x, double y) {

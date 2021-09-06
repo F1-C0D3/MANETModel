@@ -6,7 +6,7 @@ import de.manetmodel.example.elements.ScalarLinkQuality;
 import de.manetmodel.example.elements.ScalarRadioFlow;
 import de.manetmodel.example.elements.ScalarRadioLink;
 import de.manetmodel.example.elements.ScalarRadioNode;
-import de.manetmodel.example.linkqualitycomputator.ScalarLinkQualityEvaluator;
+import de.manetmodel.example.evaluator.ScalarLinkQualityEvaluator;
 import de.manetmodel.network.MANET;
 import de.manetmodel.network.mobility.MobilityModel;
 import de.manetmodel.network.radio.IRadioModel;
@@ -18,9 +18,7 @@ public class ScalarRadioMANET extends MANET<ScalarRadioNode, ScalarRadioLink, Sc
 	    IRadioModel<ScalarRadioNode, ScalarRadioLink, ScalarLinkQuality> radioModel, MobilityModel mobilityModel,
 	    ScalarLinkQualityEvaluator linkQualityEvaluator) {
 
-	super(vertexSupplier, edgeSupplier, edgeWeightSupplier, flowSupplier, radioModel, mobilityModel,
-		linkQualityEvaluator);
-	// TODO Auto-generated constructor stub
+	super(vertexSupplier, edgeSupplier, edgeWeightSupplier, flowSupplier, radioModel, mobilityModel, linkQualityEvaluator);
     }
 
 }

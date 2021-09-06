@@ -10,8 +10,7 @@ import java.util.stream.Collectors;
 
 import de.jgraphlib.graph.DirectedWeighted2DGraph;
 import de.jgraphlib.util.Tuple;
-import de.manetmodel.linkqualityevaluator.ILinkWeightEvaluator;
-import de.manetmodel.linkqualityevaluator.LinkQualityEvaluator;
+import de.manetmodel.example.evaluator.LinkQualityEvaluator;
 import de.manetmodel.network.mobility.MobilityModel;
 import de.manetmodel.network.mobility.MovementPattern;
 import de.manetmodel.network.radio.IRadioModel;
@@ -28,10 +27,10 @@ public class MANET<N extends Node, L extends Link<W>, W extends LinkQuality, F e
     protected DataRate capacity;
     protected List<List<Integer>> utilizationAdjacencies;
     protected Set<Integer> activeUtilizedLinks;
-    protected ILinkWeightEvaluator<N, L,W> linkQualityEvaluator;
+    protected LinkQualityEvaluator<N, L, W> linkQualityEvaluator;
 
     public MANET(Supplier<N> vertexSupplier, Supplier<L> edgeSupplier, Supplier<W> edgeWeightSupplier,
-	    Supplier<F> flowSupplier, IRadioModel<N, L, W> radioModel, MobilityModel mobilityModel, ILinkWeightEvaluator<N, L,W> linkQualityEvaluator) {
+	    Supplier<F> flowSupplier, IRadioModel<N, L, W> radioModel, MobilityModel mobilityModel, LinkQualityEvaluator<N, L,W> linkQualityEvaluator) {
 	super(vertexSupplier, edgeSupplier, edgeWeightSupplier, flowSupplier);
 	this.radioModel = radioModel;
 	this.mobilityModel = mobilityModel;
@@ -178,8 +177,9 @@ public class MANET<N extends Node, L extends Link<W>, W extends LinkQuality, F e
 	link.setUtilization(new DataRate(0));
 
 	System.out.println(link.getTransmissionRate().toString());
+	
 	if(!Objects.isNull(linkQualityEvaluator))
-	    linkQualityEvaluator.computeAndSetWeight(source, target, link);
+	    linkQualityEvaluator.compute(source, link, target);
 	
 	capacity.set(capacity.get() + link.getTransmissionRate().get());
 	return link;
