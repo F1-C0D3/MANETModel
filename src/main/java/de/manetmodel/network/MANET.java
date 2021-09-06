@@ -27,19 +27,10 @@ public class MANET<N extends Node, L extends Link<W>, W extends LinkQuality, F e
     protected DataRate capacity;
     protected List<List<Integer>> utilizationAdjacencies;
     protected Set<Integer> activeUtilizedLinks;
-<<<<<<< HEAD
     protected LinkQualityEvaluator<N, L, W> linkQualityEvaluator;
-=======
-    protected ILinkWeightEvaluator<N, L, W> linkQualityEvaluator;
->>>>>>> refs/remotes/origin/master
 
     public MANET(Supplier<N> vertexSupplier, Supplier<L> edgeSupplier, Supplier<W> edgeWeightSupplier,
-<<<<<<< HEAD
 	    Supplier<F> flowSupplier, IRadioModel<N, L, W> radioModel, MobilityModel mobilityModel, LinkQualityEvaluator<N, L,W> linkQualityEvaluator) {
-=======
-	    Supplier<F> flowSupplier, IRadioModel<N, L, W> radioModel, MobilityModel mobilityModel,
-	    ILinkWeightEvaluator<N, L, W> linkQualityEvaluator) {
->>>>>>> refs/remotes/origin/master
 	super(vertexSupplier, edgeSupplier, edgeWeightSupplier, flowSupplier);
 	this.radioModel = radioModel;
 	this.mobilityModel = mobilityModel;
@@ -48,7 +39,6 @@ public class MANET<N extends Node, L extends Link<W>, W extends LinkQuality, F e
 	this.utilizationAdjacencies = new ArrayList<List<Integer>>();
 	this.activeUtilizedLinks = new HashSet<Integer>();
 	this.linkQualityEvaluator = linkQualityEvaluator;
-
     }
 
     public MANET(MANET<N, L, W, F> manet) {
@@ -185,17 +175,11 @@ public class MANET<N extends Node, L extends Link<W>, W extends LinkQuality, F e
 	radioModel.setLinkRadioParameters(link, distance);
 	link.setUtilization(new DataRate(0));
 
-<<<<<<< HEAD
 	System.out.println(link.getTransmissionRate().toString());
 	
 	if(!Objects.isNull(linkQualityEvaluator))
 	    linkQualityEvaluator.compute(source, link, target);
-	
-=======
-	if (!Objects.isNull(linkQualityEvaluator))
-	    linkQualityEvaluator.computeAndSetWeight(source, target, link);
 
->>>>>>> refs/remotes/origin/master
 	capacity.set(capacity.get() + link.getTransmissionRate().get());
 	return link;
     }
