@@ -1,27 +1,29 @@
 package de.manetmodel.example.elements;
 
 import de.manetmodel.network.Node;
+import de.manetmodel.network.unit.Watt;
+import de.manetmodel.network.unit.dBm;
 
 public class ScalarRadioNode extends Node {
 
-    private double transmissionPower;
-    private double receptionThreshold;
+    private Watt transmissionPower;
+    private Watt receptionThreshold;
     private double carrierFrequency;
     
     
-    public double getTransmissionPower() {
+    public Watt getTransmissionPower() {
         return transmissionPower;
     }
     
-    public void setTransmissionPower(double transmissionPower) {
+    public void setTransmissionPower(Watt transmissionPower) {
         this.transmissionPower = transmissionPower;
     }
     
-    public double getReceptionThreshold() {
+    public Watt getReceptionThreshold() {
         return receptionThreshold;
     }
     
-    public void setReceptionThreshold(double receptionThreshold) {
+    public void setReceptionThreshold(Watt receptionThreshold) {
         this.receptionThreshold = receptionThreshold;
     }
 
