@@ -11,7 +11,7 @@ import de.jgraphlib.graph.generator.PathProblemGenerator;
 import de.jgraphlib.util.RandomNumbers;
 import de.manetmodel.network.Flow;
 import de.manetmodel.network.LinkQuality;
-import de.manetmodel.network.unit.DataRate;
+import de.manetmodel.units.DataRate;
 
 public class FlowProblemGenerator<N extends Vertex<Position2D>, L extends WeightedEdge<W>, W extends LinkQuality, F extends Flow<N,L,W>> extends PathProblemGenerator<N, L, W ,F> {
     

@@ -13,19 +13,20 @@ import de.jgraphlib.graph.generator.GraphProperties.DoubleRange;
 import de.jgraphlib.graph.generator.GraphProperties.IntRange;
 import de.jgraphlib.gui.VisualGraphApp;
 import de.jgraphlib.util.RandomNumbers;
-import de.manetmodel.example.elements.ScalarLinkQuality;
-import de.manetmodel.example.elements.ScalarRadioLink;
-import de.manetmodel.example.elements.ScalarRadioNode;
-import de.manetmodel.example.evaluator.ScalarLinkQualityEvaluator;
-import de.manetmodel.example.network.ScalarRadioMANET;
-import de.manetmodel.example.network.ScalarRadioMANETSupplier;
-import de.manetmodel.example.radio.ScalarRadioModel;
-import de.manetmodel.gui.LinkQualityPrinter;
-import de.manetmodel.network.mobility.PedestrianMobilityModel;
-import de.manetmodel.network.unit.Speed;
-import de.manetmodel.network.unit.Unit;
-import de.manetmodel.network.unit.Speed.SpeedRange;
-import de.manetmodel.network.unit.Watt;
+import de.manetmodel.evaluator.DoubleScope;
+import de.manetmodel.evaluator.ScalarLinkQualityEvaluator;
+import de.manetmodel.gui.LinkQualityScorePrinter;
+import de.manetmodel.mobilitymodel.PedestrianMobilityModel;
+import de.manetmodel.network.scalar.ScalarLinkQuality;
+import de.manetmodel.network.scalar.ScalarRadioLink;
+import de.manetmodel.network.scalar.ScalarRadioMANET;
+import de.manetmodel.network.scalar.ScalarRadioMANETSupplier;
+import de.manetmodel.network.scalar.ScalarRadioModel;
+import de.manetmodel.network.scalar.ScalarRadioNode;
+import de.manetmodel.units.Speed;
+import de.manetmodel.units.Unit;
+import de.manetmodel.units.Watt;
+import de.manetmodel.units.Speed.SpeedRange;
 
 public class ScalarLinkQualityEvaluatorTest {
 
@@ -56,7 +57,7 @@ public class ScalarLinkQualityEvaluatorTest {
 
 	manet.initialize();
 
-	SwingUtilities.invokeAndWait(new VisualGraphApp<ScalarRadioNode, ScalarRadioLink, ScalarLinkQuality>(manet, new LinkQualityPrinter<ScalarLinkQuality>()));
+	SwingUtilities.invokeAndWait(new VisualGraphApp<ScalarRadioNode, ScalarRadioLink, ScalarLinkQuality>(manet, new LinkQualityScorePrinter<ScalarLinkQuality>()));
 	
 	System.in.read();
     }
