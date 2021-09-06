@@ -46,7 +46,6 @@ public class MANETSupplier {
     public static class FlowSupplier implements Supplier<Flow<Node, Link<LinkQuality>, LinkQuality>> {
 	@Override
 	public Flow<Node, Link<LinkQuality>, LinkQuality> get() {
-	    // TODO Auto-generated method stub
 	    return new Flow<Node, Link<LinkQuality>, LinkQuality>();
 	}
     }
