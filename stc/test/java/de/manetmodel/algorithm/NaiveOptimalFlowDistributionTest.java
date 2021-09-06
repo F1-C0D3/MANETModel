@@ -38,7 +38,7 @@ public class NaiveOptimalFlowDistributionTest {
 	NetworkGraphProperties graphProperties = new NetworkGraphProperties(
 		/* playground width */ 		1024,
 		/* playground height */ 	768, 
-		/* number of vertices */ 	new IntRange(30,30),
+		/* number of vertices */ 	new IntRange(10,10),
 		/* distance between vertices */ new DoubleRange(50d, 100d),
 		/* edge distance */ 		new DoubleRange(100d, 100d));
 
@@ -50,11 +50,11 @@ public class NaiveOptimalFlowDistributionTest {
 	
 	generator.generate(graphProperties);
 	
-	manet.addFlow(manet.getFirstVertex(), manet.getVertices().get(random.getRandom(1, manet.getVertices().size()-1)), new DataRate(1000));
-	/*manet.addFlow(manet.getFirstVertex(), manet.getVertices().get(random.getRandom(1, manet.getVertices().size()-1)), new DataRate(1000));
-	manet.addFlow(manet.getFirstVertex(), manet.getVertices().get(random.getRandom(1, manet.getVertices().size()-1)), new DataRate(1000));
-	manet.addFlow(manet.getFirstVertex(), manet.getVertices().get(random.getRandom(1, manet.getVertices().size()-1)), new DataRate(1000));
-	manet.addFlow(manet.getFirstVertex(), manet.getVertices().get(random.getRandom(1, manet.getVertices().size()-1)), new DataRate(1000));*/
+	manet.addFlow(manet.getFirstVertex(), manet.getVertices().get(random.getRandom(1, manet.getVertices().size()-1)), new DataRate(100));
+	manet.addFlow(manet.getFirstVertex(), manet.getVertices().get(random.getRandom(1, manet.getVertices().size()-1)), new DataRate(100));
+	manet.addFlow(manet.getFirstVertex(), manet.getVertices().get(random.getRandom(1, manet.getVertices().size()-1)), new DataRate(100));
+	manet.addFlow(manet.getFirstVertex(), manet.getVertices().get(random.getRandom(1, manet.getVertices().size()-1)), new DataRate(100));
+	manet.addFlow(manet.getFirstVertex(), manet.getVertices().get(random.getRandom(1, manet.getVertices().size()-1)), new DataRate(100));
 
 	manet.initialize();
 		
@@ -65,6 +65,5 @@ public class NaiveOptimalFlowDistributionTest {
 		new NaiveOptimalFlowDistribution<ScalarRadioNode, ScalarRadioLink, ScalarLinkQuality, ScalarRadioFlow>();
 
 	naiveOptimalFlowDistribution.generateFeasibleDistributions(manet);
-    }
-    
+    }  
 }

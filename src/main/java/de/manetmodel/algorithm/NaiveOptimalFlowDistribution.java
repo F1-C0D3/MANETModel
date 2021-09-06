@@ -26,10 +26,10 @@ public class NaiveOptimalFlowDistribution<N extends Node, L extends Link<W>, W e
     long combinations = 1;
     int statusMillis = 1000;
 
-    public NaiveOptimalFlowDistribution() {
-	feasibleDistributions = new ArrayList<List<F>>();
+    public NaiveOptimalFlowDistribution() {	
 	log = new Log();
 	timer = new Timer();
+	feasibleDistributions = new ArrayList<List<F>>();
     }
 
     public <M extends MANET<N, L, W, F>> void initialize(M manet) {
