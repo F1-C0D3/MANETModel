@@ -13,7 +13,7 @@ import de.manetmodel.network.unit.Unit.Distance;
 public class PedestrianMobilityModel extends MobilityModel {
 
     DoubleRange speed;
-    Speed deviation;
+    private Speed deviation;
 
     public PedestrianMobilityModel(RandomNumbers random, SpeedRange speedRange, Speed deviation) {
 	super(random, speedRange);
@@ -36,16 +36,15 @@ public class PedestrianMobilityModel extends MobilityModel {
 	Speed prevSpeed = prevPattern.getSpeed();
 	Position2D prevPosition = prevPattern.getPostion();
 	double prevAngle = prevPattern.getAngle();
-	if (prevSpeed.value - deviation.value < speedRange.min().value) {
+	if ((prevSpeed.value - deviation.value) < speedRange.min().value) {
 	    prevSpeed.value = deviation.value + prevSpeed.value;
-	} else if (prevSpeed.value + deviation.value > speedRange.max().value) {
+	} else if ((prevSpeed.value + deviation.value) > speedRange.max().value) {
 	    prevSpeed.value = prevSpeed.value - deviation.value;
 	} else {
 	    prevSpeed.value = random.getRandom((prevSpeed.value - deviation.value),
 		    (prevSpeed.value + deviation.value));
 	}
-	Speed newSpeed = new Speed(prevSpeed.value * timeStamp.value, Distance.meter,
-		Unit.TimeSteps.second);
+	Speed newSpeed = new Speed(prevSpeed.value * timeStamp.value);
 	Tuple<Position2D, Double> nextPos = nextPosition(newSpeed, prevAngle, prevPosition);
 	newSpeed.value = newSpeed.value / timeStamp.value;
 	MovementPattern pattern = new MovementPattern(newSpeed, nextPos.getFirst(), nextPos.getSecond());
@@ -96,6 +95,14 @@ public class PedestrianMobilityModel extends MobilityModel {
 	position2D = new Position2D(xNew, yNew);
 
 	return new Tuple<Position2D, Double>(position2D, angle);
+    }
+
+    @Override
+    public Speed initializeSpeed() {
+
+	double initialSpeed = random.getRandom((this.getSpeedRange().min().value) + this.deviation.value,
+		(this.getSpeedRange().max().value) - this.deviation.value);
+	return new Speed(initialSpeed);
     }
 
 }

@@ -1,9 +1,5 @@
 package de.manetmodel.network.unit;
 
-import java.net.http.HttpClient.Version;
-
-import org.apache.commons.lang3.Validate;
-
 public class Speed {
     public double value;
 
@@ -11,13 +7,29 @@ public class Speed {
 	this.value = toBase(value, distance, time);
     }
 
-    public Speed() {
+    public Speed(double value) {
+	this.value = value;
     }
 
     private double toBase(double value, Unit.Distance distanceUnit, Unit.TimeSteps timeUnit) {
 	value = ((value) / (double) Unit.getTimeFactor(timeUnit)) * ((double) Unit.getDistanceFactor(distanceUnit));
 
 	return value;
+    }
+
+    public double convertTo(Unit.Distance distance, Unit.TimeSteps timeUnit) {
+	double newValue = value;
+
+	int distanceFactor = Unit.getDistanceFactor(distance);
+	int timeFactor = Unit.getTimeFactor(timeUnit);
+
+	return (newValue / distanceFactor * timeFactor);
+
+    }
+
+    @Override
+    public String toString() {
+	return String.format("%f meter/sec", convertTo(Unit.Distance.kilometer, Unit.TimeSteps.hour));
     }
 
     public static class SpeedRange {

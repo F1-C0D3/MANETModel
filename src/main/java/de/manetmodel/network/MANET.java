@@ -299,8 +299,7 @@ public class MANET<N extends Node, L extends Link<W>, W extends LinkQuality, F e
 
 	if (!Objects.isNull(mobilityModel)) {
 
-	    Speed initialSpeed = new Speed(mobilityModel.speedRange.max().value / 2d, Unit.Distance.meter,
-		    Unit.TimeSteps.second);
+	    Speed initialSpeed = mobilityModel.initializeSpeed();
 
 	    List<MovementPattern> patternList = new ArrayList<MovementPattern>();
 

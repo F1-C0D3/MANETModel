@@ -33,7 +33,7 @@ public abstract class MobilityModel {
 	} else {
 	    this.recordDuration = recordDuration;
 	}
-	this.timeStamp = new Time(Unit.TimeSteps.second, recordDuration.getMillis() / (long) ticks);
+	this.timeStamp = new Time(Unit.TimeSteps.milliseconds, recordDuration.getMillis() / (long) ticks);
 
     }
 
@@ -74,6 +74,8 @@ public abstract class MobilityModel {
     public void setRandom(RandomNumbers random) {
 	this.random = random;
     }
+
+    public abstract Speed initializeSpeed();
 
     public abstract MovementPattern computeNextMovementPattern(MovementPattern prevPattern);
 }
