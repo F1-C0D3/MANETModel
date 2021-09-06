@@ -9,7 +9,7 @@ import de.manetmodel.network.unit.DataUnit.Type;
 
 public class Unit {
 
-    public enum Time {
+    public enum TimeSteps {
 	milliseconds, second, minute, hour
     }
 
@@ -17,13 +17,13 @@ public class Unit {
 	meter, kilometer
     }
 
-    private static final List<Tuple<Time, Integer>> times;
+    private static final List<Tuple<TimeSteps, Integer>> times;
     static {
-	List<Tuple<Time, Integer>> units = new ArrayList<Tuple<Time, Integer>>();
-	units.add(new Tuple<Time, Integer>(Time.milliseconds, 1));
-	units.add(new Tuple<Time, Integer>(Time.second, 1000));
-	units.add(new Tuple<Time, Integer>(Time.minute, 60000));
-	units.add(new Tuple<Time, Integer>(Time.hour, 3600000));
+	List<Tuple<TimeSteps, Integer>> units = new ArrayList<Tuple<TimeSteps, Integer>>();
+	units.add(new Tuple<TimeSteps, Integer>(TimeSteps.milliseconds, 1));
+	units.add(new Tuple<TimeSteps, Integer>(TimeSteps.second, 1000));
+	units.add(new Tuple<TimeSteps, Integer>(TimeSteps.minute, 60000));
+	units.add(new Tuple<TimeSteps, Integer>(TimeSteps.hour, 3600000));
 	times = Collections.unmodifiableList(units);
     }
 
@@ -35,7 +35,7 @@ public class Unit {
 	distances = Collections.unmodifiableList(units);
     }
 
-    public static int getTimeFactor(Unit.Time unit) {
+    public static int getTimeFactor(Unit.TimeSteps unit) {
 	return times.stream().filter(t -> t.getFirst().equals(unit)).findFirst().get().getSecond();
     }
 
@@ -47,7 +47,7 @@ public class Unit {
 	return distances.get(0).getFirst();
     }
 
-    public static Time lowestTimeUnit() {
+    public static TimeSteps lowestTimeUnit() {
 	return times.get(0).getFirst();
     }
 

@@ -177,12 +177,11 @@ public class MANET<N extends Node, L extends Link<W>, W extends LinkQuality, F e
 	radioModel.setLinkRadioParameters(link, distance);
 	link.setUtilization(new DataRate(0));
 
+	System.out.println(link.getTransmissionRate().toString());
 	if(!Objects.isNull(linkQualityEvaluator))
 	    linkQualityEvaluator.computeAndSetWeight(source, target, link);
 	
 	capacity.set(capacity.get() + link.getTransmissionRate().get());
-	// call a void method like computeWeights(N target,L newLink) of
-	// LinkQualityComputator
 	return link;
     }
 
@@ -303,7 +302,7 @@ public class MANET<N extends Node, L extends Link<W>, W extends LinkQuality, F e
 	if (!Objects.isNull(mobilityModel)) {
 
 	    Speed initialSpeed = new Speed(mobilityModel.speedRange.max().value / 2d, Unit.Distance.meter,
-		    Unit.Time.second);
+		    Unit.TimeSteps.second);
 
 	    List<MovementPattern> patternList = new ArrayList<MovementPattern>();
 

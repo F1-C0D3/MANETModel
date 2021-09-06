@@ -29,11 +29,11 @@ public abstract class MobilityModel {
 	}
 
 	if (recordDuration == null || recordDuration.value == 0) {
-	    this.recordDuration = new Time(Unit.Time.second, 30);
+	    this.recordDuration = new Time(Unit.TimeSteps.second, 30);
 	} else {
 	    this.recordDuration = recordDuration;
 	}
-	this.timeStamp = new Time(Unit.Time.second, recordDuration.getMillis() / (long) ticks);
+	this.timeStamp = new Time(Unit.TimeSteps.second, recordDuration.getMillis() / (long) ticks);
 
     }
 
@@ -43,20 +43,20 @@ public abstract class MobilityModel {
 	this.speedRange = speedRange;
 
 	if (recordDuration == null || recordDuration.value == 0) {
-	    this.recordDuration = new Time(Unit.Time.second, 30);
+	    this.recordDuration = new Time(Unit.TimeSteps.second, 30);
 	} else {
 	    this.recordDuration = recordDuration;
 	}
 
-	this.timeStamp = new Time(Unit.Time.second, recordDuration.value / (long) ticks);
+	this.timeStamp = new Time(Unit.TimeSteps.second, recordDuration.value / (long) ticks);
     }
 
     public MobilityModel(RandomNumbers random, SpeedRange speedRange) {
 	this.ticks = 3;
-	this.recordDuration = new Time(Unit.Time.second, 30);
+	this.recordDuration = new Time(Unit.TimeSteps.second, 30);
 	this.random = random;
 	this.speedRange = speedRange;
-	this.timeStamp = new Time(Unit.Time.second, recordDuration.value / (long) ticks);
+	this.timeStamp = new Time(Unit.TimeSteps.second, recordDuration.value / (long) ticks);
     }
 
     public SpeedRange getSpeedRange() {

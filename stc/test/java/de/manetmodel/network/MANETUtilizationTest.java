@@ -37,8 +37,8 @@ public class MANETUtilizationTest {
 		new MANETSupplier().getLinkPropertySupplier(), new MANETSupplier().getFlowSupplier(),
 		new ScalarRadioModel(0.002d, 1e-11, 2000000d, 2412000000d),
 		new PedestrianMobilityModel(RandomNumbers.getInstance(10),
-			new SpeedRange(4d, 40d, Unit.Time.hour, Unit.Distance.kilometer),
-			new Time(Unit.Time.second, 30l), new Speed(4d, Unit.Distance.kilometer, Unit.Time.hour), 10));
+			new SpeedRange(4d, 40d, Unit.TimeSteps.hour, Unit.Distance.kilometer),
+			new Time(Unit.TimeSteps.second, 30l), new Speed(4d, Unit.Distance.kilometer, Unit.TimeSteps.hour), 10));
 
 	GridGraphProperties properties = new GridGraphProperties(/* playground width */ 1024,
 		/* playground height */ 768, /* distance between vertices */ 100, /* length of edges */ 100);

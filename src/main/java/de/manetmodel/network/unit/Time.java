@@ -3,7 +3,7 @@ package de.manetmodel.network.unit;
 public class Time {
     public long value;
 
-    public Time(Unit.Time unit, long value) {
+    public Time(Unit.TimeSteps unit, long value) {
 	this.value = toBase(unit, value);
     }
 
@@ -23,7 +23,7 @@ public class Time {
 	return this.value;
     }
 
-    private long toBase(Unit.Time unit, long value) {
+    private long toBase(Unit.TimeSteps unit, long value) {
 	return value * Unit.getTimeFactor(unit);
     }
 

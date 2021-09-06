@@ -45,7 +45,7 @@ public class PedestrianMobilityModel extends MobilityModel {
 		    (prevSpeed.value + deviation.value));
 	}
 	Speed newSpeed = new Speed(prevSpeed.value * timeStamp.value, Distance.meter,
-		Unit.Time.second);
+		Unit.TimeSteps.second);
 	Tuple<Position2D, Double> nextPos = nextPosition(newSpeed, prevAngle, prevPosition);
 	newSpeed.value = newSpeed.value / timeStamp.value;
 	MovementPattern pattern = new MovementPattern(newSpeed, nextPos.getFirst(), nextPos.getSecond());

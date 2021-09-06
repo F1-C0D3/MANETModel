@@ -43,8 +43,8 @@ public class GridTopology_1024x786 {
 		new MANETSupplier().getLinkPropertySupplier(), new MANETSupplier().getFlowSupplier(),
 		new RadioModel<Node,Link<LinkQuality>,LinkQuality>(new DataRate(10,Type.megabit)),
 		new PedestrianMobilityModel(RandomNumbers.getInstance(10),
-			new SpeedRange(4d, 40d, Unit.Time.hour, Unit.Distance.kilometer),
-			new Time(Unit.Time.second, 30l), new Speed(4d, Unit.Distance.kilometer, Unit.Time.hour), 10));
+			new SpeedRange(4d, 40d, Unit.TimeSteps.hour, Unit.Distance.kilometer),
+			new Time(Unit.TimeSteps.second, 30l), new Speed(4d, Unit.Distance.kilometer, Unit.TimeSteps.hour), 10));
 
 	GridGraphProperties properties = new GridGraphProperties(/* playground width */ 1024,
 		/* playground height */ 768, /* distance between vertices */ 100, /* length of edges */ 100);
@@ -76,8 +76,8 @@ public class GridTopology_1024x786 {
 		new MANETSupplier().getLinkPropertySupplier(), new MANETSupplier().getFlowSupplier(),
 		new RadioModel<Node,Link<LinkQuality>,LinkQuality>(new DataRate(10,Type.megabit)),
 		new PedestrianMobilityModel(RandomNumbers.getInstance(10),
-			new SpeedRange(4d, 40d, Unit.Time.hour, Unit.Distance.kilometer),
-			new Time(Unit.Time.second, 30l), new Speed(4d, Unit.Distance.kilometer, Unit.Time.hour), 10));
+			new SpeedRange(4d, 40d, Unit.TimeSteps.hour, Unit.Distance.kilometer),
+			new Time(Unit.TimeSteps.second, 30l), new Speed(4d, Unit.Distance.kilometer, Unit.TimeSteps.hour), 10));
 
 	XMLImporter<Node, Position2D, Link<LinkQuality>, LinkQuality> importer = new XMLImporter<Node, Position2D, Link<LinkQuality>, LinkQuality>(
 		manet, new VertextPosition2DMapper());
