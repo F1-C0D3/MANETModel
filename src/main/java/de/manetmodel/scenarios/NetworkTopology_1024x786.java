@@ -57,7 +57,7 @@ public class NetworkTopology_1024x786 {
 	DijkstraShortestPath<ScalarRadioNode, ScalarRadioLink, ScalarLinkQuality> sp = 
 		new DijkstraShortestPath<ScalarRadioNode, ScalarRadioLink, ScalarLinkQuality>(manet);
 
-	Function<ScalarLinkQuality, Double> metric2 = (ScalarLinkQuality w) -> {return (double) w.getDistance();};
+	Function<ScalarRadioLink, Double> metric2 = (ScalarRadioLink l) -> {return (double) l.getWeight().getDistance();};
 
 	ScalarRadioFlow flow1 = new ScalarRadioFlow(manet.getVertex(0), manet.getVertex(69), new DataRate(1500000));
 	
