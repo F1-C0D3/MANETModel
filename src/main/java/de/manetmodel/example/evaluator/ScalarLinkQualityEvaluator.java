@@ -38,16 +38,11 @@ public class ScalarLinkQualityEvaluator
 
 	ScalarLinkQuality scalarLinkQuality = link.getWeight();
 
-	// compute value for receptionConfidence
-	/*scalarLinkQuality.setReceptionConfidence(
-		this.computeConfidenceRange.apply(new Quadruple<Watt, Watt, Watt, Double>(source.getTransmissionPower(),
-			link.getReceptionPower(), sink.getReceptionThreshold(), radioModel.getCarrierFrequency())));*/
-
 	scalarLinkQuality.setReceptionConfidence(confidenceRangeEvaluator.compute(source, link, sink, radioModel));
 	
 	scalarLinkQuality.setMobilityQuality(mobilityEvaluator.compute(source, sink));
 
-	scalarLinkQuality.setScore(scalarLinkQuality.getMobilityQuality() + scalarLinkQuality.getReceptionConfidence());
+	scalarLinkQuality.setScore(getScore(scalarLinkQuality.getMobilityQuality() + scalarLinkQuality.getReceptionConfidence()));
 
 	return true;
     }
