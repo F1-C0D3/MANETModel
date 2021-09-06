@@ -12,4 +12,8 @@ public class LinkQuality extends EdgeDistance {
     public void setScore(double score) {
 	this.score = score;
     }
+    
+    public double getScore() {
+	return score;
+    }
 }

@@ -39,6 +39,7 @@ public class ConfidenceRangeEvaluator extends PropertyStandardization {
 		    / (confidenceThreshold.get() - theoreticalMaxReceptionPower.get())), 4);
 	else {
 	    dBm receptionThresholddBm = receptionThreshold.todBm();
+
 	    confidenceValue = Math.pow(((receptionPower.get() - receptionThresholddBm.get())
 		    / (confidenceThreshold.get() - (receptionThresholddBm.get()))), 10d);
 
@@ -48,4 +49,4 @@ public class ConfidenceRangeEvaluator extends PropertyStandardization {
 
 	return getScore(confidenceValue);
     }
-}
+}	

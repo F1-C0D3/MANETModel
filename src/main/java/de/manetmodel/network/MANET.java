@@ -179,6 +179,7 @@ public class MANET<N extends Node, L extends Link<W>, W extends LinkQuality, F e
 	    linkQualityEvaluator.compute(source, link, target);
 
 	capacity.set(capacity.get() + link.getTransmissionRate().get());
+	
 	return link;
     }
 

@@ -20,7 +20,7 @@ public class ScalarLinkQualityEvaluator
 	super(scoreScope);
 
 	this.radioModel = radioModel;
-
+	
 	this.mobilityEvaluator = new MobilityEvaluator<ScalarRadioNode>(
 		/* scoreScope */ new DoubleScope(0d, 1d),
 		/* weight */ 1);
@@ -47,7 +47,7 @@ public class ScalarLinkQualityEvaluator
 	
 	scalarLinkQuality.setMobilityQuality(mobilityEvaluator.compute(source, sink));
 
-	scalarLinkQuality.setScore(getScore(scalarLinkQuality.getReceptionConfidence() + scalarLinkQuality.getMobilityQuality()));
+	scalarLinkQuality.setScore(scalarLinkQuality.getMobilityQuality());
 
 	return true;
     }
