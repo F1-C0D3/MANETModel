@@ -1,11 +1,17 @@
 package de.manetmodel.algorithm;
 
+import java.lang.reflect.InvocationTargetException;
+
+import javax.swing.SwingUtilities;
+
 import org.junit.Test;
 
 import de.jgraphlib.graph.generator.NetworkGraphGenerator;
 import de.jgraphlib.graph.generator.NetworkGraphProperties;
 import de.jgraphlib.graph.generator.GraphProperties.DoubleRange;
 import de.jgraphlib.graph.generator.GraphProperties.IntRange;
+import de.jgraphlib.gui.VisualGraphApp;
+import de.jgraphlib.gui.printer.WeightedEdgeIDPrinter;
 import de.jgraphlib.util.RandomNumbers;
 import de.manetmodel.example.elements.ScalarLinkQuality;
 import de.manetmodel.example.elements.ScalarRadioFlow;
@@ -14,16 +20,13 @@ import de.manetmodel.example.elements.ScalarRadioNode;
 import de.manetmodel.example.network.ScalarRadioMANET;
 import de.manetmodel.example.network.ScalarRadioMANETSupplier;
 import de.manetmodel.example.radio.ScalarRadioModel;
-import de.manetmodel.generator.FlowProblemGenerator;
-import de.manetmodel.generator.FlowProblemProperties;
-import de.manetmodel.network.Flow;
 import de.manetmodel.network.unit.DataRate;
 
 
 public class NaiveOptimalFlowDistributionTest {
 
     @Test
-    public void naiveOptimalFlowDistributionTest() {
+    public void naiveOptimalFlowDistributionTest() throws InvocationTargetException, InterruptedException {
 	
 	ScalarRadioMANET manet = new ScalarRadioMANET(
 			new ScalarRadioMANETSupplier().getNodeSupplier(),
@@ -35,7 +38,7 @@ public class NaiveOptimalFlowDistributionTest {
 	NetworkGraphProperties graphProperties = new NetworkGraphProperties(
 		/* playground width */ 		1024,
 		/* playground height */ 	768, 
-		/* number of vertices */ 	new IntRange(20, 20),
+		/* number of vertices */ 	new IntRange(10,10),
 		/* distance between vertices */ new DoubleRange(50d, 100d),
 		/* edge distance */ 		new DoubleRange(100d, 100d));
 
@@ -49,13 +52,18 @@ public class NaiveOptimalFlowDistributionTest {
 	
 	manet.addFlow(manet.getFirstVertex(), manet.getVertices().get(random.getRandom(1, manet.getVertices().size()-1)), new DataRate(100));
 	manet.addFlow(manet.getFirstVertex(), manet.getVertices().get(random.getRandom(1, manet.getVertices().size()-1)), new DataRate(100));
-	
+	manet.addFlow(manet.getFirstVertex(), manet.getVertices().get(random.getRandom(1, manet.getVertices().size()-1)), new DataRate(100));
+	manet.addFlow(manet.getFirstVertex(), manet.getVertices().get(random.getRandom(1, manet.getVertices().size()-1)), new DataRate(100));
+	manet.addFlow(manet.getFirstVertex(), manet.getVertices().get(random.getRandom(1, manet.getVertices().size()-1)), new DataRate(100));
+
 	manet.initialize();
 		
+	SwingUtilities.invokeAndWait(new VisualGraphApp<ScalarRadioNode, ScalarRadioLink, ScalarLinkQuality>(
+		manet, new WeightedEdgeIDPrinter<ScalarRadioLink, ScalarLinkQuality>()));
+	
 	NaiveOptimalFlowDistribution<ScalarRadioNode, ScalarRadioLink, ScalarLinkQuality, ScalarRadioFlow> naiveOptimalFlowDistribution = 
 		new NaiveOptimalFlowDistribution<ScalarRadioNode, ScalarRadioLink, ScalarLinkQuality, ScalarRadioFlow>();
 
-	naiveOptimalFlowDistribution.getFeasibleDistributions(manet);
-    }
-    
+	naiveOptimalFlowDistribution.generateFeasibleDistributions(manet);
+    }  
 }
