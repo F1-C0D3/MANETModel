@@ -31,44 +31,6 @@ public class ScalarLinkQualityEvaluator
 	
 	this.setPropertyScope(new DoubleScope(0d, mobilityEvaluator.getScoreScope().max + confidenceRangeEvaluator.getScoreScope().max));
 
-	// -> Moved to class ConfidenceRangeEvaluator
-	/*
-	this.computeConfidenceRange = (Quadruple< // transmission power 
-		Watt, // reception power 
-		Watt, // reception threshold 
-		Watt,  // carrier frequency 
-		Double> radioParameters) -> {
-
-	    double confidenceValue = 0d;
-
-	    double confidenceMax = 0.85d;
-
-	    Watt transmissionPower = radioParameters.getFirst();
-	    dBm receptionPower = radioParameters.getSecond().todBm();
-	    Watt receptionThreshold = radioParameters.getThird();
-	    double carrierFrequency = radioParameters.getFourth();
-
-	    double theoreticalMaxDistance = ScalarRadioModel.Propagation.theoreticalDistance(receptionThreshold,
-		    transmissionPower, carrierFrequency);
-
-	    double maxConfidenceDistance = theoreticalMaxDistance * confidenceMax;
-
-	    dBm confidenceThreshold = ScalarRadioModel.Propagation
-		    .receptionPower(maxConfidenceDistance, transmissionPower, carrierFrequency).todBm();
-
-	    dBm theoreticalMaxReceptionPower = new dBm(0d);
-
-	    if (receptionPower.get() > confidenceThreshold.get())
-		confidenceValue = 1d - ((receptionPower.get() - confidenceThreshold.get())
-			/ (theoreticalMaxReceptionPower.get() - confidenceThreshold.get()));
-	    else {
-		dBm receptionThresholddBm = receptionThreshold.todBm();
-		confidenceValue = Math
-			.pow(((receptionPower.get() - receptionThresholddBm.get()) / confidenceThreshold.get()
-				- receptionThresholddBm.get()), 10d);
-	    }
-	    return confidenceValue;
-	};*/
     }
 
     @Override

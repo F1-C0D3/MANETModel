@@ -16,7 +16,7 @@ public class Watt {
     }
 
     private double convert(double value) {
-	return 1d * (Math.log10(1000d * this.value * 1d));
+	return 10d * (Math.log10(1000d * this.value * 1d));
     }
 
     public dBm todBm() {

@@ -20,7 +20,7 @@ public class ConfidenceRangeEvaluator extends PropertyStandardization {
 	double confidenceMax = 0.85d;
 
 	Watt transmissionPower = source.getTransmissionPower();
-	dBm receptionPower = sink.getReceptionThreshold().todBm();
+	dBm receptionPower = link.getReceptionPower().todBm();
 	Watt receptionThreshold = sink.getReceptionThreshold();
 	double carrierFrequency = scalarRadioModel.getCarrierFrequency();
 
@@ -32,17 +32,20 @@ public class ConfidenceRangeEvaluator extends PropertyStandardization {
 	dBm confidenceThreshold = ScalarRadioModel.Propagation
 		.receptionPower(maxConfidenceDistance, transmissionPower, carrierFrequency).todBm();
 
-	dBm theoreticalMaxReceptionPower = new dBm(0d);
+	dBm theoreticalMaxReceptionPower = transmissionPower.todBm();
 
 	if (receptionPower.get() > confidenceThreshold.get())
-	    confidenceValue = 1d - ((receptionPower.get() - confidenceThreshold.get())
-		    / (theoreticalMaxReceptionPower.get() - confidenceThreshold.get()));
+	    confidenceValue = Math.pow(((receptionPower.get() - theoreticalMaxReceptionPower.get())
+		    / (confidenceThreshold.get() - theoreticalMaxReceptionPower.get())), 4);
 	else {
 	    dBm receptionThresholddBm = receptionThreshold.todBm();
-	    confidenceValue = Math.pow(((receptionPower.get() - receptionThresholddBm.get()) / confidenceThreshold.get()
-		    - receptionThresholddBm.get()), 10d);
-	}
+	    confidenceValue = Math.pow(((receptionPower.get() - receptionThresholddBm.get())
+		    / (confidenceThreshold.get() - (receptionThresholddBm.get()))), 10d);
 
-	return confidenceValue;
+	}
+	
+	this.setPropertyScope(new DoubleScope(0d, 1d));
+
+	return getScore(confidenceValue);
     }
 }
