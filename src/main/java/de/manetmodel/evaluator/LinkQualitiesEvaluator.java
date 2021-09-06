@@ -23,27 +23,27 @@ public class LinkQualitiesEvaluator<N extends Node, L extends Link<W>, W extends
 	
 	super(scoreScope);
 	
-	    receptionPower = 
-		    new PropertyEvaluator<W>(
-			    /*property value*/	(W w) -> {return (double) w.getReceptionPower();}, 		
-			    /*property scope*/ 	new DoubleScope(0 /*manet.getMinReceptionPower*/, 10/*manet.getMaxReceptionPower*/),
-			    /*score scope*/	new DoubleScope(0d, 1d),
-			    /*weight*/		receptionPowerWeight);
+		//receptionPower = 
+		//	    new PropertyEvaluator<W>(
+		//		    /*property value*/	(W w) -> {return (double) w.getReceptionPower();}, 		
+		//		    /*property scope*/ 	new DoubleScope(0 /*manet.getMinReceptionPower*/, 10/*manet.getMaxReceptionPower*/),
+		//		    /*score scope*/	new DoubleScope(0d, 1d),
+		//		    /*weight*/		receptionPowerWeight);
 	    
-	    mobility = 
-		    new PropertyEvaluator<Node>(
-			    /*property value*/	(Node n) -> {return (double) n.getSpeed();}, 		
-			    /*property scope*/ 	new DoubleScope(0 /*manet.getMaxSpeed*/,10/*manet.getMinSpeed*/),
-			    /*score scope*/	new DoubleScope(0d, 10d),
-			    /*weight*/		mobilityWeight);    
+	    //mobility = 
+	    //    new PropertyEvaluator<Node>(
+	    //	    /*property value*/	(Node n) -> {return (double) n.getSpeed();}, 		
+	    //	    /*property scope*/ 	new DoubleScope(0 /*manet.getMaxSpeed*/,10/*manet.getMinSpeed*/),
+	    //	    /*score scope*/	new DoubleScope(0d, 10d),
+	    //	    /*weight*/		mobilityWeight);    
 	   
-	    utilization = 
-		    new PropertyEvaluator<LinkQuality>(
-			    /*score*/		(LinkQuality w) -> {return (double) w.getUtilization().get();}, 
-			    /*property min*/	(LinkQuality w) -> {return 0d;},
-			    /*property max*/	(LinkQuality w) -> {return (double) w.getTransmissionRate().get();},
-			    /*score scope*/	new DoubleScope(0d, 10d),
-			    /*weight*/		utilizationWeight);  
+	    //utilization = 
+	    //new PropertyEvaluator<LinkQuality>(
+	    //	    /*score*/		(LinkQuality w) -> {return (double) w.getUtilization().get();}, 
+	    //	    /*property min*/	(LinkQuality w) -> {return 0d;},
+	    //	    /*property max*/	(LinkQuality w) -> {return (double) w.getTransmissionRate().get();},
+	    //	    /*score scope*/	new DoubleScope(0d, 10d),
+	    //	    /*weight*/		utilizationWeight);  
 	    
 	    //confidenceArea = 
 	    

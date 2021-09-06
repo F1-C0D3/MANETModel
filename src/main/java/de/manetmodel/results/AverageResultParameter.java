@@ -2,7 +2,7 @@ package de.manetmodel.results;
 
 import com.opencsv.bean.CsvBindByName;
 
-import de.manetmodel.network.unit.Time;
+import de.manetmodel.units.Time;
 
 
 public class AverageResultParameter extends ResultParameter {

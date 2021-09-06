@@ -6,9 +6,9 @@ import java.util.function.Supplier;
 import com.opencsv.bean.ColumnPositionMappingStrategy;
 
 import de.jgraphlib.util.Tuple;
-import de.manetmodel.network.mobility.MobilityModel;
-import de.manetmodel.network.unit.Time;
+import de.manetmodel.mobilitymodel.MobilityModel;
 import de.manetmodel.scenarios.Scenario;
+import de.manetmodel.units.Time;
 
 public abstract class AverageResultMapper<A extends AverageResultParameter, R extends RunResultParameter>
 	extends ResultMapper<A> {

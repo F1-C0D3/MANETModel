@@ -13,15 +13,15 @@ import de.jgraphlib.graph.generator.GraphProperties.IntRange;
 import de.jgraphlib.gui.VisualGraphApp;
 import de.jgraphlib.gui.printer.WeightedEdgeIDPrinter;
 import de.jgraphlib.util.RandomNumbers;
-import de.manetmodel.example.elements.ScalarLinkQuality;
-import de.manetmodel.example.elements.ScalarRadioFlow;
-import de.manetmodel.example.elements.ScalarRadioLink;
-import de.manetmodel.example.elements.ScalarRadioNode;
-import de.manetmodel.example.network.ScalarRadioMANET;
-import de.manetmodel.example.network.ScalarRadioMANETSupplier;
-import de.manetmodel.example.radio.ScalarRadioModel;
-import de.manetmodel.network.unit.DataRate;
-import de.manetmodel.network.unit.Watt;
+import de.manetmodel.network.scalar.ScalarLinkQuality;
+import de.manetmodel.network.scalar.ScalarRadioFlow;
+import de.manetmodel.network.scalar.ScalarRadioLink;
+import de.manetmodel.network.scalar.ScalarRadioMANET;
+import de.manetmodel.network.scalar.ScalarRadioMANETSupplier;
+import de.manetmodel.network.scalar.ScalarRadioModel;
+import de.manetmodel.network.scalar.ScalarRadioNode;
+import de.manetmodel.units.DataRate;
+import de.manetmodel.units.Watt;
 
 
 public class NaiveOptimalFlowDistributionTest {

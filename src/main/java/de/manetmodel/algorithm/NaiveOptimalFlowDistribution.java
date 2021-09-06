@@ -105,7 +105,6 @@ public class NaiveOptimalFlowDistribution<N extends Node, L extends Link<W>, W e
 		log.info(String.format("%d/%d (%.2f %%)", count, combinations,
 			((double) count / (double) combinations) * 100));
 	    }
-
 	});
 
 	log.infoHeader(HeaderLevel.h2, "(3) Evaluation");

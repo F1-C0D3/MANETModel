@@ -6,8 +6,8 @@ import java.util.function.Supplier;
 import com.opencsv.bean.ColumnPositionMappingStrategy;
 
 import de.jgraphlib.util.Tuple;
-import de.manetmodel.network.unit.Time;
 import de.manetmodel.scenarios.Scenario;
+import de.manetmodel.units.Time;
 
 public class MANETAverageResultMapper extends AverageResultMapper<AverageResultParameter, RunResultParameter> {
 

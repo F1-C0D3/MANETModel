@@ -8,7 +8,7 @@ import de.jgraphlib.graph.elements.Position2D;
 import de.jgraphlib.graph.elements.Vertex;
 import de.jgraphlib.graph.elements.WeightedEdge;
 import de.jgraphlib.util.Tuple;
-import de.manetmodel.network.unit.DataRate;
+import de.manetmodel.units.DataRate;
 
 public class Flow<N extends Vertex<Position2D>, L extends WeightedEdge<W>, W extends LinkQuality>
 	extends Path<N, L, W> {

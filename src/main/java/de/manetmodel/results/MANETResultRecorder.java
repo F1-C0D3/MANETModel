@@ -9,8 +9,8 @@ import de.manetmodel.network.Link;
 import de.manetmodel.network.LinkQuality;
 import de.manetmodel.network.MANET;
 import de.manetmodel.network.Node;
-import de.manetmodel.network.unit.Time;
 import de.manetmodel.results.CSVExporter.RecordType;
+import de.manetmodel.units.Time;
 
 public class MANETResultRecorder<R extends RunResultParameter,A extends AverageResultParameter> {
 

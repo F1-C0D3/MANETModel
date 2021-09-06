@@ -10,18 +10,18 @@ import java.util.stream.Collectors;
 
 import de.jgraphlib.graph.DirectedWeighted2DGraph;
 import de.jgraphlib.util.Tuple;
-import de.manetmodel.example.evaluator.LinkQualityEvaluator;
-import de.manetmodel.network.mobility.MobilityModel;
-import de.manetmodel.network.mobility.MovementPattern;
-import de.manetmodel.network.radio.IRadioModel;
-import de.manetmodel.network.unit.DataRate;
-import de.manetmodel.network.unit.Speed;
-import de.manetmodel.network.unit.Unit;
+import de.manetmodel.evaluator.LinkQualityEvaluator;
+import de.manetmodel.mobilitymodel.MobilityModel;
+import de.manetmodel.mobilitymodel.MovementPattern;
+import de.manetmodel.radiomodel.RadioModel;
+import de.manetmodel.units.DataRate;
+import de.manetmodel.units.Speed;
+import de.manetmodel.units.Unit;
 
 public class MANET<N extends Node, L extends Link<W>, W extends LinkQuality, F extends Flow<N, L, W>>
 	extends DirectedWeighted2DGraph<N, L, W, F> {
 
-    protected IRadioModel<N, L, W> radioModel;
+    protected RadioModel<N, L, W> radioModel;
     protected MobilityModel mobilityModel;
     protected DataRate utilization;
     protected DataRate capacity;
@@ -30,7 +30,7 @@ public class MANET<N extends Node, L extends Link<W>, W extends LinkQuality, F e
     protected LinkQualityEvaluator<N, L, W> linkQualityEvaluator;
 
     public MANET(Supplier<N> vertexSupplier, Supplier<L> edgeSupplier, Supplier<W> edgeWeightSupplier,
-	    Supplier<F> flowSupplier, IRadioModel<N, L, W> radioModel, MobilityModel mobilityModel, LinkQualityEvaluator<N, L,W> linkQualityEvaluator) {
+	    Supplier<F> flowSupplier, RadioModel<N, L, W> radioModel, MobilityModel mobilityModel, LinkQualityEvaluator<N, L,W> linkQualityEvaluator) {
 	super(vertexSupplier, edgeSupplier, edgeWeightSupplier, flowSupplier);
 	this.radioModel = radioModel;
 	this.mobilityModel = mobilityModel;

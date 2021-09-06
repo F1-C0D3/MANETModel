@@ -10,7 +10,7 @@ import de.manetmodel.network.Link;
 import de.manetmodel.network.LinkQuality;
 import de.manetmodel.network.MANET;
 import de.manetmodel.network.Node;
-import de.manetmodel.network.unit.DataRate;
+import de.manetmodel.units.DataRate;
 
 public class OverUtilzedProblemGenerator<N extends Node, L extends Link<W>, W extends LinkQuality, F extends Flow<N, L, W>> {
 

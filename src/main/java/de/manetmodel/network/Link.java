@@ -1,7 +1,7 @@
 package de.manetmodel.network;
 
 import de.jgraphlib.graph.elements.WeightedEdge;
-import de.manetmodel.network.unit.DataRate;
+import de.manetmodel.units.DataRate;
 
 public class Link<W extends LinkQuality> extends WeightedEdge<W> {
 

@@ -5,7 +5,7 @@ import java.util.List;
 
 import de.jgraphlib.graph.elements.Position2D;
 import de.jgraphlib.graph.elements.Vertex;
-import de.manetmodel.network.mobility.MovementPattern;
+import de.manetmodel.mobilitymodel.MovementPattern;
 
 public class Node extends Vertex<Position2D> {
 

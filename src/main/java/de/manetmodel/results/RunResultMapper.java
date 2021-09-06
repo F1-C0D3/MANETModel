@@ -2,10 +2,10 @@ package de.manetmodel.results;
 
 import com.opencsv.bean.ColumnPositionMappingStrategy;
 
+import de.manetmodel.mobilitymodel.MobilityModel;
 import de.manetmodel.network.Link;
 import de.manetmodel.network.LinkQuality;
 import de.manetmodel.network.Node;
-import de.manetmodel.network.mobility.MobilityModel;
 import de.manetmodel.scenarios.Scenario;
 
 public abstract class RunResultMapper<R extends RunResultParameter,N extends Node,L extends Link<W>, W extends LinkQuality> extends ResultMapper<R> {
