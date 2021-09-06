@@ -30,6 +30,8 @@ public class MobilityEvaluator<N extends Node> extends PropertyStandardization {
 	
 	setPropertyScope(new DoubleScope(-vectorProduct, vectorProduct));
 	
+	//System.out.println(String.format("score %.2f", getScore(scalarProduct)));
+	
 	return getScore(scalarProduct);
     }   
 }
