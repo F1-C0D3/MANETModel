@@ -43,6 +43,7 @@ public class ConfidenceRangeEvaluator extends PropertyStandardization {
 		    / (confidenceThreshold.get() - (receptionThresholddBm.get()))), 10d);
 	}
 
+	confidenceValue = 1 - confidenceValue;
 	this.setPropertyScope(new DoubleScope(0d, 1d));
 
 	return getScore(confidenceValue);
