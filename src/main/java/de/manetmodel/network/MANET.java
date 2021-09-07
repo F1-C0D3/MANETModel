@@ -9,6 +9,7 @@ import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 import de.jgraphlib.graph.DirectedWeighted2DGraph;
+import de.jgraphlib.graph.elements.Position2D;
 import de.jgraphlib.util.Tuple;
 import de.manetmodel.evaluator.LinkQualityEvaluator;
 import de.manetmodel.mobilitymodel.MobilityModel;
@@ -30,7 +31,8 @@ public class MANET<N extends Node, L extends Link<W>, W extends LinkQuality, F e
     protected LinkQualityEvaluator<N, L, W> linkQualityEvaluator;
 
     public MANET(Supplier<N> vertexSupplier, Supplier<L> edgeSupplier, Supplier<W> edgeWeightSupplier,
-	    Supplier<F> flowSupplier, RadioModel<N, L, W> radioModel, MobilityModel mobilityModel, LinkQualityEvaluator<N, L,W> linkQualityEvaluator) {
+	    Supplier<F> flowSupplier, RadioModel<N, L, W> radioModel, MobilityModel mobilityModel,
+	    LinkQualityEvaluator<N, L, W> linkQualityEvaluator) {
 	super(vertexSupplier, edgeSupplier, edgeWeightSupplier, flowSupplier);
 	this.radioModel = radioModel;
 	this.mobilityModel = mobilityModel;
@@ -40,7 +42,7 @@ public class MANET<N extends Node, L extends Link<W>, W extends LinkQuality, F e
 	this.activeUtilizedLinks = new HashSet<Integer>();
 	this.linkQualityEvaluator = linkQualityEvaluator;
     }
-      
+
     public MANET(MANET<N, L, W, F> manet) {
 	super(manet.vertexSupplier, manet.edgeSupplier, manet.edgeWeightSupplier, manet.pathSupplier);
 	this.vertices = manet.vertices;
@@ -59,19 +61,19 @@ public class MANET<N extends Node, L extends Link<W>, W extends LinkQuality, F e
 	this.utilizationAdjacencies = new ArrayList<List<Integer>>(manet.utilizationAdjacencies);
 	this.activeUtilizedLinks = new HashSet<Integer>(manet.activeUtilizedLinks);
     }
- 
+
     public MobilityModel getMobilityModel() {
 	return mobilityModel;
     }
-    
+
     public RadioModel<N, L, W> getRadioModel() {
 	return radioModel;
     }
-    
+
     public void setLinkQualtiyEvaluator(LinkQualityEvaluator<N, L, W> linkQualityEvaluator) {
 	this.linkQualityEvaluator = linkQualityEvaluator;
     }
-    
+
     public MANET<N, L, W, F> copy() {
 	return new MANET<N, L, W, F>(this);
     }
@@ -187,11 +189,11 @@ public class MANET<N extends Node, L extends Link<W>, W extends LinkQuality, F e
 	radioModel.setLinkRadioParameters(link, distance);
 	link.setUtilization(new DataRate(0));
 
-	if(!Objects.isNull(linkQualityEvaluator))
+	if (!Objects.isNull(linkQualityEvaluator))
 	    linkQualityEvaluator.compute(source, link, target);
 
 	capacity.set(capacity.get() + link.getTransmissionRate().get());
-	
+
 	return link;
     }
 
@@ -305,9 +307,9 @@ public class MANET<N extends Node, L extends Link<W>, W extends LinkQuality, F e
     }
 
     @Override
-    public N addVertex(double x, double y) {
-
-	N n = super.addVertex(x, y);
+    public N addVertex(Position2D position) {
+	
+	N n = super.addVertex(position);
 
 	if (!Objects.isNull(mobilityModel)) {
 
@@ -331,6 +333,11 @@ public class MANET<N extends Node, L extends Link<W>, W extends LinkQuality, F e
 	    radioModel.setNodeRadioParameters(n, 100);
 
 	return n;
+    }
+
+    @Override
+    public N addVertex(double x, double y) {
+	return addVertex(new Position2D(x, y));
     }
 
     public double getOverUtilizationPercentage() {
