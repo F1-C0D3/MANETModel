@@ -57,8 +57,8 @@ public class OverUtilzedProblemGeneratorTest {
 	generator.generate(graphProperties);
 	manet.initialize();
 
-	Function<ScalarRadioLink, Double> metric = (ScalarRadioLink w) -> {
-	    return (double) w.getUtilization().get();
+	Function<ScalarLinkQuality, Double> metric = (ScalarLinkQuality w) -> {
+	    return w.getScore();
 	};
 
 	OverUtilzedProblemGenerator<ScalarRadioNode, ScalarRadioLink, ScalarLinkQuality, ScalarRadioFlow> overUtilizedProblemGenerator 

@@ -15,11 +15,11 @@ import de.manetmodel.units.DataRate;
 public class OverUtilzedProblemGenerator<N extends Node, L extends Link<W>, W extends LinkQuality, F extends Flow<N, L, W>> {
 
     MANET<N, L, W, F> manet;
-    Function<L, Double> metric;
+    Function<W, Double> metric;
     FlowProblemGenerator<N, L, W, F> flowProblemGenerator;
     RandomNumbers randomNumbers = new RandomNumbers();
 
-    public OverUtilzedProblemGenerator(MANET<N, L, W, F> manet, Function<L, Double> metric) {
+    public OverUtilzedProblemGenerator(MANET<N, L, W, F> manet, Function<W, Double> metric) {
 	this.manet = manet;
 	this.metric = metric;
     }
