@@ -46,7 +46,7 @@ public class MANETAverageResultMapper extends AverageResultMapper<AverageResultP
 	averageRunParemeter.setOverUtilization(overUtilization);
 	averageRunParemeter.setUtilization(averageUtilization);
 	averageRunParemeter.setConnectionStability(averageConnectivityStability / activeLinks);
-	averageRunParemeter.setActivePathParticipants(activeLinks / runs.size());
+	averageRunParemeter.setActivePathParticipants(activeLinks);
 	averageRunParemeter.setSimulationTime(duration);
 
 	return averageRunParemeter;
