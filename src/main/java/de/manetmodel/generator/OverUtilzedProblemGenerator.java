@@ -56,7 +56,8 @@ public class OverUtilzedProblemGenerator<N extends Node, L extends Link<W>, W ex
 		trys++;
 	    }
 	}
-	
+	manet.undeployFlows();
+	manet.clearFlows();
 	return flowProblems;
     }
 }
