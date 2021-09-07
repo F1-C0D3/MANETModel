@@ -15,8 +15,9 @@ public class ScalarRadioMANET extends MANET<ScalarRadioNode, ScalarRadioLink, Sc
 	    Supplier<ScalarLinkQuality> edgeWeightSupplier, 
 	    Supplier<ScalarRadioFlow> flowSupplier,
 	    ScalarRadioModel radioModel, 
-	    MobilityModel mobilityModel) {
+	    MobilityModel mobilityModel,
+	    ScalarLinkQualityEvaluator evaluator) {
 	
-	super(vertexSupplier, edgeSupplier, edgeWeightSupplier, flowSupplier, radioModel, mobilityModel, new ScalarLinkQualityEvaluator(new DoubleScope(0d,1d), radioModel, mobilityModel));	
+	super(vertexSupplier, edgeSupplier, edgeWeightSupplier, flowSupplier, radioModel, mobilityModel, evaluator );	
     }  
 }

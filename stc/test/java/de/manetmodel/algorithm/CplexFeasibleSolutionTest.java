@@ -14,6 +14,8 @@ import de.jgraphlib.graph.generator.GraphProperties.IntRange;
 import de.jgraphlib.gui.VisualGraphApp;
 import de.jgraphlib.gui.printer.WeightedEdgeIDPrinter;
 import de.jgraphlib.util.RandomNumbers;
+import de.manetmodel.evaluator.DoubleScope;
+import de.manetmodel.evaluator.ScalarLinkQualityEvaluator;
 import de.manetmodel.mobilitymodel.PedestrianMobilityModel;
 import de.manetmodel.network.scalar.ScalarLinkQuality;
 import de.manetmodel.network.scalar.ScalarRadioFlow;
@@ -36,12 +38,19 @@ public class CplexFeasibleSolutionTest {
     @Test
     public void naiveOptimalFlowDistributionTest() throws InvocationTargetException, InterruptedException, IloException {
 	
+	ScalarRadioModel radioModel = new ScalarRadioModel(new Watt(0.002d), new Watt(1e-11), 1000d, 2412000000d);
+	PedestrianMobilityModel mobilityModel = new PedestrianMobilityModel(new RandomNumbers(), new SpeedRange(0, 100, Unit.TimeSteps.second, Unit.Distance.meter), new Speed(50, Unit.Distance.meter, Unit.TimeSteps.second));
+	ScalarLinkQualityEvaluator evaluator = new ScalarLinkQualityEvaluator(new DoubleScope(0d, 1d), radioModel,
+		mobilityModel);
+	
+	
 	ScalarRadioMANET manet = new ScalarRadioMANET(new ScalarRadioMANETSupplier().getNodeSupplier(),
 		new ScalarRadioMANETSupplier().getLinkSupplier(),
 		new ScalarRadioMANETSupplier().getLinkPropertySupplier(),
 		new ScalarRadioMANETSupplier().getFlowSupplier(),
-		new ScalarRadioModel(new Watt(0.002d), new Watt(1e-11), 1000d, 2412000000d), 
-		new PedestrianMobilityModel(new RandomNumbers(), new SpeedRange(0, 100, Unit.TimeSteps.second, Unit.Distance.meter), new Speed(50, Unit.Distance.meter, Unit.TimeSteps.second)));
+		radioModel, 
+		mobilityModel,
+		evaluator);
 	
 	NetworkGraphProperties graphProperties = new NetworkGraphProperties(
 		/* playground width */ 		1024,

@@ -38,12 +38,19 @@ public class NetworkTopology_1024x786 {
 
     public static void main(String args[]) {
 
+	ScalarRadioModel radioModel = new ScalarRadioModel(new Watt(0.002d), new Watt(1e-11), 1000d, 2412000000d);
+	PedestrianMobilityModel mobilityModel = new PedestrianMobilityModel(new RandomNumbers(), new SpeedRange(0, 100, Unit.TimeSteps.second, Unit.Distance.meter), new Speed(50, Unit.Distance.meter, Unit.TimeSteps.second));
+	ScalarLinkQualityEvaluator evaluator = new ScalarLinkQualityEvaluator(new DoubleScope(0d, 1d), radioModel,
+		mobilityModel);
+	
+	
 	ScalarRadioMANET manet = new ScalarRadioMANET(new ScalarRadioMANETSupplier().getNodeSupplier(),
 		new ScalarRadioMANETSupplier().getLinkSupplier(),
 		new ScalarRadioMANETSupplier().getLinkPropertySupplier(),
 		new ScalarRadioMANETSupplier().getFlowSupplier(),
-		new ScalarRadioModel(new Watt(0.002d), new Watt(1e-11), 1000d, 2412000000d), 
-		new PedestrianMobilityModel(new RandomNumbers(), new SpeedRange(0, 100, Unit.TimeSteps.second, Unit.Distance.meter), new Speed(50, Unit.Distance.meter, Unit.TimeSteps.second)));
+		radioModel, 
+		mobilityModel,
+		evaluator);
 
 	XMLImporter<ScalarRadioNode, Position2D, ScalarRadioLink, ScalarLinkQuality> importer = 
 		new XMLImporter<ScalarRadioNode, Position2D, ScalarRadioLink, ScalarLinkQuality>(
@@ -56,7 +63,7 @@ public class NetworkTopology_1024x786 {
 	DijkstraShortestPath<ScalarRadioNode, ScalarRadioLink, ScalarLinkQuality> sp = 
 		new DijkstraShortestPath<ScalarRadioNode, ScalarRadioLink, ScalarLinkQuality>(manet);
 
-	Function<ScalarRadioLink, Double> metric2 = (ScalarRadioLink l) -> {return (double) l.getWeight().getDistance();};
+	Function<ScalarLinkQuality, Double> metric2 = (ScalarLinkQuality q) -> {return (double) q.getDistance();};
 
 	ScalarRadioFlow flow1 = new ScalarRadioFlow(manet.getVertex(0), manet.getVertex(69), new DataRate(1500000));
 	

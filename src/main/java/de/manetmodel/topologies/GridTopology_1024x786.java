@@ -47,12 +47,19 @@ public class GridTopology_1024x786 {
 
     public Boolean create() {
 
+	ScalarRadioModel radioModel = new ScalarRadioModel(new Watt(0.002d), new Watt(1e-11), 1000d, 2412000000d);
+	PedestrianMobilityModel mobilityModel = new PedestrianMobilityModel(new RandomNumbers(), new SpeedRange(0, 100, Unit.TimeSteps.second, Unit.Distance.meter), new Speed(50, Unit.Distance.meter, Unit.TimeSteps.second));
+	ScalarLinkQualityEvaluator evaluator = new ScalarLinkQualityEvaluator(new DoubleScope(0d, 1d), radioModel,
+		mobilityModel);
+	
+	
 	ScalarRadioMANET manet = new ScalarRadioMANET(new ScalarRadioMANETSupplier().getNodeSupplier(),
 		new ScalarRadioMANETSupplier().getLinkSupplier(),
 		new ScalarRadioMANETSupplier().getLinkPropertySupplier(),
 		new ScalarRadioMANETSupplier().getFlowSupplier(),
-		new ScalarRadioModel(new Watt(0.002d), new Watt(1e-11), 1000d, 2412000000d), 
-		new PedestrianMobilityModel(new RandomNumbers(), new SpeedRange(0, 100, Unit.TimeSteps.second, Unit.Distance.meter), new Speed(50, Unit.Distance.meter, Unit.TimeSteps.second)));
+		radioModel, 
+		mobilityModel,
+		evaluator);
 
 	GridGraphProperties properties = new GridGraphProperties(
 		/* playground width */ 1024,
@@ -81,12 +88,19 @@ public class GridTopology_1024x786 {
 
 	topology.create();
 
+	ScalarRadioModel radioModel = new ScalarRadioModel(new Watt(0.002d), new Watt(1e-11), 1000d, 2412000000d);
+	PedestrianMobilityModel mobilityModel = new PedestrianMobilityModel(new RandomNumbers(), new SpeedRange(0, 100, Unit.TimeSteps.second, Unit.Distance.meter), new Speed(50, Unit.Distance.meter, Unit.TimeSteps.second));
+	ScalarLinkQualityEvaluator evaluator = new ScalarLinkQualityEvaluator(new DoubleScope(0d, 1d), radioModel,
+		mobilityModel);
+	
+	
 	ScalarRadioMANET manet = new ScalarRadioMANET(new ScalarRadioMANETSupplier().getNodeSupplier(),
 		new ScalarRadioMANETSupplier().getLinkSupplier(),
 		new ScalarRadioMANETSupplier().getLinkPropertySupplier(),
 		new ScalarRadioMANETSupplier().getFlowSupplier(),
-		new ScalarRadioModel(new Watt(0.002d), new Watt(1e-11), 1000d, 2412000000d), 
-		new PedestrianMobilityModel(new RandomNumbers(), new SpeedRange(0, 100, Unit.TimeSteps.second, Unit.Distance.meter), new Speed(50, Unit.Distance.meter, Unit.TimeSteps.second)));
+		radioModel, 
+		mobilityModel,
+		evaluator);
 
 	XMLImporter<ScalarRadioNode, Position2D, ScalarRadioLink, ScalarLinkQuality> importer = 
 		new XMLImporter<ScalarRadioNode, Position2D, ScalarRadioLink, ScalarLinkQuality>(
