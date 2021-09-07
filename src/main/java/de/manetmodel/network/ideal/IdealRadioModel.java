@@ -6,15 +6,11 @@ import de.manetmodel.units.DataRate;
 
 public class IdealRadioModel extends RadioModel<IdealRadioNode, IdealRadioLink, LinkQuality> {
        
-    private DataRate transmissionBitrate;
 
-    public IdealRadioModel(DataRate transmissionBitrate) {
-	super(transmissionBitrate);	
+    public IdealRadioModel(DataRate transmissionBitrate,double linkMaxTransmissionRange) {
+	super(transmissionBitrate,linkMaxTransmissionRange);	
     }
 
-    public void setLinkRadioParameters(IdealRadioLink link, double linkDistance) {
-	link.setTransmissionRate(transmissionBitrate);
-    }
 
     public void setNodeRadioParameters(IdealRadioNode node, double coverageRange) {
 	node.setTransmissionRange(coverageRange);

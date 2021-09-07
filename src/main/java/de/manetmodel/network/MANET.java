@@ -328,9 +328,9 @@ public class MANET<N extends Node, L extends Link<W>, W extends LinkQuality, F e
 
 	    n.setPrevMobility(patternList);
 	}
-	if (!Objects.isNull(linkQualityEvaluator))
+	if (!Objects.isNull(linkQualityEvaluator) && !Objects.isNull(radioModel))
 	    // I don't know another way howto obtain the maximum distance a link can have
-	    radioModel.setNodeRadioParameters(n, 100);
+	    radioModel.setNodeRadioParameters(n, radioModel.getLinkMaxTransmissionRate());
 
 	return n;
     }

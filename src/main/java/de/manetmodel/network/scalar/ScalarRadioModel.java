@@ -12,8 +12,8 @@ public class ScalarRadioModel extends RadioModel<ScalarRadioNode, ScalarRadioLin
     private final double bandwidth;
     private final double carrierFrequency;
 
-    public ScalarRadioModel(Watt transmissionPower, Watt backgroundNoise, double bandwidth, double carrierFrequency) {
-	super(new DataRate(0));
+    public ScalarRadioModel(Watt transmissionPower, Watt backgroundNoise, double bandwidth, double carrierFrequency,double linkMaxTransmissionRange) {
+	super(new DataRate(0),linkMaxTransmissionRange);
 	this.transmissionPower = transmissionPower;
 	this.backgroundNoisePower = backgroundNoise;
 	this.bandwidth = bandwidth;
