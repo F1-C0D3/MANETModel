@@ -14,6 +14,7 @@ import de.jgraphlib.util.Tuple;
 import de.manetmodel.evaluator.LinkQualityEvaluator;
 import de.manetmodel.mobilitymodel.MobilityModel;
 import de.manetmodel.mobilitymodel.MovementPattern;
+import de.manetmodel.network.scalar.ScalarRadioFlow;
 import de.manetmodel.radiomodel.RadioModel;
 import de.manetmodel.units.DataRate;
 import de.manetmodel.units.Speed;
@@ -197,6 +198,13 @@ public class MANET<N extends Node, L extends Link<W>, W extends LinkQuality, F e
 	return link;
     }
 
+    
+    public void addFlows(List<F> flows) {
+	for (F f : flows) {
+	    addFlow(f);
+	}
+    }  
+    
     public void addFlow(F flow) {
 	flow.setID(paths.size());
 	paths.add(flow);

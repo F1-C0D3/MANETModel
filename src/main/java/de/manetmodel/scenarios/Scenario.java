@@ -9,7 +9,7 @@ import de.jgraphlib.util.RandomNumbers;
 import de.jgraphlib.util.Tuple;
 
 
-public abstract class Scenario {
+public class Scenario {
 
     protected int numFlows;
     protected int numNodes;
