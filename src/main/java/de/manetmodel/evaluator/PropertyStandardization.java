@@ -61,6 +61,6 @@ public abstract class PropertyStandardization {
 		
 	//System.out.println(String.format("propertyValue: %.2f", propertyValue));
 		
-	return function.getY(propertyValue + propertyOffset);
+	return propertyValue;
     }
 }
