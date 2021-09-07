@@ -40,7 +40,7 @@ public class MANET<N extends Node, L extends Link<W>, W extends LinkQuality, F e
 	this.activeUtilizedLinks = new HashSet<Integer>();
 	this.linkQualityEvaluator = linkQualityEvaluator;
     }
-
+      
     public MANET(MANET<N, L, W, F> manet) {
 	super(manet.vertexSupplier, manet.edgeSupplier, manet.edgeWeightSupplier, manet.pathSupplier);
 	this.vertices = manet.vertices;
@@ -59,7 +59,19 @@ public class MANET<N extends Node, L extends Link<W>, W extends LinkQuality, F e
 	this.utilizationAdjacencies = new ArrayList<List<Integer>>(manet.utilizationAdjacencies);
 	this.activeUtilizedLinks = new HashSet<Integer>(manet.activeUtilizedLinks);
     }
-
+ 
+    public MobilityModel getMobilityModel() {
+	return mobilityModel;
+    }
+    
+    public RadioModel<N, L, W> getRadioModel() {
+	return radioModel;
+    }
+    
+    public void setLinkQualtiyEvaluator(LinkQualityEvaluator<N, L, W> linkQualityEvaluator) {
+	this.linkQualityEvaluator = linkQualityEvaluator;
+    }
+    
     public MANET<N, L, W, F> copy() {
 	return new MANET<N, L, W, F>(this);
     }

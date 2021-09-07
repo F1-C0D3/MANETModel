@@ -2,18 +2,18 @@ package de.manetmodel.evaluator;
 
 import java.util.function.Function;
 
-public class PropertyEvaluator<W> {
+public class PropertyEvaluator<T> {
     
-    Function<W, Double> propertyValue;
-    Function<W, Double> propertyMinValue;
-    Function<W, Double> propertyMaxValue;
+    Function<T, Double> propertyValue;
+    Function<T, Double> propertyMinValue;
+    Function<T, Double> propertyMaxValue;
     DoubleScope propertyScope;
     DoubleScope scoreScope;
     int weight;    
      
     public PropertyEvaluator(
-	    Function<W, Double> propertyValue, 
-	    DoubleScope propertyScope, 		/* property scope is static and depends on global environment */
+	    Function<T, Double> propertyValue, 
+	    DoubleScope propertyScope, 		
 	    DoubleScope scoreScope, 
 	    int weight) {
 	
@@ -24,9 +24,9 @@ public class PropertyEvaluator<W> {
     }
     
     public PropertyEvaluator(
-	    Function<W, Double> propertyValue, 
-	    Function<W, Double> propertyMinValue, /*property scope depends on (a dynamic state) of the object itself*/
-	    Function<W, Double> propertyMaxValue, 
+	    Function<T, Double> propertyValue, 
+	    Function<T, Double> propertyMinValue,
+	    Function<T, Double> propertyMaxValue, 
 	    DoubleScope scoreScope,
 	    int weight) {
 	
@@ -37,7 +37,7 @@ public class PropertyEvaluator<W> {
  	this.scoreScope = scoreScope;
      }
     
-    public double getScore(W linkQuality) {	
+    public double getScore(T linkQuality) {	
 	return ((propertyValue.apply(linkQuality) / propertyScope.max() ) * scoreScope.max()) * weight;
     }
 }

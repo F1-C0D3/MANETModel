@@ -43,8 +43,7 @@ public class NetworkTopology_1024x786 {
 		new ScalarRadioMANETSupplier().getLinkPropertySupplier(),
 		new ScalarRadioMANETSupplier().getFlowSupplier(),
 		new ScalarRadioModel(new Watt(0.002d), new Watt(1e-11), 1000d, 2412000000d), 
-		new PedestrianMobilityModel(new RandomNumbers(), new SpeedRange(0, 100, Unit.TimeSteps.second, Unit.Distance.meter), new Speed(50, Unit.Distance.meter, Unit.TimeSteps.second)), 
-		new ScalarLinkQualityEvaluator(new DoubleScope(1d,10d), new ScalarRadioModel(new Watt(0.002d), new Watt(1e-11), 1000d, 2412000000d)));
+		new PedestrianMobilityModel(new RandomNumbers(), new SpeedRange(0, 100, Unit.TimeSteps.second, Unit.Distance.meter), new Speed(50, Unit.Distance.meter, Unit.TimeSteps.second)));
 
 	XMLImporter<ScalarRadioNode, Position2D, ScalarRadioLink, ScalarLinkQuality> importer = 
 		new XMLImporter<ScalarRadioNode, Position2D, ScalarRadioLink, ScalarLinkQuality>(

@@ -1,11 +1,6 @@
 package de.manetmodel.mobilitymodel;
 
-import java.util.List;
-
-import de.jgraphlib.graph.elements.Position2D;
-import de.jgraphlib.graph.generator.GraphProperties.DoubleRange;
 import de.jgraphlib.util.RandomNumbers;
-import de.manetmodel.units.DataUnit;
 import de.manetmodel.units.Speed;
 import de.manetmodel.units.Time;
 import de.manetmodel.units.Unit;

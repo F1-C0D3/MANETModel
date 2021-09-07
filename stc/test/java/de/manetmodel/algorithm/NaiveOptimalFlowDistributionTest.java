@@ -13,6 +13,7 @@ import de.jgraphlib.graph.generator.GraphProperties.IntRange;
 import de.jgraphlib.gui.VisualGraphApp;
 import de.jgraphlib.gui.printer.WeightedEdgeIDPrinter;
 import de.jgraphlib.util.RandomNumbers;
+import de.manetmodel.mobilitymodel.PedestrianMobilityModel;
 import de.manetmodel.network.scalar.ScalarLinkQuality;
 import de.manetmodel.network.scalar.ScalarRadioFlow;
 import de.manetmodel.network.scalar.ScalarRadioLink;
@@ -21,7 +22,10 @@ import de.manetmodel.network.scalar.ScalarRadioMANETSupplier;
 import de.manetmodel.network.scalar.ScalarRadioModel;
 import de.manetmodel.network.scalar.ScalarRadioNode;
 import de.manetmodel.units.DataRate;
+import de.manetmodel.units.Speed;
+import de.manetmodel.units.Unit;
 import de.manetmodel.units.Watt;
+import de.manetmodel.units.Speed.SpeedRange;
 
 
 public class NaiveOptimalFlowDistributionTest {
@@ -29,12 +33,12 @@ public class NaiveOptimalFlowDistributionTest {
     @Test
     public void naiveOptimalFlowDistributionTest() throws InvocationTargetException, InterruptedException {
 	
-	ScalarRadioMANET manet = new ScalarRadioMANET(
-			new ScalarRadioMANETSupplier().getNodeSupplier(),
-			new ScalarRadioMANETSupplier().getLinkSupplier(),
-			new ScalarRadioMANETSupplier().getLinkPropertySupplier(), 
-			new ScalarRadioMANETSupplier().getFlowSupplier(),
-			new ScalarRadioModel(new Watt(0.002d), new Watt(1e-11), 1000d, 2412000000d), null, null);
+	ScalarRadioMANET manet = new ScalarRadioMANET(new ScalarRadioMANETSupplier().getNodeSupplier(),
+		new ScalarRadioMANETSupplier().getLinkSupplier(),
+		new ScalarRadioMANETSupplier().getLinkPropertySupplier(),
+		new ScalarRadioMANETSupplier().getFlowSupplier(),
+		new ScalarRadioModel(new Watt(0.002d), new Watt(1e-11), 1000d, 2412000000d), 
+		new PedestrianMobilityModel(new RandomNumbers(), new SpeedRange(0, 100, Unit.TimeSteps.second, Unit.Distance.meter), new Speed(50, Unit.Distance.meter, Unit.TimeSteps.second)));
 	
 	NetworkGraphProperties graphProperties = new NetworkGraphProperties(
 		/* playground width */ 		1024,
