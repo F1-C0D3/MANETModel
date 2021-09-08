@@ -5,5 +5,6 @@ import de.manetmodel.units.DataRate;
 
 public class FlowProblemProperties extends PathProblemProperties {
     public DataRate minDemand;
-    public DataRate maxDemand;  
+    public DataRate maxDemand;
+    public boolean uniqueSourceDestination;
 }
