@@ -17,7 +17,6 @@ public class OverUtilzedProblemGenerator<N extends Node, L extends Link<W>, W ex
     MANET<N, L, W, F> manet;
     Function<W, Double> metric;
     FlowProblemGenerator<N, L, W, F> flowProblemGenerator;
-    RandomNumbers randomNumbers = new RandomNumbers();
 
     public OverUtilzedProblemGenerator(MANET<N, L, W, F> manet, Function<W, Double> metric) {
 	this.manet = manet;
@@ -25,36 +24,61 @@ public class OverUtilzedProblemGenerator<N extends Node, L extends Link<W>, W ex
     }
 
     public List<F> compute(OverUtilizedProblemProperties properties) {
+	return compute(properties, new RandomNumbers());
+    }
+
+    public List<F> compute(OverUtilizedProblemProperties properties, RandomNumbers randomNumbers) {
 
 	int trys = 0;
-	
+	boolean invalidSoltuion = false;
+
 	flowProblemGenerator = new FlowProblemGenerator<N, L, W, F>(randomNumbers, manet.getFlowSupplier());
 	DijkstraShortestPath<N, L, W> dijkstraShortestPath = new DijkstraShortestPath<N, L, W>(manet);
 
 	double overUtilizationPercentage = 0;
 
 	List<F> flowProblems = null;
-	
+
 	while (overUtilizationPercentage < properties.overUtilizationPercentage && trys < 100) {
 
 	    flowProblems = flowProblemGenerator.generate(manet, properties);
 
 	    for (F flowProblem : flowProblems) {
-		flowProblem.update(dijkstraShortestPath.compute(flowProblem.getSource(), flowProblem.getTarget(), metric));
+		flowProblem
+			.update(dijkstraShortestPath.compute(flowProblem.getSource(), flowProblem.getTarget(), metric));
+
 		manet.addFlow(flowProblem);
 		manet.deployFlow(flowProblem);
+		// No single flow can be over-utilize the network
+		if (manet.isOverutilized()) {
+		    manet.undeployFlow(flowProblem);
+		    invalidSoltuion = true;
+		}
+		manet.undeployFlow(flowProblem);
 	    }
 
-	    if (manet.getOverUtilizedActiveLinks().size() > 0) {
-		overUtilizationPercentage = manet.getOverUtilizationPercentageOf(manet.getOverUtilizedActiveLinks());
-		System.out.println(overUtilizationPercentage);	
+	    if (!invalidSoltuion) {
+
+		manet.deployFlows(flowProblems);
+
+		if (manet.getOverUtilizedActiveLinks().size() > 0) {
+		    overUtilizationPercentage = manet
+			    .getOverUtilizationPercentageOf(manet.getOverUtilizedActiveLinks());
+		    System.out.println(overUtilizationPercentage);
+
+		} else {
+		    manet.undeployFlows();
+		    manet.clearFlows();
+		    properties.maxDemand = new DataRate(properties.maxDemand.get() + properties.maxDemand.get() / 10);
+		    trys++;
+		}
 	    }
-	    else {
-		manet.undeployFlows();
-		manet.clearFlows();
-		properties.maxDemand = new DataRate(properties.maxDemand.get() + properties.maxDemand.get() / 10);
-		trys++;
-	    }
+	    
+	   invalidSoltuion=false;
+	}
+
+	for (F flowProblem : flowProblems) {
+	    flowProblem.clear();
 	}
 	manet.undeployFlows();
 	manet.clearFlows();
