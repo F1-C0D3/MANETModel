@@ -6,6 +6,7 @@ public class ScalarLinkQuality extends LinkQuality {
 
     private double mobilityQuality;
     private double receptionConfidence;
+    private double receptionQuality;
     
     public double getReceptionConfidence() {
         return receptionConfidence;
@@ -22,4 +23,14 @@ public class ScalarLinkQuality extends LinkQuality {
     public void setMobilityQuality(double mobilityQuality) {
 	this.mobilityQuality = mobilityQuality;
     }
+
+    public double getReceptionQuality() {
+        return receptionQuality;
+    }
+
+    public void setReceptionQuality(double receptionQuality) {
+        this.receptionQuality = receptionQuality;
+    }
+    
+    
 }
