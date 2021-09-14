@@ -62,6 +62,13 @@ public abstract class PropertyStandardization {
 	return this.scoreScope;
     }
 
+    protected double getWeightedScore(double propertyValue) {
+
+	// System.out.println(String.format("propertyValue: %.2f", propertyValue));
+
+	return function.getY(propertyValue + propertyOffset)*weight;
+    }
+    
     protected double getScore(double propertyValue) {
 
 	// System.out.println(String.format("propertyValue: %.2f", propertyValue));
