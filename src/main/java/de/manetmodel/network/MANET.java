@@ -241,11 +241,19 @@ public class MANET<N extends Node, L extends Link<W>, W extends LinkQuality, F e
     }
 
     public void deployFlow(F flow) {
+    	
 	for (L link : flow.getEdges()) {
 	    link.setActive();
 	    increaseUtilizationBy(link, flow.getDataRate());
 	}
     }
+    
+    public void deployFlows(List<F> flows) {
+	for (F flow : flows) {
+	    deployFlow(flow);
+	}
+    }
+    
 
     public void undeployFlows() {
 	for (L link : getEdges()) {
@@ -338,7 +346,7 @@ public class MANET<N extends Node, L extends Link<W>, W extends LinkQuality, F e
 	}
 	if (!Objects.isNull(linkQualityEvaluator) && !Objects.isNull(radioModel))
 	    // I don't know another way howto obtain the maximum distance a link can have
-	    radioModel.setNodeRadioParameters(n, radioModel.getLinkMaxTransmissionRate());
+	    radioModel.setNodeRadioParameters(n, radioModel.getLinkMaxTransmissionRange());
 
 	return n;
     }
