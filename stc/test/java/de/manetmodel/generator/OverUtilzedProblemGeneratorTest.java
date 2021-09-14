@@ -1,5 +1,6 @@
 package de.manetmodel.generator;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.fail;
 
@@ -87,14 +88,10 @@ public class OverUtilzedProblemGeneratorTest {
 
 	List<ScalarRadioFlow> flowProblems = overUtilizedProblemGenerator.compute(problemProperties);
 
-	SwingUtilities.invokeAndWait(new VisualGraphApp<ScalarRadioNode, ScalarRadioLink, ScalarLinkQuality>(manet,
-		new LinkUtilizationPrinter<ScalarRadioLink, ScalarLinkQuality>()));
-
-	System.in.read();
     }
 
     @Test
-    public void generateUniqueSourceDestinationNodes() {
+    public void generateUniqueSourceDestinationNodes() throws InvocationTargetException, InterruptedException {
 
 	ScalarRadioModel radioModel = new ScalarRadioModel(new Watt(0.002d), new Watt(1e-11), 1000d, 2412000000d, /**
 														   * maxCommunicationRange
@@ -157,7 +154,7 @@ public class OverUtilzedProblemGeneratorTest {
     }
 
     @Test
-    public void verifyOverUtilization() {
+    public void verifyOverUtilization() throws InvocationTargetException, InterruptedException {
 
 	ScalarRadioModel radioModel = new ScalarRadioModel(new Watt(0.002d), new Watt(1e-11), 1000d, 2412000000d, /**
 														   * maxCommunicationRange
@@ -213,6 +210,58 @@ public class OverUtilzedProblemGeneratorTest {
 	manet.addFlows(flowProblems);
 	manet.deployFlows(flowProblems);
 	assertNotEquals(0d, manet.getOverUtilization().get());
+
+    }
+
+    @Test
+    public void verifySingleFlowNoSolution() throws InvocationTargetException, InterruptedException {
+
+	ScalarRadioModel radioModel = new ScalarRadioModel(new Watt(0.002d), new Watt(1e-11), 1000d, 2412000000d, /**
+														   * maxCommunicationRange
+														   **/
+		100d);
+	PedestrianMobilityModel mobilityModel = new PedestrianMobilityModel(new RandomNumbers(),
+		new SpeedRange(0, 100, Unit.TimeSteps.second, Unit.Distance.meter),
+		new Speed(50, Unit.Distance.meter, Unit.TimeSteps.second));
+	ScalarLinkQualityEvaluator evaluator = new ScalarLinkQualityEvaluator(new DoubleScope(0d, 1d), radioModel,
+		mobilityModel);
+
+	ScalarRadioMANET manet = new ScalarRadioMANET(new ScalarRadioMANETSupplier().getNodeSupplier(),
+		new ScalarRadioMANETSupplier().getLinkSupplier(),
+		new ScalarRadioMANETSupplier().getLinkPropertySupplier(),
+		new ScalarRadioMANETSupplier().getFlowSupplier(), radioModel, mobilityModel, evaluator);
+
+	NetworkGraphProperties graphProperties = new NetworkGraphProperties(/* playground width */ 1024,
+		/* playground height */ 768, /* number of vertices */ new IntRange(100, 100),
+		/* distance between vertices */ new DoubleRange(50d, 100d),
+		/* edge distance */ new DoubleRange(100d, 100d));
+
+	NetworkGraphGenerator<ScalarRadioNode, ScalarRadioLink, ScalarLinkQuality> generator = new NetworkGraphGenerator<ScalarRadioNode, ScalarRadioLink, ScalarLinkQuality>(
+		manet, new ScalarRadioMANETSupplier().getLinkPropertySupplier(), new RandomNumbers());
+
+	generator.generate(graphProperties);
+	manet.initialize();
+
+	Function<ScalarLinkQuality, Double> metric = (ScalarLinkQuality w) -> {
+	    return w.getDistance();
+	};
+
+	OverUtilzedProblemGenerator<ScalarRadioNode, ScalarRadioLink, ScalarLinkQuality, ScalarRadioFlow> overUtilizedProblemGenerator = new OverUtilzedProblemGenerator<ScalarRadioNode, ScalarRadioLink, ScalarLinkQuality, ScalarRadioFlow>(
+		manet, metric);
+
+	OverUtilizedProblemProperties problemProperties = new OverUtilizedProblemProperties();
+	problemProperties.pathCount = 1;
+	problemProperties.minLength = 10;
+	problemProperties.maxLength = 20;
+	problemProperties.minDemand = new DataRate(100);
+	problemProperties.maxDemand = new DataRate(200);
+	problemProperties.overUtilizationPercentage = 5;
+	problemProperties.uniqueSourceDestination = true;
+
+	ScalarRadioFlow flowProblem = overUtilizedProblemGenerator.compute(problemProperties).get(0);
+
+	assertEquals(0, flowProblem.getEdges().size());
+	
 
     }
 }
