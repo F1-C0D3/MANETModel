@@ -14,6 +14,5 @@ public class FlowDistributionEvaluation<F extends Flow<?,?,?>> extends TreeMap<D
     
     public double getScore() {
 	return this.score;
-    }
-    
+    } 
 }

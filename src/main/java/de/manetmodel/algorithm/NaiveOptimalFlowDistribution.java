@@ -55,7 +55,7 @@ public class NaiveOptimalFlowDistribution<N extends Node, L extends Link<W>, W e
 	}
 
 	log.info(String.format(
-		"~> Overall combination options of %d (possible flow distribution represenations to check on the model)",
+		"~> Overall combination options of %d (flow distribution represenations we have to check on the model)",
 		combinations));
 
 	pathIndexes = new int[possiblePaths.size()][];

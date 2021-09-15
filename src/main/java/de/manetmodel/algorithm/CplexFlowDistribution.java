@@ -41,11 +41,12 @@ public class CplexFlowDistribution<N extends Node, L extends Link<W>, W extends 
      * Returns undeployed flows incl. paths in feasibleDistribution if solution exists.
      * Otherwise, feasibleDistribution is empty.
      */
-    public <M extends MANET<N, L, W, F>> List<F> generateFeasibleSolution(M manet) throws IloException {
+    public <M extends MANET<N, L, W, F>> List<F> generateFeasibleSolution(M manet) {
 
 	log.infoHeader(HeaderLevel.h1, "(1) Computation");
 
 	timer.start();
+	
 	try (IloCplex cplex = new IloCplex()) {
 
 	    // Decision variables
@@ -64,9 +65,7 @@ public class CplexFlowDistribution<N extends Node, L extends Link<W>, W extends 
 		    a_l[link.getID()].setName(String.format("a_l_[%d]_(%d,%d)", link.getID(),
 			    manet.getVerticesOf(link).getFirst().getID(),
 			    manet.getVerticesOf(link).getSecond().getID()));
-
 		}
-
 	    }
 
 	    /*
@@ -153,10 +152,9 @@ public class CplexFlowDistribution<N extends Node, L extends Link<W>, W extends 
 	    }
 
 	    IloNumExpr[] linkWeightExpr = new IloNumExpr[manet.getFlows().size()];
+	    
 	    for (int i = 0; i < linkWeightMatrix.length; i++) {
-
 		linkWeightExpr[i] = cplex.scalProd(linkWeightMatrix[i], x_f_l[i]);
-
 	    }
 
 	    cplex.addMinimize(cplex.sum(linkWeightExpr));
@@ -182,11 +180,9 @@ public class CplexFlowDistribution<N extends Node, L extends Link<W>, W extends 
 				flow.add(new Tuple<L, N>(link, manet.getTargetOf(link)));
 				break;
 			    }
-
 			}
 			index++;
 			node = flow.get(index).getSecond();
-
 		    }
 
 		    feasibleDistribution.add(flow);
@@ -194,8 +190,10 @@ public class CplexFlowDistribution<N extends Node, L extends Link<W>, W extends 
 	    }
 	    
 	    return feasibleDistribution;
+	} catch (IloException e) {
+	    e.printStackTrace();
 	}
-
+	
+	return feasibleDistribution;
     }
-
 }

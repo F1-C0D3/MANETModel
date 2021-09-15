@@ -262,6 +262,13 @@ public class MANET<N extends Node, L extends Link<W>, W extends LinkQuality, F e
 	}
 	this.utilization = new DataRate(0L);
     }
+    
+    public void reset() {
+	for(F flow : paths) {
+	    undeployFlow(flow);
+	    flow.clear();
+	}
+    }
 
     public void undeployFlow(F flow) {
 

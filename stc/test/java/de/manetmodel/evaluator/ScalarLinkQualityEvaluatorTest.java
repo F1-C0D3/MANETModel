@@ -50,7 +50,7 @@ public class ScalarLinkQualityEvaluatorTest {
 	NetworkGraphProperties graphProperties = new NetworkGraphProperties(
 		/* playground width */ 1024,
 		/* playground height */ 768, 
-		/* number of vertices */ new IntRange(10, 10),
+		/* number of vertices */ new IntRange(150, 150),
 		/* distance between vertices */ new DoubleRange(50d, 100d), 
 		/* edge distance */ new DoubleRange(100d, 100d));	
 
