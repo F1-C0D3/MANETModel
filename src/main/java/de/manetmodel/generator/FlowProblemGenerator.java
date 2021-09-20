@@ -9,6 +9,7 @@ import de.jgraphlib.graph.elements.Position2D;
 import de.jgraphlib.graph.elements.Vertex;
 import de.jgraphlib.graph.elements.WeightedEdge;
 import de.jgraphlib.graph.generator.PathProblemGenerator;
+import de.jgraphlib.util.Log;
 import de.jgraphlib.util.RandomNumbers;
 import de.manetmodel.network.Flow;
 import de.manetmodel.network.FlowSupplier;
@@ -31,12 +32,11 @@ public class FlowProblemGenerator<N extends Vertex<Position2D>, L extends Weight
 	    List<Integer> nodeIdExclusionList = new ArrayList<Integer>();
 	    
 	    for (int i = 0; i < problemProperties.pathCount; i++) {
-		int randomSourceNodeID = randomNumbers.getRandomNotInE(0, graph.getVertices().size() - 1,
-			nodeIdExclusionList);
+		
+		int randomSourceNodeID = randomNumbers.getRandomNotInE(0, graph.getVertices().size() - 1, nodeIdExclusionList);
 		nodeIdExclusionList.add(randomSourceNodeID);
 
-		int randomTargetNodeID = randomNumbers.getRandomNotInE(0, graph.getVertices().size() - 1,
-			nodeIdExclusionList);
+		int randomTargetNodeID = randomNumbers.getRandomNotInE(0, graph.getVertices().size() - 1, nodeIdExclusionList);
 		nodeIdExclusionList.add(randomTargetNodeID);
 
 		F flow = pathSupplier.get();
@@ -44,12 +44,12 @@ public class FlowProblemGenerator<N extends Vertex<Position2D>, L extends Weight
 		flow.setTarget(graph.getVertex(randomTargetNodeID));
 		flowProblems.add(flow);
 	    }
+	    
 	} else
 	    flowProblems = super.generate(graph, problemProperties);
 
 	for (F flowProblem : flowProblems)
-	    flowProblem.setDataRate(new DataRate((long) randomNumbers.getRandom(problemProperties.minDemand.get(),
-		    problemProperties.maxDemand.get())));
+	    flowProblem.setDataRate(new DataRate((long) randomNumbers.getRandom(problemProperties.minDemand.get(), problemProperties.maxDemand.get())));
 
 	return flowProblems;
     }

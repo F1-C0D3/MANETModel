@@ -4,20 +4,13 @@ import de.jgraphlib.graph.elements.WeightedEdge;
 import de.manetmodel.units.DataRate;
 
 public class Link<W extends LinkQuality> extends WeightedEdge<W> {
-
-    public Link() {
-    }
-
-    private boolean isActive;
-
-    private DataRate transmissionRate;
-
-
-    // Rate as unit (bits, kbits, mbits,...)
-    private DataRate utilization;
     
+    private boolean isActive;
+    private DataRate transmissionRate;
+    private DataRate utilization;
     private int numberOfUtilizedLinks;
-
+    
+    public Link() {}
 
     public int getNumberOfUtilizedLinks() {
 	return numberOfUtilizedLinks;
@@ -42,7 +35,7 @@ public class Link<W extends LinkQuality> extends WeightedEdge<W> {
     public void setUtilization(DataRate u) {
 	this.utilization = u;
     }
-
+    
     public void setActive() {
 	this.isActive = true;
     }
@@ -55,14 +48,17 @@ public class Link<W extends LinkQuality> extends WeightedEdge<W> {
 	return this.isActive;
     }
 
-    @Override
     public String toString() {
 	return new StringBuffer("Link id: ").append(getID()).toString();
     }
+    
+    public boolean isOverutilized() {
+	return utilization.get() > transmissionRate.get();	
+    }
 
     public DataRate getOverUtilization() {
-	if (utilization.get() > this.transmissionRate.get())
-	    return new DataRate(utilization.get() - this.transmissionRate.get());
+	if (utilization.get() > transmissionRate.get())
+	    return new DataRate(utilization.get() - transmissionRate.get());
 	else
 	    return new DataRate(0);
     }

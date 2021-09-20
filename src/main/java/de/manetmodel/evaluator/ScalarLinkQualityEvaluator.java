@@ -13,8 +13,9 @@ public class ScalarLinkQualityEvaluator
     private MobilityModel mobilityModel;
     
     private MobilityEvaluator<ScalarRadioNode> mobilityEvaluator;
-    private ConfidenceRangeEvaluator confidenceRangeEvaluator;
-
+    
+    private ConfidenceRangeEvaluator confidenceRangeEvaluator; 
+    
     public ScalarLinkQualityEvaluator(DoubleScope scoreScope, ScalarRadioModel radioModel, MobilityModel mobilityModel) {
 
 	super(scoreScope);
