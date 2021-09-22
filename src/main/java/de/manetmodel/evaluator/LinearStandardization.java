@@ -3,7 +3,7 @@ package de.manetmodel.evaluator;
 import de.jgraphlib.maths.Line2D;
 import de.jgraphlib.maths.Point2D;
 
-public abstract class PropertyStandardization {
+public class LinearStandardization {
 
     DoubleScope propertyScope;
     DoubleScope scoreScope;
@@ -12,7 +12,7 @@ public abstract class PropertyStandardization {
     boolean invert;
     Line2D function;
 
-    public PropertyStandardization(DoubleScope scoreScope, double weight) {
+    public LinearStandardization(DoubleScope scoreScope, double weight) {
 	this.scoreScope = scoreScope;
 	this.weight = weight;
 	this.propertyOffset = 0;
@@ -61,16 +61,36 @@ public abstract class PropertyStandardization {
     public DoubleScope getScoreScope() {
 	return this.scoreScope;
     }
+    
+    public DoubleScope getPropertyScope() {
+	return this.propertyScope;
+    }
+    
+    public Double getWeight() {
+	return weight;
+    }
 
     protected double getWeightedScore(double propertyValue) {
 
+	if(propertyValue > propertyScope.max)
+	    return scoreScope.max;
+	
+	if(propertyValue < propertyScope.min)
+	    return scoreScope.min;
+	
 	// System.out.println(String.format("propertyValue: %.2f", propertyValue));
 
-	return function.getY(propertyValue + propertyOffset)*weight;
+	return function.getY(propertyValue + propertyOffset) * weight;
     }
     
     protected double getScore(double propertyValue) {
 
+	if(propertyValue > propertyScope.max)
+	    return scoreScope.max;
+	
+	if(propertyValue < propertyScope.min)
+	    return scoreScope.min;
+	
 	// System.out.println(String.format("propertyValue: %.2f", propertyValue));
 
 	return function.getY(propertyValue + propertyOffset);

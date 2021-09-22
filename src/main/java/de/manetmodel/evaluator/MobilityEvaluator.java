@@ -1,14 +1,10 @@
 package de.manetmodel.evaluator;
 
-import de.jgraphlib.util.Tuple;
 import de.manetmodel.mobilitymodel.MobilityModel;
 import de.manetmodel.mobilitymodel.MovementPattern;
 import de.manetmodel.network.Node;
-import de.manetmodel.units.Speed;
 
-public class MobilityEvaluator<N extends Node> extends PropertyStandardization {
-
-    PropertyEvaluator<Tuple<Speed, Speed>> speed;
+public class MobilityEvaluator<N extends Node> extends LinearStandardization {
     
     MobilityModel mobilityModel;
         
@@ -18,12 +14,6 @@ public class MobilityEvaluator<N extends Node> extends PropertyStandardization {
 	this.mobilityModel = mobilityModel;
 	
 	setPropertyScope(new DoubleScope(Math.pow(mobilityModel.getSpeedRange().max().value, 2), Math.pow(mobilityModel.getSpeedRange().min().value, 2)));
-	
-	speed = new PropertyEvaluator<Tuple<Speed, Speed>>(
-		/* propertyValue */	(Tuple<Speed, Speed> speeds) -> { return speeds.getFirst().value * speeds.getSecond().value; },
-		/* propertyScope */ 	new DoubleScope(Math.pow(mobilityModel.getSpeedRange().min().value, 2), Math.pow(mobilityModel.getSpeedRange().max().value, 0)),
-		/* scoreScope */ 	new DoubleScope(0d, 1d), 
-		/* weight */		1);
 	
 	//System.out.println(String.format("SpeedRange: min %.2f max %.2f", mobilityModel.getSpeedRange().min().value, mobilityModel.getSpeedRange().max().value));
     }

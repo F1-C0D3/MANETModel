@@ -6,8 +6,7 @@ public class LinkQuality extends EdgeDistance {
   
     double score;
     
-    public LinkQuality() {
-    }
+    public LinkQuality() {}
 
     public void setScore(double score) {
 	this.score = score;

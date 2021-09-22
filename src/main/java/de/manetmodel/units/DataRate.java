@@ -65,4 +65,8 @@ public class DataRate implements Comparator<DataRate> {
     public int compare(DataRate o1, DataRate o2) {
 	return (int) (o1.get() - o2.get());
     }
+    
+    public boolean equals(DataRate o) {	
+	return this.bits == o.bits;
+    }
 }

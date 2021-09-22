@@ -13,7 +13,6 @@ public class ScalarLinkQualityEvaluator
     private MobilityModel mobilityModel;
     
     private MobilityEvaluator<ScalarRadioNode> mobilityEvaluator;
-    
     private ConfidenceRangeEvaluator confidenceRangeEvaluator; 
     
     public ScalarLinkQualityEvaluator(DoubleScope scoreScope, ScalarRadioModel radioModel, MobilityModel mobilityModel) {
@@ -37,16 +36,18 @@ public class ScalarLinkQualityEvaluator
 
     @Override
     public boolean compute(ScalarRadioNode source, ScalarRadioLink link, ScalarRadioNode sink) {
-
 	ScalarLinkQuality scalarLinkQuality = link.getWeight();
-
-	scalarLinkQuality.setReceptionConfidence(confidenceRangeEvaluator.compute(source, link, sink, radioModel));
-	
+	scalarLinkQuality.setReceptionConfidence(confidenceRangeEvaluator.compute(source, link, sink, radioModel));	
 	scalarLinkQuality.setMobilityQuality(mobilityEvaluator.compute(source, sink));
-
 	scalarLinkQuality.setScore(getScore(scalarLinkQuality.getMobilityQuality() + scalarLinkQuality.getReceptionConfidence()));
-
 	return true;
     }
 
+    public MobilityEvaluator<ScalarRadioNode> getMobilityEvaluator() {
+	return mobilityEvaluator;
+    }
+    
+    public ConfidenceRangeEvaluator getConfidenceRangeEvaluator() {
+	return confidenceRangeEvaluator;
+    }   
 }

@@ -1,18 +1,33 @@
 package de.manetmodel.evaluator;
 
+import java.util.HashMap;
 import java.util.TreeMap;
 
 import de.manetmodel.network.Flow;
 
-public class FlowDistributionEvaluation<F extends Flow<?,?,?>> extends TreeMap<Double, F>{
-
-    private double score;   
+public class FlowDistributionEvaluation<F extends Flow<?,?,?>> extends HashMap<F, Double>{
+   
+    double score;
+    double scoreSum;
+    
+    public FlowDistributionEvaluation() {
+	scoreSum = 0;
+    }
     
     public void setScore(double score) {
 	this.score = score;
     }
     
     public double getScore() {
-	return this.score;
-    } 
+	return score;
+    }
+    
+    public double getScoreSum() {
+	return scoreSum;
+    }
+    
+    public Double put(F flow, Double score){		
+	scoreSum += score;
+	return super.put(flow, score);
+    }
 }

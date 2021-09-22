@@ -30,7 +30,5 @@ public class ScalarLinkQuality extends LinkQuality {
 
     public void setReceptionQuality(double receptionQuality) {
         this.receptionQuality = receptionQuality;
-    }
-    
-    
+    }     
 }
