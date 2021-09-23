@@ -70,29 +70,17 @@ public class LinearStandardization {
 	return weight;
     }
 
-    protected double getWeightedScore(double propertyValue) {
+    protected double getScore(double propertyValue) {
 
 	if(propertyValue > propertyScope.max)
-	    return scoreScope.max;
+	    return function.getY(propertyScope.max + propertyOffset) * weight;
 	
 	if(propertyValue < propertyScope.min)
-	    return scoreScope.min;
+	    return function.getY(propertyScope.min + propertyOffset) * weight;
 	
 	// System.out.println(String.format("propertyValue: %.2f", propertyValue));
 
 	return function.getY(propertyValue + propertyOffset) * weight;
     }
-    
-    protected double getScore(double propertyValue) {
 
-	if(propertyValue > propertyScope.max)
-	    return scoreScope.max;
-	
-	if(propertyValue < propertyScope.min)
-	    return scoreScope.min;
-	
-	// System.out.println(String.format("propertyValue: %.2f", propertyValue));
-
-	return function.getY(propertyValue + propertyOffset);
-    }
 }

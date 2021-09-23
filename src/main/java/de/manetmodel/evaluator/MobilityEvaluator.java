@@ -33,6 +33,6 @@ public class MobilityEvaluator<N extends Node> extends LinearStandardization {
 	// Compute a "speed-score" based on node's speed
 	//double speedScore = speed.getScore(new Tuple<Speed,Speed>(sourceTick.getSpeed(), sinkTick.getSpeed()));
 	
-	return getWeightedScore(sourceTick.getSpeed().value * sinkTick.getSpeed().value);
+	return getScore(sourceTick.getSpeed().value * sinkTick.getSpeed().value);
     }
 }

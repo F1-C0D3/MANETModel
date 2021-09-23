@@ -162,7 +162,6 @@ public class MANET<N extends Node, L extends Link<W>, W extends LinkQuality, F e
 	    link.setNumberOfUtilizedLinks(utilizedLinks.size());
 
 	    utilizationAdjacencies.add(utilizedLinks.stream().map(L::getID).collect(Collectors.toList()));
-
 	}
     }
 
@@ -469,6 +468,16 @@ public class MANET<N extends Node, L extends Link<W>, W extends LinkQuality, F e
 	return activeUtilizedLinks.stream().collect(Collectors.toList());
     }
 
+    public DataRate getMaxUtilizationOf(L link) {
+		
+	long maxUtilization = 0;
+	
+	for(F flow : getFlows())
+	    maxUtilization += getUtilizedLinksOf(link).size() * flow.getDataRate().get();
+	
+	return new DataRate(maxUtilization);
+    }
+    
     public Supplier<F> getFlowSupplier() {
 	return this.pathSupplier;
     }

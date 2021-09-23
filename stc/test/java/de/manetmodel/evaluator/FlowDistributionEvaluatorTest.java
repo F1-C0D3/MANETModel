@@ -2,13 +2,19 @@ package de.manetmodel.evaluator;
 
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
+import java.util.Map;
+
+import javax.swing.SwingUtilities;
 
 import org.junit.Test;
 
 import de.jgraphlib.graph.algorithms.DijkstraShortestPath;
 import de.jgraphlib.graph.generator.GridGraphGenerator;
 import de.jgraphlib.graph.generator.GridGraphProperties;
+import de.jgraphlib.gui.VisualGraphApp;
 import de.jgraphlib.util.RandomNumbers;
+import de.manetmodel.gui.LinkQualityScorePrinter;
+import de.manetmodel.gui.LinkUtilizationPrinter;
 import de.manetmodel.mobilitymodel.PedestrianMobilityModel;
 import de.manetmodel.network.scalar.ScalarLinkQuality;
 import de.manetmodel.network.scalar.ScalarRadioFlow;
@@ -18,16 +24,16 @@ import de.manetmodel.network.scalar.ScalarRadioMANETSupplier;
 import de.manetmodel.network.scalar.ScalarRadioModel;
 import de.manetmodel.network.scalar.ScalarRadioNode;
 import de.manetmodel.units.DataRate;
-import de.manetmodel.units.DataUnit.Type;
 import de.manetmodel.units.Speed;
 import de.manetmodel.units.Unit;
 import de.manetmodel.units.Watt;
+import de.manetmodel.units.DataUnit.Type;
 import de.manetmodel.units.Speed.SpeedRange;
 
-public class UtilizationEvaluatorTest {
+public class FlowDistributionEvaluatorTest {
 
     @Test
-    public void utilizationEvaluatorTest() throws InvocationTargetException, InterruptedException, IOException {
+    public void flowDistributionEvaluatorTest() throws InvocationTargetException, InterruptedException, IOException {
 	
 	/**************************************************************************************************************************************/
 	ScalarRadioModel radioModel = new ScalarRadioModel(
@@ -42,13 +48,16 @@ public class UtilizationEvaluatorTest {
 		new SpeedRange(0, 100, Unit.TimeSteps.second, Unit.Distance.meter), 
 		new Speed(50, Unit.Distance.meter, Unit.TimeSteps.second));
 			
+	ScalarLinkQualityEvaluator linkQualityEvaluator = 
+		new ScalarLinkQualityEvaluator(new DoubleScope(0d, 1d), radioModel, mobilityModel);
+	
 	ScalarRadioMANET manet = new ScalarRadioMANET(new ScalarRadioMANETSupplier().getNodeSupplier(),
 		new ScalarRadioMANETSupplier().getLinkSupplier(),
 		new ScalarRadioMANETSupplier().getLinkPropertySupplier(),
 		new ScalarRadioMANETSupplier().getFlowSupplier(),
 		radioModel, 
 		mobilityModel,
-		new ScalarLinkQualityEvaluator(new DoubleScope(0d, 1d), radioModel, mobilityModel));
+		linkQualityEvaluator);
 	
 	/**************************************************************************************************************************************/
 	
@@ -70,22 +79,39 @@ public class UtilizationEvaluatorTest {
 	
 	/**************************************************************************************************************************************/	
 		
-	ScalarRadioFlow flow1 = new ScalarRadioFlow(manet.getFirstVertex(), manet.getLastVertex(), new DataRate(1, Type.kilobit));
-	ScalarRadioFlow flow2 = new ScalarRadioFlow(manet.getFirstVertex(), manet.getLastVertex(), new DataRate(2, Type.kilobit));
-	ScalarRadioFlow flow3 = new ScalarRadioFlow(manet.getFirstVertex(), manet.getLastVertex(), new DataRate(3, Type.kilobit));
-
+	DijkstraShortestPath<ScalarRadioNode, ScalarRadioLink, ScalarLinkQuality> dijkstraShortestPath = 
+		new DijkstraShortestPath<ScalarRadioNode, ScalarRadioLink, ScalarLinkQuality>(manet);
+	
+	ScalarRadioFlow flow1 = new ScalarRadioFlow(manet.getVertex(1), manet.getVertex(31), new DataRate(0.5, Type.kilobit));
+	flow1.update(dijkstraShortestPath.compute(flow1.getSource(), flow1.getTarget(), (ScalarLinkQuality w) -> { return w.getScore();}));
 	manet.addFlow(flow1);
+	manet.deployFlow(flow1);
+	
+	ScalarRadioFlow flow2 = new ScalarRadioFlow(manet.getVertex(1), manet.getVertex(31), new DataRate(0.5, Type.kilobit));
+	flow2.update(dijkstraShortestPath.compute(flow2.getSource(), flow2.getTarget(), (ScalarLinkQuality w) -> { return w.getScore();}));
 	manet.addFlow(flow2);
+	manet.deployFlow(flow2);
+	
+	/*ScalarRadioFlow flow3 = new ScalarRadioFlow(manet.getVertex(1), manet.getVertex(31), new DataRate(1, Type.kilobit));
+	flow3.update(dijkstraShortestPath.compute(flow3.getSource(), flow3.getTarget(), (ScalarLinkQuality w) -> { return w.getScore();}));
 	manet.addFlow(flow3);
+	manet.deployFlow(flow3);*/
+
+	FlowDistributionEvaluator<ScalarRadioLink, ScalarRadioFlow> flowDistributionEvaluator = 
+		new FlowDistributionEvaluator<ScalarRadioLink, ScalarRadioFlow>(new DoubleScope(0,1), linkQualityEvaluator, 1, 2);
+			
+	for(Map.Entry<ScalarRadioFlow, Double> entry : flowDistributionEvaluator.evaluate(manet).entrySet()) {  
+	    
+	    double score = 0;
+	    
+	    for(ScalarRadioLink link : entry.getKey().getEdges()) 
+		score += link.getWeight().getScore();
+	    
+	    System.out.println(String.format("flow %d mergedScore %.2f score %.2f", entry.getKey().getID(), entry.getValue(), score));
+	}
 	
-	UtilizationEvaluator utilizationEvaluator = new UtilizationEvaluator(new DoubleScope(0,1), 1, manet);
+	SwingUtilities.invokeAndWait(new VisualGraphApp<ScalarRadioNode, ScalarRadioLink, ScalarLinkQuality>(manet, new LinkUtilizationPrinter<ScalarRadioLink, ScalarLinkQuality>()));
 	
-	System.out.println(String.format("minDemand: %s", utilizationEvaluator.getMinDemand()));
-	System.out.println(String.format("maxDemand: %s", utilizationEvaluator.getMaxDemand()));
-	
-	System.out.println(utilizationEvaluator.getScore(new DataRate(0, Type.kilobit).get()));
-	System.out.println(utilizationEvaluator.getScore(new DataRate(2, Type.kilobit).get()));
-	System.out.println(utilizationEvaluator.getScore(new DataRate(3, Type.kilobit).get()));
-	System.out.println(utilizationEvaluator.getScore(new DataRate(6, Type.kilobit).get()));
+	System.in.read();
     }   
 }
