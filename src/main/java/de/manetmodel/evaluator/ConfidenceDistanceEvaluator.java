@@ -6,7 +6,7 @@ import de.manetmodel.network.scalar.ScalarRadioNode;
 import de.manetmodel.units.Watt;
 import de.manetmodel.units.dBm;
 
-public class ConfidenceDistanceEvaluator extends PropertyStandardization {
+public class ConfidenceDistanceEvaluator extends LinearStandardization {
 
     public ConfidenceDistanceEvaluator(DoubleScope scoreScope, double weight) {
 	super(scoreScope, weight);
