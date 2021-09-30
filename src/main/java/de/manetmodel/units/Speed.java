@@ -29,7 +29,7 @@ public class Speed {
 
     @Override
     public String toString() {
-	return String.format("%f kilometer/sec", convertTo(Unit.Distance.kilometer, Unit.TimeSteps.hour));
+	return String.format("%f kilometer/hour", convertTo(Unit.Distance.kilometer, Unit.TimeSteps.hour));
     }
 
     public static class SpeedRange {
