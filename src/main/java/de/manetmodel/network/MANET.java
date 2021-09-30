@@ -299,19 +299,17 @@ public class MANET<N extends Node, L extends Link<W>, W extends LinkQuality, F e
 	return fContainingl;
     }
 
-    public void increaseUtilizationBy(L activeUtilizedLink, DataRate dataRate) {
+    public void increaseUtilizationBy(L link, DataRate dataRate) {
 
-	activeUtilizedLink.setActive();
-	activeUtilizedLink.setUtilization(new DataRate(activeUtilizedLink.getUtilization().get() + dataRate.get()));
+	link.setActive();
 
-	activeUtilizedLinks.add(activeUtilizedLink.getID());
+	activeUtilizedLinks.add(link.getID());
 
-	for (L passiveUtilizedLink : getUtilizedLinksOf(activeUtilizedLink)) {
-
+	for (L utilizedLink : getUtilizedLinksOf(link)) {
 	    utilization.set(this.utilization.get() + dataRate.get());
 
-	    passiveUtilizedLink
-		    .setUtilization(new DataRate(passiveUtilizedLink.getUtilization().get() + dataRate.get()));
+	    utilizedLink
+		    .setUtilization(new DataRate(utilizedLink.getUtilization().get() + dataRate.get()));
 	}
     }
 
@@ -502,6 +500,5 @@ public class MANET<N extends Node, L extends Link<W>, W extends LinkQuality, F e
 
 	return allPaths;
     }
-   
 
 }
