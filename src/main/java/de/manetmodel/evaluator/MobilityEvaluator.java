@@ -20,8 +20,8 @@ public class MobilityEvaluator<N extends Node> extends LinearStandardization {
 
     public double compute(N source, N sink) {
 
-	MovementPattern sourceTick = source.getMobility().get(source.getMobility().size() - 1);
-	MovementPattern sinkTick = sink.getMobility().get(source.getMobility().size() - 1);
+	MovementPattern sourceTick = source.getPreviousMobilityPattern();
+	MovementPattern sinkTick = sink.getPreviousMobilityPattern();
 
 	// Check if motion is in same direction
 	//double angleDregrees = Math.abs(sourceTick.getAngle() - sinkTick.getAngle());

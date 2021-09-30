@@ -13,7 +13,7 @@ public class MANETAverageResultMapper extends AverageResultMapper<AverageResultP
 
     public MANETAverageResultMapper(ColumnPositionMappingStrategy<AverageResultParameter> mappingStrategy,
 	    Scenario scenario) {
-	super(mappingStrategy, scenario);
+	super(scenario,mappingStrategy);
     }
 
     @Override

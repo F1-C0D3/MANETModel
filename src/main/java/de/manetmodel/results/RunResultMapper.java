@@ -13,9 +13,9 @@ public abstract class RunResultMapper<R extends RunResultParameter,N extends Nod
     protected ColumnPositionMappingStrategy<R> mappingStrategy;
     protected MobilityModel mobilityModel;
 
-    public RunResultMapper(ColumnPositionMappingStrategy<R> mappingStrategy, Scenario scenario,
+    public RunResultMapper( Scenario scenario,ColumnPositionMappingStrategy<R> mappingStrategy,
 	    MobilityModel mobilityModel) {
-	super(scenario);
+	super(scenario,mappingStrategy);
 
 	this.mappingStrategy = mappingStrategy;
 	this.mobilityModel = mobilityModel;

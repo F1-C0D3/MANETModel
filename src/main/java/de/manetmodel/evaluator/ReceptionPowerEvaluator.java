@@ -6,7 +6,7 @@ import de.manetmodel.network.scalar.ScalarRadioNode;
 import de.manetmodel.units.Watt;
 import de.manetmodel.units.dBm;
 
-public class ReceptionPowerEvaluator extends PropertyStandardization {
+public class ReceptionPowerEvaluator extends LinearStandardization {
 
     public ReceptionPowerEvaluator(DoubleScope scoreScope, double weight) {
 	super(scoreScope, weight);

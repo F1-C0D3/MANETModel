@@ -1,12 +1,10 @@
 package de.manetmodel.results;
 
 import java.util.List;
-import java.util.function.Supplier;
 
 import com.opencsv.bean.ColumnPositionMappingStrategy;
 
 import de.jgraphlib.util.Tuple;
-import de.manetmodel.mobilitymodel.MobilityModel;
 import de.manetmodel.scenarios.Scenario;
 import de.manetmodel.units.Time;
 
@@ -15,8 +13,8 @@ public abstract class AverageResultMapper<A extends AverageResultParameter, R ex
 
     protected ColumnPositionMappingStrategy<A> mappingStrategy;
 
-    public AverageResultMapper(ColumnPositionMappingStrategy<A> mappingStrategy, Scenario scenario) {
-	super(scenario);
+    public AverageResultMapper(Scenario scenario,ColumnPositionMappingStrategy<A> mappingStrategy) {
+	super(scenario,mappingStrategy);
 	this.mappingStrategy = mappingStrategy;
     }
 
