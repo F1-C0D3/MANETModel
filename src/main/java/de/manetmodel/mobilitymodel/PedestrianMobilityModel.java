@@ -9,6 +9,7 @@ import de.manetmodel.units.Time;
 import de.manetmodel.units.Unit;
 import de.manetmodel.units.Speed.SpeedRange;
 import de.manetmodel.units.Unit.Distance;
+import de.manetmodel.units.Unit.TimeSteps;
 
 public class PedestrianMobilityModel extends MobilityModel {
 
@@ -44,9 +45,8 @@ public class PedestrianMobilityModel extends MobilityModel {
 	    prevSpeed.value = random.getRandom((prevSpeed.value - deviation.value),
 		    (prevSpeed.value + deviation.value));
 	}
-	Speed newSpeed = new Speed(prevSpeed.value * timeStamp.value);
+	Speed newSpeed = new Speed(prevSpeed.value);
 	Tuple<Position2D, Double> nextPos = nextPosition(newSpeed, prevAngle, prevPosition);
-	newSpeed.value = newSpeed.value / timeStamp.value;
 	MovementPattern pattern = new MovementPattern(newSpeed, nextPos.getFirst(), nextPos.getSecond());
 
 	return pattern;
@@ -90,8 +90,8 @@ public class PedestrianMobilityModel extends MobilityModel {
 	}
 	angle = (angle + prevAngle) % 360;
 	double angleRadians = Math.toRadians(angle);
-	double xNew = (Math.cos(angleRadians) * speed.value) + prevPosition.x();
-	double yNew = (Math.sin(angleRadians) * speed.value) + prevPosition.y();
+	double xNew = (Math.cos(angleRadians) * speed.convertTo(Distance.kilometer, TimeSteps.hour)) + prevPosition.x();
+	double yNew = (Math.sin(angleRadians) * speed.convertTo(Distance.kilometer, TimeSteps.hour)) + prevPosition.y();
 	position2D = new Position2D(xNew, yNew);
 
 	return new Tuple<Position2D, Double>(position2D, angle);

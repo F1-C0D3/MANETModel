@@ -43,6 +43,6 @@ public class MovementPattern {
     }
     
     public String toString() {
-	return String.format("speed: %.2f, position: %s, angle: %.2f", speed.value, absolutePostion.toString(), absoluteAngle);
+	return String.format("speed: %.2f, position: %s, angle: %.2f", speed.toString(), absolutePostion.toString(), absoluteAngle);
     }
 }

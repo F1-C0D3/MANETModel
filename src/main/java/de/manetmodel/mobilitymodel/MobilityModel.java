@@ -18,7 +18,7 @@ public abstract class MobilityModel {
 	this.random = random;
 	this.speedRange = speedRange;
 	if (ticks == 0) {
-	    this.ticks = 3;
+	    this.ticks = 5;
 	} else {
 	    this.ticks = ticks;
 	}

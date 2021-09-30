@@ -14,12 +14,23 @@ public class Node extends Vertex<Position2D> {
     public Node() {
     }
 
-    public List<MovementPattern> getMobility() {
+    public List<MovementPattern> getMobilityCharacteristic() {
 	return mobility;
     }
 
-    public void setMobility(List<MovementPattern> mobility) {
+    public void setMobilityCharacteristic(List<MovementPattern> mobility) {
 	this.mobility = mobility;
+    }
+    
+    public void appendMovementPattern(MovementPattern pattern) {
+	mobility.add(pattern);
+    }
+    
+    public MovementPattern getPreviousMobilityPattern () {
+	if (mobility==null || mobility.size()==0)
+	    return null;
+	
+	return mobility.get(mobility.size()-1);
     }
     
     public void setMobility(MovementPattern mobility) {
@@ -29,14 +40,6 @@ public class Node extends Vertex<Position2D> {
     public Node(double x, double y) {
 	this();
 	super.setPosition(new Position2D(x, y));
-    }
-
-    public List<MovementPattern> getPrevMobility() {
-	return mobility;
-    }
-
-    public void setPrevMobility(List<MovementPattern> prevMobility) {
-	this.mobility = prevMobility;
     }
 
     @Override
