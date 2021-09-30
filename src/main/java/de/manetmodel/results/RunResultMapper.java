@@ -11,14 +11,11 @@ import de.manetmodel.scenarios.Scenario;
 public abstract class RunResultMapper<R extends RunResultParameter,N extends Node,L extends Link<W>, W extends LinkQuality> extends ResultMapper<R> {
 
     protected ColumnPositionMappingStrategy<R> mappingStrategy;
-    protected MobilityModel mobilityModel;
 
-    public RunResultMapper( Scenario scenario,ColumnPositionMappingStrategy<R> mappingStrategy,
-	    MobilityModel mobilityModel) {
+    public RunResultMapper( Scenario scenario,ColumnPositionMappingStrategy<R> mappingStrategy) {
 	super(scenario,mappingStrategy);
 
 	this.mappingStrategy = mappingStrategy;
-	this.mobilityModel = mobilityModel;
 
     }
 
