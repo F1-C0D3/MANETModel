@@ -3,6 +3,7 @@ package de.manetmodel.evaluator;
 import de.manetmodel.network.scalar.ScalarRadioLink;
 import de.manetmodel.network.scalar.ScalarRadioModel;
 import de.manetmodel.network.scalar.ScalarRadioNode;
+import de.manetmodel.radiomodel.RadioModel;
 import de.manetmodel.units.Watt;
 import de.manetmodel.units.dBm;
 
@@ -55,6 +56,7 @@ public class ConfidenceDistanceEvaluator extends LinearStandardization {
 	
 
 	confidenceValue = 1d - confidenceValue;
+	
 	return confidenceValue;
     }
 }

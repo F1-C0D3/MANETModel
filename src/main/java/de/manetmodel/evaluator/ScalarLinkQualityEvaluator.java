@@ -12,7 +12,7 @@ public class ScalarLinkQualityEvaluator
     private ScalarRadioModel radioModel;
     private MobilityModel mobilityModel;
     
-    private MobilityEvaluator<ScalarRadioNode> mobilityEvaluator;
+    private SourceSinkSingleTickMobilityEvaluator<ScalarRadioNode> mobilityEvaluator;
     private ConfidenceRangeEvaluator confidenceRangeEvaluator; 
     
     public ScalarLinkQualityEvaluator(DoubleScope scoreScope, ScalarRadioModel radioModel, MobilityModel mobilityModel) {
@@ -22,7 +22,7 @@ public class ScalarLinkQualityEvaluator
 	this.radioModel = radioModel;
 	this.mobilityModel = mobilityModel;
 	
-	this.mobilityEvaluator = new MobilityEvaluator<ScalarRadioNode>(
+	this.mobilityEvaluator = new SourceSinkSingleTickMobilityEvaluator<ScalarRadioNode>(
 		/* scoreScope */ new DoubleScope(0d, 1d),
 		/* weight */ 1,
 		/* mobilityModel*/ mobilityModel);
@@ -43,7 +43,7 @@ public class ScalarLinkQualityEvaluator
 	return true;
     }
 
-    public MobilityEvaluator<ScalarRadioNode> getMobilityEvaluator() {
+    public SourceSinkSingleTickMobilityEvaluator<ScalarRadioNode> getMobilityEvaluator() {
 	return mobilityEvaluator;
     }
     

@@ -1,30 +1,29 @@
 package de.manetmodel.evaluator;
 
-import de.jgraphlib.util.Tuple;
 import de.manetmodel.mobilitymodel.MobilityModel;
 import de.manetmodel.mobilitymodel.MovementPattern;
 import de.manetmodel.network.Node;
-import de.manetmodel.units.Speed;
+import de.manetmodel.units.Unit.Distance;
+import de.manetmodel.units.Unit.TimeSteps;
 
-public class SimpleSinkMobilityEvaluator<N extends Node> extends LinearStandardization {
+public class SinkSingleTickMobilityEvaluator<N extends Node> extends LinearStandardization {
 
     MobilityModel mobilityModel;
 
-    public SimpleSinkMobilityEvaluator(DoubleScope scoreScope, double weight, MobilityModel mobilityModel) {
+    public SinkSingleTickMobilityEvaluator(DoubleScope scoreScope, double weight, MobilityModel mobilityModel) {
 	super(scoreScope, weight);
 
 	this.mobilityModel = mobilityModel;
 
-	setPropertyScope(new DoubleScope(Math.pow(mobilityModel.getSpeedRange().max().value, 2),
-		Math.pow(mobilityModel.getSpeedRange().min().value, 2)));
+	setPropertyScope(new DoubleScope(mobilityModel.getSpeedRange().min().convertTo(Distance.kilometer, TimeSteps.hour), mobilityModel.getSpeedRange().max().convertTo(Distance.kilometer, TimeSteps.hour)));
 
     }
 
     public double compute(N source, N sink) {
 
 	MovementPattern sinkTick = sink.getPreviousMobilityPattern();
+	 double speedValue = sinkTick.getSpeed().value / mobilityModel.getSpeedRange().max().value;
 
-
-	return sinkTick.getSpeed().value / mobilityModel.getSpeedRange().max().value;
+	return speedValue;
     }
 }
