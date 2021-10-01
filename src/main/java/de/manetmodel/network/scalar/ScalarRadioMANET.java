@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Supplier;
 
+import de.manetmodel.evaluator.LinkQualityEvaluator;
 import de.manetmodel.evaluator.ScalarLinkQualityEvaluator;
 import de.manetmodel.mobilitymodel.MobilityModel;
 import de.manetmodel.network.MANET;
@@ -17,7 +18,7 @@ public class ScalarRadioMANET extends MANET<ScalarRadioNode, ScalarRadioLink, Sc
 	    Supplier<ScalarRadioFlow> flowSupplier,
 	    ScalarRadioModel radioModel, 
 	    MobilityModel mobilityModel,
-	    ScalarLinkQualityEvaluator evaluator) {
+	    LinkQualityEvaluator evaluator) {
 	
 	super(vertexSupplier, edgeSupplier, edgeWeightSupplier, flowSupplier, radioModel, mobilityModel, evaluator);	
     }  
