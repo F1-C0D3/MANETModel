@@ -13,33 +13,33 @@ public class MANETAverageResultMapper extends AverageResultMapper<AverageResultP
 
     public MANETAverageResultMapper(ColumnPositionMappingStrategy<AverageResultParameter> mappingStrategy,
 	    Scenario scenario) {
-	super(scenario,mappingStrategy);
+	super(scenario, mappingStrategy);
     }
 
     @Override
-    public AverageResultParameter averageRunResultMapper(List<RunResultParameter> runs, Time duration) {
+    public AverageResultParameter averageRunResultMapper(List<RunResultParameter> runParameters, Time duration) {
 	AverageResultParameter averageRunParemeter = new AverageResultParameter();
 
 	long overUtilization = 0l;
 	long averageUtilization = 0l;
 	int activeLinks = 0;
 	double averageConnectivityStability = 0d;
-	for (RunResultParameter run : runs) {
+	for (RunResultParameter runParameter : runParameters) {
 
-	    if (run.isPathParticipant()) {
+	    if (runParameter.isPathParticipant()) {
 
-		if (run.getOverUtilization() != 0l) {
-		    overUtilization += run.getOverUtilization();
+		if (runParameter.getOverUtilization() != 0l) {
+		    overUtilization += runParameter.getOverUtilization();
 		}
 
-		if (run.getConnectionStability() != 0) {
-		    averageConnectivityStability += run.getConnectionStability();
+		if (runParameter.getConnectionStability() != 0) {
+		    averageConnectivityStability += runParameter.getConnectionStability();
 		    activeLinks++;
 		}
 	    }
 
-	    if (run.getUtilization() != 0l) {
-		averageUtilization += run.getUtilization();
+	    if (runParameter.getUtilization() != 0l) {
+		averageUtilization += runParameter.getUtilization();
 	    }
 
 	}
@@ -60,6 +60,7 @@ public class MANETAverageResultMapper extends AverageResultMapper<AverageResultP
 	Time simulationTime = new Time();
 	double averageRunActiveLinks = 0;
 
+	double runConnectionStability = 0;
 	for (Tuple<List<RunResultParameter>, Time> run : runs) {
 	    int activeLinks = 0;
 	    for (RunResultParameter runResultParameter : run.getFirst()) {
@@ -75,27 +76,17 @@ public class MANETAverageResultMapper extends AverageResultMapper<AverageResultP
 
 	    }
 	    simulationTime.set(simulationTime.getMillis() + run.getSecond().getMillis());
-	    averageRunActiveLinks += activeLinks / (double) run.getFirst().size();
+	    averageRunActiveLinks += activeLinks;
+	    runConnectionStability += averageRunParemeter.getConnectionStability() / activeLinks;
 	}
-	averageRunActiveLinks = averageRunActiveLinks / (double) runs.size();
 
 	averageRunParemeter.setOverUtilization(averageRunParemeter.getOverUtilization() / runs.size());
 	averageRunParemeter.setUtilization(averageRunParemeter.getUtilization() / runs.size());
-	averageRunParemeter.setConnectionStability(averageRunParemeter.getConnectionStability() / runs.size());
+	averageRunParemeter.setConnectionStability(runConnectionStability / runs.size());
 	averageRunParemeter.setSimulationTime(new Time(simulationTime.getMillis() / (long) runs.size()));
-	averageRunParemeter.setActivePathParticipants(averageRunActiveLinks);
+	averageRunParemeter.setActivePathParticipants(averageRunActiveLinks / (double) runs.size());
 
 	return averageRunParemeter;
-    }
-
-    @Override
-    public ColumnPositionMappingStrategy<AverageResultParameter> getMappingStrategy() {
-	return this.mappingStrategy;
-    }
-
-    @Override
-    public void setMappingStrategy(ColumnPositionMappingStrategy<AverageResultParameter> mappingStrategy) {
-	this.mappingStrategy = mappingStrategy;
     }
 
 }
