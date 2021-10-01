@@ -12,7 +12,7 @@ import de.manetmodel.network.Node;
 import de.manetmodel.results.CSVExporter.RecordType;
 import de.manetmodel.units.Time;
 
-public class MANETResultRecorder<R extends RunResultParameter,A extends AverageResultParameter> {
+public class MANETResultRecorder<R extends RunResultParameter, A extends AverageResultParameter> {
 
     private String resultFileName;
     private List<Tuple<List<R>, Time>> resultRuns;
@@ -22,20 +22,21 @@ public class MANETResultRecorder<R extends RunResultParameter,A extends AverageR
 	this.resultRuns = new ArrayList<Tuple<List<R>, Time>>();
     }
 
-    public <N extends Node,L extends Link<W>,W extends LinkQuality, F extends Flow<N,L,W>> void recordRun(
-	    MANET<N,L,W,F> manet, RunResultMapper<R,N,L,W> resultMapper, Time runDuration) {
+    public <N extends Node, L extends Link<W>, W extends LinkQuality, F extends Flow<N, L, W>> void recordRun(
+	    MANET<N, L, W, F> manet, RunResultMapper<R, N, L, W> resultMapper, Time runDuration) {
+	if(manet.getUtilization().get()>0d)
 	recordIndividualRun(manet, resultMapper, runDuration);
 
     }
 
-    private <N extends Node,L extends Link<W>, W extends LinkQuality,F extends Flow<N,L,W>> void recordIndividualRun(
-	    MANET<N,L,W,F> manet, RunResultMapper<R,N,L,W> resultMapper, Time runDuration) {
+    private <N extends Node, L extends Link<W>, W extends LinkQuality, F extends Flow<N, L, W>> void recordIndividualRun(
+	    MANET<N, L, W, F> manet, RunResultMapper<R, N, L, W> resultMapper, Time runDuration) {
 	CSVExporter exporter = new CSVExporter(resultFileName, RecordType.individualRun);
 	List<R> individualRun = new ArrayList<R>();
 	for (L link : manet.getEdges()) {
 	    Tuple<N, N> sourceAndSink = manet.getVerticesOf(link);
 	    R runResult = resultMapper.individualRunResultMapper(sourceAndSink.getFirst(), sourceAndSink.getSecond(),
-		    link );
+		    link);
 	    individualRun.add(runResult);
 	}
 
@@ -44,16 +45,19 @@ public class MANETResultRecorder<R extends RunResultParameter,A extends AverageR
 		new StringBuffer().append(resultRuns.size() - 1).toString());
     }
 
-    public  void finish(AverageResultMapper<A,R> resultMapper) {
-	this.recordAverageRun(resultMapper);
-	CSVExporter exporter = new CSVExporter(resultFileName, RecordType.total);
-	A mean = resultMapper.toMeanMapper(resultRuns);
-	List<A> r = new ArrayList<A>();
-	r.add(mean);
-	exporter.write(r, resultMapper.getMappingStrategy(), resultMapper.getScenario(), "total");
+    public void finish(AverageResultMapper<A, R> resultMapper) {
+	if (!resultRuns.isEmpty()) {
+	    this.recordAverageRun(resultMapper);
+	    CSVExporter exporter = new CSVExporter(resultFileName, RecordType.total);
+
+	    A mean = resultMapper.toMeanMapper(resultRuns);
+	    List<A> r = new ArrayList<A>();
+	    r.add(mean);
+	    exporter.write(r, resultMapper.getMappingStrategy(), resultMapper.getScenario(), "total");
+	}
     }
 
-    private void recordAverageRun(AverageResultMapper<A,R> resultMapper) {
+    private void recordAverageRun(AverageResultMapper<A, R> resultMapper) {
 	CSVExporter averageRunExporter = new CSVExporter(resultFileName, RecordType.averageRun);
 	List<A> resultList = new ArrayList<A>();
 	for (Tuple<List<R>, Time> run : resultRuns) {
