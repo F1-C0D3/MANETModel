@@ -2,25 +2,22 @@ package de.manetmodel.scenarios;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.List;
-
-import de.jgraphlib.util.RandomNumbers;
-import de.jgraphlib.util.Tuple;
-
 
 public class Scenario {
 
+    private String indivdualName;
+
+    protected int overUtilizePercentage;
     protected int numFlows;
     protected int numNodes;
-    private String indivdualName;
     protected int numRuns;
 
-    public Scenario(String indivdualName, int numFlows, int numNodes, int runs) {
+    public Scenario(String indivdualName, int numFlows, int numNodes, int runs, int overUtilizePercentage) {
 	this.numRuns = runs;
 	this.indivdualName = indivdualName;
 	this.numNodes = numNodes;
 	this.numFlows = numFlows;
+	this.overUtilizePercentage= overUtilizePercentage;
     }
 
     public Scenario(int flows, int nodes, int runs) {
@@ -35,22 +32,29 @@ public class Scenario {
 	this.numFlows = -1;
 	this.numNodes = -1;
     }
-    
-    
+
+    public int getOverUtilizePercentage() {
+	return overUtilizePercentage;
+    }
+
+    public void setOverUtilizePercentage(int overUtilizePercentage) {
+	this.overUtilizePercentage = overUtilizePercentage;
+    }
+
     public int getNumFlows() {
-        return numFlows;
+	return numFlows;
     }
 
     public void setNumFlows(int numFlows) {
-        this.numFlows = numFlows;
+	this.numFlows = numFlows;
     }
 
     public int getNumRuns() {
-        return numRuns;
+	return numRuns;
     }
 
     public void setNumRuns(int numRuns) {
-        this.numRuns = numRuns;
+	this.numRuns = numRuns;
     }
 
     public String getScenarioName() {
