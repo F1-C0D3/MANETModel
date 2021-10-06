@@ -35,6 +35,23 @@ public class Scenario {
 	this.numFlows = -1;
 	this.numNodes = -1;
     }
+    
+    
+    public int getNumFlows() {
+        return numFlows;
+    }
+
+    public void setNumFlows(int numFlows) {
+        this.numFlows = numFlows;
+    }
+
+    public int getNumRuns() {
+        return numRuns;
+    }
+
+    public void setNumRuns(int numRuns) {
+        this.numRuns = numRuns;
+    }
 
     public String getScenarioName() {
 	return indivdualName;
