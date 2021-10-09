@@ -4,9 +4,9 @@ import de.manetmodel.network.LinkQuality;
 
 public class ScalarLinkQuality extends LinkQuality {
 
-    private double mobilityQuality;
+    private double speedQuality;
     private double receptionConfidence;
-    private double receptionQuality;
+    private double relativeMobility;
     
     public double getReceptionConfidence() {
         return receptionConfidence;
@@ -16,19 +16,22 @@ public class ScalarLinkQuality extends LinkQuality {
         this.receptionConfidence = receptionConfidence;
     }
     
-    public double getMobilityQuality() {
-	return this.mobilityQuality;
+    public double getSpeedQuality() {
+        return speedQuality;
+    }
+
+    public void setSpeedQuality(double speedQuality) {
+        this.speedQuality = speedQuality;
+    }
+
+    public double getRelativeMobility() {
+        return relativeMobility;
+    }
+
+    public void setRelativeMobility(double relativeMobility) {
+        this.relativeMobility = relativeMobility;
     }
     
-    public void setMobilityQuality(double mobilityQuality) {
-	this.mobilityQuality = mobilityQuality;
-    }
+    
 
-    public double getReceptionQuality() {
-        return receptionQuality;
-    }
-
-    public void setReceptionQuality(double receptionQuality) {
-        this.receptionQuality = receptionQuality;
-    }     
 }

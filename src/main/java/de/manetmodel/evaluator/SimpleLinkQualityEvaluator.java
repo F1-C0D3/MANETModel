@@ -9,23 +9,22 @@ import de.manetmodel.network.scalar.ScalarRadioNode;
 public class SimpleLinkQualityEvaluator
 	extends LinkQualityEvaluator<ScalarRadioNode, ScalarRadioLink, ScalarLinkQuality> {
 
-    private ScalarRadioModel radioModel;
-
     private SinkSingleTickMobilityEvaluator<ScalarRadioNode> sinkMobilityProperty;
     private ConfidenceDistanceEvaluator confidenceDistanceProperty;
+    private SourceSinkRelativeDirectionEvaluator<ScalarRadioNode, ScalarRadioLink, ScalarLinkQuality> relativeDirectionProperty;
 
     public SimpleLinkQualityEvaluator(DoubleScope scoreScope, ScalarRadioModel radioModel,
 	    MobilityModel mobilityModel) {
 
 	super(scoreScope);
 
-	this.radioModel = radioModel;
-
 	this.sinkMobilityProperty = new SinkSingleTickMobilityEvaluator<ScalarRadioNode>(
 		/* scoreScope */ new DoubleScope(0d, 1d), /* weight */ 1, /* mobilityModel */ mobilityModel);
 
-	this.confidenceDistanceProperty = new ConfidenceDistanceEvaluator(
-		/* scoreScope */ new DoubleScope(0d, 1d), /* weight */ 1);
+	this.confidenceDistanceProperty = new ConfidenceDistanceEvaluator(/* scoreScope */ new DoubleScope(0d, 1d),
+		/* weight */ 1, radioModel);
+	this.relativeDirectionProperty = new SourceSinkRelativeDirectionEvaluator<ScalarRadioNode, ScalarRadioLink, ScalarLinkQuality>(
+		/* scoreScope */ new DoubleScope(0d, 1d), /* weight */ 1, mobilityModel);
 
 	this.setPropertyScope(new DoubleScope(0d, 1d));
     }
@@ -33,10 +32,11 @@ public class SimpleLinkQualityEvaluator
     @Override
     public boolean compute(ScalarRadioNode source, ScalarRadioLink link, ScalarRadioNode sink) {
 	ScalarLinkQuality scalarLinkQuality = link.getWeight();
-	scalarLinkQuality.setReceptionConfidence(confidenceDistanceProperty.compute(source, link, sink, radioModel));
-	scalarLinkQuality.setMobilityQuality(sinkMobilityProperty.compute(source, sink));
-	scalarLinkQuality.setScore(
-		getScore(scalarLinkQuality.getMobilityQuality() + scalarLinkQuality.getReceptionConfidence()));
+	scalarLinkQuality.setReceptionConfidence(confidenceDistanceProperty.compute(source, link, sink));
+	scalarLinkQuality.setSpeedQuality(sinkMobilityProperty.compute(source, sink));
+	scalarLinkQuality.setRelativeMobility(relativeDirectionProperty.compute(source, sink, link));
+	scalarLinkQuality
+		.setScore(getScore(scalarLinkQuality.getSpeedQuality() + scalarLinkQuality.getReceptionConfidence()));
 	return true;
     }
 
