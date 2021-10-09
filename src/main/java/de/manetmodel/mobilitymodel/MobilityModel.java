@@ -8,11 +8,12 @@ import de.manetmodel.units.Speed.SpeedRange;
 
 public abstract class MobilityModel {
 
-    public final int ticks;
-    public final Time recordDuration;
-    public final Time timeStamp;
-    public RandomNumbers random;
-    public SpeedRange speedRange;
+    private final int ticks;
+    private final Time recordDuration;
+    private final Time timeStamp;
+   
+    protected SpeedRange speedRange;
+    protected RandomNumbers random;
 
     public MobilityModel(RandomNumbers random, SpeedRange speedRange, Time recordDuration, int ticks) {
 	this.random = random;
@@ -70,7 +71,14 @@ public abstract class MobilityModel {
 	this.random = random;
     }
 
+    
+    public Time getTimeStamp() {
+        return timeStamp;
+    }
+
     public abstract Speed initializeSpeed();
 
     public abstract MovementPattern computeNextMovementPattern(MovementPattern prevPattern);
+    
+    
 }
