@@ -8,12 +8,13 @@ import de.manetmodel.units.dBm;
 
 public class ConfidenceRangeEvaluator extends LinearStandardization {
 
-    public ConfidenceRangeEvaluator(DoubleScope scoreScope, double weight) {
+    private ScalarRadioModel radioModel;
+    public ConfidenceRangeEvaluator(DoubleScope scoreScope, double weight, ScalarRadioModel radioModel) {
 	super(scoreScope, weight);
+	this.radioModel = radioModel;
     }
 
-    public double compute(ScalarRadioNode source, ScalarRadioLink link, ScalarRadioNode sink,
-	    ScalarRadioModel scalarRadioModel) {
+    public double compute(ScalarRadioNode source, ScalarRadioLink link, ScalarRadioNode sink) {
 
 	double confidenceValue = 0d;
 	double confidenceMax = 0.85d;
@@ -21,7 +22,7 @@ public class ConfidenceRangeEvaluator extends LinearStandardization {
 	Watt transmissionPower = source.getTransmissionPower();
 	dBm receptionPower = link.getReceptionPower().todBm();
 	Watt receptionThreshold = sink.getReceptionThreshold();
-	double carrierFrequency = scalarRadioModel.getCarrierFrequency();
+	double carrierFrequency = radioModel.getCarrierFrequency();
 
 	double theoreticalMaxDistance = ScalarRadioModel.Propagation.theoreticalDistance(receptionThreshold,
 		transmissionPower, carrierFrequency);
