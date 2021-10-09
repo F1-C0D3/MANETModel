@@ -68,43 +68,52 @@ public class CplexFlowDistribution<N extends Node, L extends Link<W>, W extends 
 		}
 	    }
 
-	    /*
-	     * Guarantee same amount at incoming edges goes out at outgoing edges This also
-	     * includes unsplittable path guarantee
-	     */
-	    for (F f : manet.getFlows()) {
+		/*
+		 * Guarantee same amount at incoming edges goes out at outgoing edges This also
+		 * includes unsplittable path guarantee
+		 */
 
-		for (N node : manet.getVertices()) {
+		for (F f : manet.getFlows()) {
 
-		    IloLinearNumExpr unsplittablePath = cplex.linearNumExpr();
-		    IloLinearNumExpr nodeEqualDemand = cplex.linearNumExpr();
-		    List<L> incomingEdgesOf = manet.getIncomingEdgesOf(node);
-		    List<L> outgoingEdgesOf = manet.getOutgoingEdgesOf(node);
+			for (N node : manet.getVertices()) {
 
-		    for (L link : incomingEdgesOf) {
-			nodeEqualDemand.addTerm(+(int) f.getDataRate().get(), x_f_l[f.getID()][link.getID()]);
-			unsplittablePath.addTerm(+1, x_f_l[f.getID()][link.getID()]);
-		    }
+				List<L> incomingEdgesOf = manet.getIncomingEdgesOf(node);
+				List<L> outgoingEdgesOf = manet.getOutgoingEdgesOf(node);
+				IloLinearIntExpr unsplittablePathIncoming = cplex.linearIntExpr();
+				IloLinearIntExpr unsplittablePathOutgoing = cplex.linearIntExpr();
+				IloLinearIntExpr nodeEqualDemand = cplex.linearIntExpr();
+				
+				for (L link : incomingEdgesOf) {
+					nodeEqualDemand.addTerm(+(int) f.getDataRate().get(), x_f_l[f.getID()][link.getID()]);
+					unsplittablePathIncoming.addTerm(+1, x_f_l[f.getID()][link.getID()]);
+					unsplittablePathOutgoing.addTerm(0, x_f_l[f.getID()][link.getID()]);
+				}
 
-		    for (L link : outgoingEdgesOf) {
-			nodeEqualDemand.addTerm(-(int) f.getDataRate().get(), x_f_l[f.getID()][link.getID()]);
-			unsplittablePath.addTerm(+1, x_f_l[f.getID()][link.getID()]);
-		    }
+				for (L link : outgoingEdgesOf) {
+					nodeEqualDemand.addTerm(-(int) f.getDataRate().get(), x_f_l[f.getID()][link.getID()]);
+					unsplittablePathOutgoing.addTerm(+1, x_f_l[f.getID()][link.getID()]);
+					unsplittablePathIncoming.addTerm(0, x_f_l[f.getID()][link.getID()]);
+				}
 
-		    if (node.getID() == f.getSource().getID()) {
-			cplex.addGe(-(int) f.getDataRate().get(), nodeEqualDemand);
-			cplex.addGe(1, unsplittablePath);
-		    } else if (node.getID() == f.getTarget().getID()) {
-			cplex.addGe(+(int) f.getDataRate().get(), nodeEqualDemand);
-			cplex.addGe(1, unsplittablePath);
-		    } else {
-			cplex.addGe(0, nodeEqualDemand);
-			cplex.addGe(2, unsplittablePath);
-		    }
+				if (node.getID() == f.getSource().getID()) {
+					cplex.addEq(-f.getDataRate().get(), nodeEqualDemand);
+					cplex.addEq(1, unsplittablePathOutgoing);
+					cplex.addEq(0, unsplittablePathIncoming);
+
+				} else if (node.getID() == f.getTarget().getID()) {
+					cplex.addEq(+f.getDataRate().get(), nodeEqualDemand);
+					cplex.addEq(1, unsplittablePathIncoming);
+					cplex.addEq(0, unsplittablePathOutgoing);
+				} else {
+					cplex.addEq(0, nodeEqualDemand);
+					cplex.addGe(1, unsplittablePathIncoming);
+					cplex.addGe(1, unsplittablePathOutgoing);
+//					cplex.addEq(0, cplex.diff(unsplittablePathIncoming, unsplittablePathOutgoing));
+				}
+
+			}
 
 		}
-
-	    }
 
 	    /*
 	     * if x^f_l == 1 -> y_l ==0 Identifies if a link is an active link or not
@@ -178,7 +187,7 @@ public class CplexFlowDistribution<N extends Node, L extends Link<W>, W extends 
 			List<L> oLinks = manet.getOutgoingEdgesOf(node);
 
 			for (L link : oLinks) {
-			    if (cplex.getValue(x_f_l[i][link.getID()]) > 0) {
+			    if (cplex.getValue(x_f_l[i][link.getID()]) >=0.90) {
 				flow.add(new Tuple<L, N>(link, manet.getTargetOf(link)));
 				break;
 			    }
