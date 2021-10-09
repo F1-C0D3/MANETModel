@@ -9,45 +9,33 @@ import de.manetmodel.network.scalar.ScalarRadioNode;
 public class ScalarLinkQualityEvaluator
 	extends LinkQualityEvaluator<ScalarRadioNode, ScalarRadioLink, ScalarLinkQuality> {
 
-    private ScalarRadioModel radioModel;
-    private MobilityModel mobilityModel;
-    
     private SourceSinkSingleTickMobilityEvaluator<ScalarRadioNode> mobilityEvaluator;
-    private ConfidenceRangeEvaluator confidenceRangeEvaluator; 
-    
-    public ScalarLinkQualityEvaluator(DoubleScope scoreScope, ScalarRadioModel radioModel, MobilityModel mobilityModel) {
+    private ConfidenceRangeEvaluator confidenceRangeEvaluator;
+
+    public ScalarLinkQualityEvaluator(DoubleScope scoreScope, ScalarRadioModel radioModel,
+	    MobilityModel mobilityModel) {
 
 	super(scoreScope);
 
-	this.radioModel = radioModel;
-	this.mobilityModel = mobilityModel;
-	
 	this.mobilityEvaluator = new SourceSinkSingleTickMobilityEvaluator<ScalarRadioNode>(
-		/* scoreScope */ new DoubleScope(0d, 1d),
-		/* weight */ 1,
-		/* mobilityModel*/ mobilityModel);
+		/* scoreScope */ new DoubleScope(0d, 1d), /* weight */ 1, /* mobilityModel */ mobilityModel);
 
-	this.confidenceRangeEvaluator = new ConfidenceRangeEvaluator(
-		/* scoreScope */ new DoubleScope(0d, 1d), 
-		/* weight */ 1);
-	
-	this.setPropertyScope(new DoubleScope(0d, mobilityEvaluator.getScoreScope().max + confidenceRangeEvaluator.getScoreScope().max));
+	this.confidenceRangeEvaluator = new ConfidenceRangeEvaluator(/* scoreScope */ new DoubleScope(0d, 1d),
+		/* weight */ 1, radioModel);
+
+
+	this.setPropertyScope(new DoubleScope(0d,
+		mobilityEvaluator.getScoreScope().max + confidenceRangeEvaluator.getScoreScope().max));
     }
 
     @Override
     public boolean compute(ScalarRadioNode source, ScalarRadioLink link, ScalarRadioNode sink) {
 	ScalarLinkQuality scalarLinkQuality = link.getWeight();
-	scalarLinkQuality.setReceptionConfidence(confidenceRangeEvaluator.compute(source, link, sink, radioModel));	
-	scalarLinkQuality.setMobilityQuality(mobilityEvaluator.compute(source, sink));
-	scalarLinkQuality.setScore(getScore(scalarLinkQuality.getMobilityQuality() + scalarLinkQuality.getReceptionConfidence()));
+	scalarLinkQuality.setReceptionConfidence(confidenceRangeEvaluator.compute(source, link, sink));
+	scalarLinkQuality.setSpeedQuality(mobilityEvaluator.compute(source, sink));
+	scalarLinkQuality
+		.setScore(getScore(scalarLinkQuality.getSpeedQuality() + scalarLinkQuality.getReceptionConfidence()));
 	return true;
     }
 
-    public SourceSinkSingleTickMobilityEvaluator<ScalarRadioNode> getMobilityEvaluator() {
-	return mobilityEvaluator;
-    }
-    
-    public ConfidenceRangeEvaluator getConfidenceRangeEvaluator() {
-	return confidenceRangeEvaluator;
-    }   
 }
