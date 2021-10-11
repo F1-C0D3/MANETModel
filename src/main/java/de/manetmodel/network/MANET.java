@@ -299,7 +299,7 @@ public class MANET<N extends Node, L extends Link<W>, W extends LinkQuality, F e
 	return fContainingl;
     }
 
-    public void increaseUtilizationBy(L link, DataRate dataRate) {
+    private void increaseUtilizationBy(L link, DataRate dataRate) {
 
 	link.setActive();
 
@@ -313,7 +313,7 @@ public class MANET<N extends Node, L extends Link<W>, W extends LinkQuality, F e
 	}
     }
 
-    public void decreaseUtilizationBy(L activeUtilizedLink, DataRate dataRate) {
+    private void decreaseUtilizationBy(L activeUtilizedLink, DataRate dataRate) {
 	for (L ul : getUtilizedLinksOf(activeUtilizedLink)) {
 	    DataRate cUtilization = ul.getUtilization();
 	    cUtilization.set(cUtilization.get() - dataRate.get());
@@ -321,6 +321,30 @@ public class MANET<N extends Node, L extends Link<W>, W extends LinkQuality, F e
 	    this.utilization.set(this.utilization.get() - dataRate.get());
 	}
     }
+    
+    
+    // Determine max possible utilization based on DataRates of flows
+    public DataRate maxPossibleUtilization() {
+	
+	//(1) Set DataRates 
+	for (L link : this.getEdges()) {
+	 for (F flow : this.paths)
+	     increaseUtilizationBy(link, flow.getDataRate());
+	}
+	
+	// (2) Record utilization
+	DataRate utilization = new DataRate(this.getUtilization().get());
+	
+	//(3) Remove DataRates
+	for (L link : this.getEdges()) {
+		 for (F flow : this.paths)
+		     decreaseUtilizationBy(link, flow.getDataRate());
+		}
+	
+	return utilization;
+	
+    }
+    
 
     @Override
     public N addVertex(Position2D position) {
