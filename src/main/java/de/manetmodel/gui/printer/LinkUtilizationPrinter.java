@@ -1,4 +1,4 @@
-package de.manetmodel.gui;
+package de.manetmodel.gui.printer;
 
 import de.jgraphlib.gui.printer.EdgePrinter;
 import de.manetmodel.network.Link;
