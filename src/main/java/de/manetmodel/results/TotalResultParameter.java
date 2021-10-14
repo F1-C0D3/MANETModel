@@ -25,8 +25,16 @@ public class TotalResultParameter extends ResultParameter {
     @CsvBindByName(column = "meanNumberOfUndeployedFlows")
     private double meanNumberOfUndeployedFlows;
 
-    @CsvBindByName(column = "averagesimulationTime")
-    private Time averagesimulationTime;
+    @CsvBindByName(column = "meanAveragesimulationTime")
+    private Time meanAveragesimulationTime;
+    
+
+    @CsvBindByName(column = "minAveragesimulationTime")
+    private Time minAveragesimulationTime;
+
+    @CsvBindByName(column = "maxAveragesimulationTime")
+    private Time maxAveragesimulationTime;
+    
 
     public TotalResultParameter() {
 	meanOverUtilization = 0;
@@ -40,12 +48,12 @@ public class TotalResultParameter extends ResultParameter {
 	this.activePathParticipants = activePathParticipants;
     }
 
-    public Time getAverageSimulationTime() {
-	return averagesimulationTime;
+    public Time getMeanAverageSimulationTime() {
+	return meanAveragesimulationTime;
     }
 
-    public void setAverageSimulationTime(Time simulationTime) {
-	this.averagesimulationTime = simulationTime;
+    public void setMeanAverageSimulationTime(Time simulationTime) {
+	this.meanAveragesimulationTime = simulationTime;
     }
 
     public void setAverageOverUtilization(double oUtilization) {
@@ -72,7 +80,23 @@ public class TotalResultParameter extends ResultParameter {
 	this.meanAverageConnectionStability = connectionStability;
     }
 
-    
+        
+    public Time getMinAveragesimulationTime() {
+        return minAveragesimulationTime;
+    }
+
+    public void setMinAveragesimulationTime(Time minAveragesimulationTime) {
+        this.minAveragesimulationTime = minAveragesimulationTime;
+    }
+
+    public Time getMaxAveragesimulationTime() {
+        return maxAveragesimulationTime;
+    }
+
+    public void setMaxAveragesimulationTime(Time maxAveragesimulationTime) {
+        this.maxAveragesimulationTime = maxAveragesimulationTime;
+    }
+
     public Time getMinAverageConnectionStability() {
         return minAverageConnectionStability;
     }
