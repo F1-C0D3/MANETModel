@@ -21,6 +21,10 @@ public class ConfidenceDistanceEvaluator extends LinearStandardization {
 	double confidenceValue = 0d;
 	double confidenceMax = 0.80d;
 	double confidenceMin = 0.20d;
+	
+	double maxTransmissionDistance = radioModel.getLinkMaxTransmissionRange();
+	double minTransmissionDistance = radioModel.getLinkMinConnumicationRange();
+	
 
 	Watt transmissionPower = source.getTransmissionPower();
 	dBm receptionPower = link.getReceptionPower().todBm();
@@ -50,12 +54,12 @@ public class ConfidenceDistanceEvaluator extends LinearStandardization {
 	    confidenceValue = Math.pow(((receptionPower.get() - receptionThresholddBm.get())
 		    / (confidenceThresholdMax.get() - (receptionThresholddBm.get()))), 8d);
 	} else {
-	    confidenceValue = (link.getWeight().getDistance()/theoreticalMaxDistance);
+	    confidenceValue =((link.getWeight().getDistance()-minTransmissionDistance)/(maxTransmissionDistance-(maxTransmissionDistance-maxConfidenceDistance)-minTransmissionDistance));
 	}
 	
-	
-
 	confidenceValue = 1d - confidenceValue;
+
+//	double confidenceValue = ((link.getWeight().getDistance()-35d)/65d);
 	
 	return confidenceValue;
     }
