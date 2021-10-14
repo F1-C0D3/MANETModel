@@ -5,7 +5,7 @@ import com.opencsv.bean.CsvBindByName;
 import de.manetmodel.units.Time;
 
 
-public class AverageResultParameter extends ResultParameter {
+public class AverageRunResultParameter extends ResultParameter {
 
     @CsvBindByName(column = "overUtilization")
     private long overUtilization;
@@ -16,17 +16,23 @@ public class AverageResultParameter extends ResultParameter {
     @CsvBindByName(column = "activePathParticipants")
     private double activePathParticipants;
 
-    @CsvBindByName(column = "connectionStability")
-    private double connectionStability;
+    @CsvBindByName(column = "meanConnectionStability")
+    private Time meanConnectionStability;
+    
+    @CsvBindByName(column = "minConnectionStability")
+    private Time minConnectionStability;
+    
+    @CsvBindByName(column = "numberOfUndeployedFlows")
+    private double numberOfUndeployedFlows;
 
     @CsvBindByName(column = "simulationTime")
     private Time simulationTime;
 
-    public AverageResultParameter() {
+    public AverageRunResultParameter() {
 	overUtilization = 0;
     }
 
-    public double isActivePathParticipants() {
+    public double getActivePathParticipants() {
 	return activePathParticipants;
     }
 
@@ -58,12 +64,31 @@ public class AverageResultParameter extends ResultParameter {
 	return this.overUtilization;
     }
 
-    public double getConnectionStability() {
-	return connectionStability;
+    
+    
+    public Time getMinConnectionStability() {
+        return minConnectionStability;
     }
 
-    public void setConnectionStability(double connectionStability) {
-	this.connectionStability = connectionStability;
+    public void setMinConnectionStability(Time minConnectionStability) {
+        this.minConnectionStability = minConnectionStability;
     }
 
+    public Time getMeanConnectionStability() {
+	return meanConnectionStability;
+    }
+
+    public void setMeanConnectionStability(Time connectionStability) {
+	this.meanConnectionStability = connectionStability;
+    }
+
+    public double getNumberOfUndeployedFlows() {
+        return numberOfUndeployedFlows;
+    }
+
+    public void setNumberOfUndeployedFlows(double numberOfUndeployedFlows) {
+        this.numberOfUndeployedFlows = numberOfUndeployedFlows;
+    }
+
+    
 }

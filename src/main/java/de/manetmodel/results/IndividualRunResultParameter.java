@@ -2,7 +2,9 @@ package de.manetmodel.results;
 
 import com.opencsv.bean.CsvBindByName;
 
-public class RunResultParameter extends ResultParameter {
+import de.manetmodel.units.Time;
+
+public class IndividualRunResultParameter extends ResultParameter {
 
     @CsvBindByName(column = "lId")
     int lId;
@@ -23,7 +25,7 @@ public class RunResultParameter extends ResultParameter {
     private boolean isPathParticipant;
 
     @CsvBindByName(column = "connectionStability")
-    private double connectionStability;
+    private Time connectionStability;
 
     public void setIndividualRunResultParameter(int lId, int n1Id, int n2Id) {
 	this.lId = lId;
@@ -31,7 +33,7 @@ public class RunResultParameter extends ResultParameter {
 	this.n2Id = n2Id;
     }
 
-    public RunResultParameter() {
+    public IndividualRunResultParameter() {
 	overUtilization = 0;
 	isPathParticipant = false;
     }
@@ -84,11 +86,11 @@ public class RunResultParameter extends ResultParameter {
 	return this.overUtilization;
     }
 
-    public double getConnectionStability() {
+    public Time getConnectionStability() {
 	return connectionStability;
     }
 
-    public void setConnectionStability(double connectionStability) {
+    public void setConnectionStability(Time connectionStability) {
 	this.connectionStability = connectionStability;
     }
 

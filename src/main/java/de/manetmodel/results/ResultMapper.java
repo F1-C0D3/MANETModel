@@ -4,22 +4,13 @@ import com.opencsv.bean.ColumnPositionMappingStrategy;
 
 import de.manetmodel.scenarios.Scenario;
 
-public abstract class ResultMapper<M extends ResultParameter> {
+public abstract class ResultMapper {
     protected Scenario scenario;
-    protected ColumnPositionMappingStrategy<M> mappingStrategy;
 
-    public ResultMapper(Scenario scenario,ColumnPositionMappingStrategy<M> mappingStrategy ) {
+    public ResultMapper(Scenario scenario ) {
 	this.scenario = scenario;
-	this.mappingStrategy = mappingStrategy;
     }
 
-    public  ColumnPositionMappingStrategy<M> getMappingStrategy(){
-	return this.mappingStrategy;
-    }
-
-    public void setMappingStrategy(ColumnPositionMappingStrategy<M> mappingStrategy) {
-	this.mappingStrategy=mappingStrategy;
-    }
 
     public Scenario getScenario() {
 	return scenario;

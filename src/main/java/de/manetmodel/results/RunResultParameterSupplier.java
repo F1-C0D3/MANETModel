@@ -2,12 +2,12 @@ package de.manetmodel.results;
 
 import java.util.function.Supplier;
 
-public class RunResultParameterSupplier implements Supplier<RunResultParameter> {
+public class RunResultParameterSupplier implements Supplier<IndividualRunResultParameter> {
 
     @Override
-    public RunResultParameter get() {
+    public IndividualRunResultParameter get() {
 	// TODO Auto-generated method stub
-	return new RunResultParameter();
+	return new IndividualRunResultParameter();
     }
 
 }
