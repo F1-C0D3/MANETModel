@@ -82,23 +82,22 @@ public class CSVExporter {
 
     }
 
-    public <R extends ResultParameter>void write(List<R> result, ColumnPositionMappingStrategy<R> mappingStrategy, Scenario scenario,
-	    String run) {
+    public <R extends ResultParameter> void write(List<R> result, ColumnPositionMappingStrategy<R> mappingStrategy,
+	    Scenario scenario, String run) {
 	try {
 	    Path resFile = createResultFile(
 		    new StringBuffer().append(run).append("_").append(scenario.getResultFile()).toString());
 	    Writer writer = new PrintWriter(resFile.toFile());
 	    StatefulBeanToCsv<R> beanToCsv = new StatefulBeanToCsvBuilder<R>(writer)
 		    .withMappingStrategy(mappingStrategy).build();
-	    try {
-		for (R res : result) {
-		    beanToCsv.write(res);
-		}
-	    } catch (CsvDataTypeMismatchException | CsvRequiredFieldEmptyException e) {
-		e.printStackTrace();
+
+	    for (R res : result) {
+		beanToCsv.write(res);
 	    }
+
 	    writer.close();
-	} catch (IOException e) {
+	} catch (IOException | CsvDataTypeMismatchException | CsvRequiredFieldEmptyException e) {
+
 	    e.printStackTrace();
 	}
 
