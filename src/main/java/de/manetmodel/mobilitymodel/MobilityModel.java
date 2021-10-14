@@ -9,13 +9,12 @@ import de.manetmodel.units.Speed.SpeedRange;
 public abstract class MobilityModel {
 
     private final int ticks;
-    private final Time recordDuration;
-    private final Time timeStamp;
+    private final Time tickDuration;
    
     protected SpeedRange speedRange;
     protected RandomNumbers random;
 
-    public MobilityModel(RandomNumbers random, SpeedRange speedRange, Time recordDuration, int ticks) {
+    public MobilityModel(RandomNumbers random, SpeedRange speedRange, Time tickDuration, int ticks) {
 	this.random = random;
 	this.speedRange = speedRange;
 	if (ticks == 0) {
@@ -24,35 +23,32 @@ public abstract class MobilityModel {
 	    this.ticks = ticks;
 	}
 
-	if (recordDuration == null || recordDuration.value == 0) {
-	    this.recordDuration = new Time(Unit.TimeSteps.second, 30);
+	if (tickDuration == null || tickDuration.value == 0) {
+	    this.tickDuration = new Time(Unit.TimeSteps.second, 30);
 	} else {
-	    this.recordDuration = recordDuration;
+	    this.tickDuration = tickDuration;
 	}
-	this.timeStamp = new Time(Unit.TimeSteps.milliseconds, recordDuration.getMillis() / (long) ticks);
 
     }
 
-    public MobilityModel(RandomNumbers random, SpeedRange speedRange, Time recordDuration) {
+    public MobilityModel(RandomNumbers random, SpeedRange speedRange, Time tickDuration) {
 	this.ticks = 3;
 	this.random = random;
 	this.speedRange = speedRange;
 
-	if (recordDuration == null || recordDuration.value == 0) {
-	    this.recordDuration = new Time(Unit.TimeSteps.second, 30);
+	if (tickDuration == null || tickDuration.value == 0) {
+	    this.tickDuration = new Time(Unit.TimeSteps.second, 1l);
 	} else {
-	    this.recordDuration = recordDuration;
+	    this.tickDuration = tickDuration;
 	}
 
-	this.timeStamp = new Time(Unit.TimeSteps.second, recordDuration.value / (long) ticks);
     }
 
     public MobilityModel(RandomNumbers random, SpeedRange speedRange) {
 	this.ticks = 3;
-	this.recordDuration = new Time(Unit.TimeSteps.second, 30);
+	this.tickDuration = new Time(Unit.TimeSteps.second, 1l);
 	this.random = random;
 	this.speedRange = speedRange;
-	this.timeStamp = new Time(Unit.TimeSteps.second, recordDuration.value / (long) ticks);
     }
 
     public SpeedRange getSpeedRange() {
@@ -72,8 +68,8 @@ public abstract class MobilityModel {
     }
 
     
-    public Time getTimeStamp() {
-        return timeStamp;
+    public Time getTickDuration() {
+        return tickDuration;
     }
 
     public abstract Speed initializeSpeed();
