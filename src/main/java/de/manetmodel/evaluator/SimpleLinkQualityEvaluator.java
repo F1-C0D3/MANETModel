@@ -19,12 +19,12 @@ public class SimpleLinkQualityEvaluator
 	super(scoreScope);
 
 	this.sinkMobilityProperty = new SinkSingleTickMobilityEvaluator<ScalarRadioNode>(
-		/* scoreScope */ new DoubleScope(0d, 1d), /* weight */ 1, /* mobilityModel */ mobilityModel);
+		/* scoreScope */ new DoubleScope(0d, 1d), /* weight */ 1d, /* mobilityModel */ mobilityModel);
 
 	this.confidenceDistanceProperty = new ConfidenceDistanceEvaluator(/* scoreScope */ new DoubleScope(0d, 1d),
-		/* weight */ 1, radioModel);
+		/* weight */ 0.33d, radioModel);
 	this.relativeDirectionProperty = new SourceSinkRelativeDirectionEvaluator<ScalarRadioNode, ScalarRadioLink, ScalarLinkQuality>(
-		/* scoreScope */ new DoubleScope(0d, 1d), /* weight */ 1, mobilityModel);
+		/* scoreScope */ new DoubleScope(0d, 1d), /* weight */ 0.33d, mobilityModel);
 
 	this.setPropertyScope(new DoubleScope(0d, 1d));
     }
