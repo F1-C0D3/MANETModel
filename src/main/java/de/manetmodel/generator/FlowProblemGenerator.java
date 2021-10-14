@@ -27,7 +27,7 @@ public class FlowProblemGenerator<N extends Vertex<Position2D>, L extends Weight
 
 	List<F> flowProblems = new ArrayList<F>();
 
-	if (problemProperties.uniqueSourceDestination) {
+	if (problemProperties.uniqueSourceDestination ) {
 
 	    List<Integer> nodeIdExclusionList = new ArrayList<Integer>();
 	    
@@ -48,9 +48,14 @@ public class FlowProblemGenerator<N extends Vertex<Position2D>, L extends Weight
 	} else
 	    flowProblems = super.generate(graph, problemProperties);
 
+	return adjustDataRates(flowProblems, problemProperties);
+
+    }
+    
+    
+    public List<F> adjustDataRates(List<F> flowProblems, FlowProblemProperties problemProperties){
 	for (F flowProblem : flowProblems)
 	    flowProblem.setDataRate(new DataRate((long) randomNumbers.getRandom(problemProperties.minDemand.get(), problemProperties.maxDemand.get())));
-
 	return flowProblems;
     }
 

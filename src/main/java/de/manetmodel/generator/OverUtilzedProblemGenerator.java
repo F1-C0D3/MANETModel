@@ -56,10 +56,15 @@ public class OverUtilzedProblemGenerator<N extends Node, L extends Link<W>, W ex
 	int trys = 5000;
 	List<F> flowProblems = null;
 	double overUtilizationPercentage = 0;
+	boolean overutilizedSettingFound = false;
 	while (overUtilizationPercentage < properties.overUtilizationPercentage && trys > 0) {
 
-	    // Generate flowProblems
-	    flowProblems = flowProblemGenerator.generate(manet, properties);
+	    if (!overutilizedSettingFound)
+		// Generate flowProblems
+		flowProblems = flowProblemGenerator.generate(manet, properties);
+	    else
+		// increase only data rates of flows 
+		flowProblems = flowProblemGenerator.adjustDataRates(flowProblems, properties);
 
 	    for (F flowProblem : flowProblems) {
 
@@ -72,33 +77,32 @@ public class OverUtilzedProblemGenerator<N extends Node, L extends Link<W>, W ex
 		manet.deployFlow(flowProblem);
 	    }
 
+	    // Check if generated flowProblems over-utilize network
+	    if (manet.isOverutilized()) {
+		overUtilizationPercentage = manet.getOverUtilizationPercentageOf(manet.getOverUtilizedActiveLinks());
+		overutilizedSettingFound = true;
+	    }
+	    // If not, increase maxDemand of flowProblemProperties and repeat
+	    else {
+		DataRate newMaxDemand = new DataRate(
+			properties.maxDemand.get() + (properties.increaseFactor.get() / flowProblems.size()));
 
-		// Check if generated flowProblems over-utilize network
-		if (manet.isOverutilized()) {
-		    overUtilizationPercentage = manet
-			    .getOverUtilizationPercentageOf(manet.getOverUtilizedActiveLinks());
-		}
-		// If not, increase maxDemand of flowProblemProperties and repeat
-		else {
-		    DataRate newMaxDemand = new DataRate(
-			    properties.maxDemand.get() + (properties.increaseFactor.get() / flowProblems.size()));
+		DataRate newMinDemand = new DataRate(
+			properties.minDemand.get() + (properties.increaseFactor.get() / flowProblems.size()));
+		// MaxDemand of a flowProblem is not allowed to grow above the link with maximum
+		// capacity
+		properties.maxDemand = newMaxDemand;
+		properties.minDemand = newMinDemand;
+		trys--;
+	    }
 
-		    DataRate newMinDemand = new DataRate(
-			    properties.minDemand.get() + (properties.increaseFactor.get() / flowProblems.size()));
-		    // MaxDemand of a flowProblem is not allowed to grow above the link with maximum
-		    // capacity
-		    properties.maxDemand = newMaxDemand;
-		    properties.minDemand = newMinDemand;
-		    trys--;
-		}
-		
 	    manet.undeployFlows();
 	    manet.clearFlows();
-	    
 
-	    if(isOverutilizedWithSingleFlow(flowProblems)) {
-		overUtilizationPercentage=0d;
-		trys--;}
+	    if (isOverutilizedWithSingleFlow(flowProblems)) {
+		overUtilizationPercentage = 0d;
+		trys--;
+	    }
 	}
 
 	if (overUtilizationPercentage > properties.overUtilizationPercentage) {
