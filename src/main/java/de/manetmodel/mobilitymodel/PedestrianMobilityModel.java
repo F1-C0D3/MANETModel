@@ -13,7 +13,6 @@ import de.manetmodel.units.Unit.TimeSteps;
 
 public class PedestrianMobilityModel extends MobilityModel {
 
-    DoubleRange speed;
     private Speed deviation;
 
     public PedestrianMobilityModel(RandomNumbers random, SpeedRange speedRange, Speed deviation) {
@@ -21,14 +20,14 @@ public class PedestrianMobilityModel extends MobilityModel {
 	this.deviation = deviation;
     }
 
-    public PedestrianMobilityModel(RandomNumbers random, SpeedRange speedRange, Time recordDuration, Speed deviation) {
-	super(random, speedRange, recordDuration);
+    public PedestrianMobilityModel(RandomNumbers random, SpeedRange speedRange, Time tickDuration, Speed deviation) {
+	super(random, speedRange, tickDuration);
 	this.deviation = deviation;
     }
 
-    public PedestrianMobilityModel(RandomNumbers random, SpeedRange speedRange, Time recordDuration, Speed deviation,
+    public PedestrianMobilityModel(RandomNumbers random, SpeedRange speedRange, Time tickDuration, Speed deviation,
 	    int segments) {
-	super(random, speedRange, recordDuration, segments);
+	super(random, speedRange, tickDuration, segments);
 	this.deviation = deviation;
     }
 
@@ -90,8 +89,8 @@ public class PedestrianMobilityModel extends MobilityModel {
 	}
 	angle = (angle + prevAngle) % 360;
 	double angleRadians = Math.toRadians(angle);
-	double xNew = (Math.cos(angleRadians) * speed.convertTo(Distance.kilometer, TimeSteps.hour)) + prevPosition.x();
-	double yNew = (Math.sin(angleRadians) * speed.convertTo(Distance.kilometer, TimeSteps.hour)) + prevPosition.y();
+	double xNew = (Math.cos(angleRadians) * speed.convertTo(Distance.meter, TimeSteps.milliseconds)*this.getTickDuration().getMillis()) + prevPosition.x();
+	double yNew = (Math.sin(angleRadians) * speed.convertTo(Distance.meter, TimeSteps.milliseconds)*this.getTickDuration().getMillis()) + prevPosition.y();
 	position2D = new Position2D(xNew, yNew);
 
 	return new Tuple<Position2D, Double>(position2D, angle);
