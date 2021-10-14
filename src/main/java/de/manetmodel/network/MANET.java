@@ -28,7 +28,6 @@ public class MANET<N extends Node, L extends Link<W>, W extends LinkQuality, F e
     protected DataRate utilization;
     protected DataRate capacity;
     protected List<List<Integer>> utilizationAdjacencies;
-    protected Set<Integer> activeUtilizedLinks;
     protected LinkQualityEvaluator<N, L, W> linkQualityEvaluator;
 
     public MANET(Supplier<N> vertexSupplier, Supplier<L> edgeSupplier, Supplier<W> edgeWeightSupplier,
@@ -40,7 +39,6 @@ public class MANET<N extends Node, L extends Link<W>, W extends LinkQuality, F e
 	this.capacity = new DataRate(0L);
 	this.utilization = new DataRate(0L);
 	this.utilizationAdjacencies = new ArrayList<List<Integer>>();
-	this.activeUtilizedLinks = new HashSet<Integer>();
 	this.linkQualityEvaluator = linkQualityEvaluator;
     }
 
@@ -57,7 +55,6 @@ public class MANET<N extends Node, L extends Link<W>, W extends LinkQuality, F e
 	this.targetSourceAdjacencies = manet.targetSourceAdjacencies;
 	this.edgeAdjacencies = manet.edgeAdjacencies;
 	this.utilizationAdjacencies = new ArrayList<List<Integer>>(manet.utilizationAdjacencies);
-	this.activeUtilizedLinks = new HashSet<Integer>(manet.activeUtilizedLinks);
     }
 
     public MobilityModel getMobilityModel() {
@@ -303,8 +300,6 @@ public class MANET<N extends Node, L extends Link<W>, W extends LinkQuality, F e
 
 	link.setActive();
 
-	activeUtilizedLinks.add(link.getID());
-
 	for (L utilizedLink : getUtilizedLinksOf(link)) {
 	    utilization.set(this.utilization.get() + dataRate.get());
 
@@ -474,11 +469,11 @@ public class MANET<N extends Node, L extends Link<W>, W extends LinkQuality, F e
     }
 
     public List<L> getActiveUtilizedLinks() {
-	return activeUtilizedLinks.stream().map(i -> getEdge(i)).collect(Collectors.toList());
+	return this.getEdges().stream().filter(l->l.isActive()==true).collect(Collectors.toList());
     }
 
     // Returns all active utilized links of flows that are utilized by given link
-    public List<L> getActiveUtilizedLinksOf(L link) {
+    public List<L> getPassiveUtilizedLinksOf(L link) {
 
 	Set<L> activeUtilizedLinks = new HashSet<L>();
 
