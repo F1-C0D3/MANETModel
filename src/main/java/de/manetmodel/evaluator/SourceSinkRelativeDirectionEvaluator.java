@@ -32,7 +32,7 @@ public class SourceSinkRelativeDirectionEvaluator<N extends Node, L extends Link
 	List<MovementPattern> sinkTicks = sink.getMobilityCharacteristic();
 	
 	SpeedRange speedRange = mobilityModel.getSpeedRange();
-	Time timeStamp = mobilityModel.getTimeStamp();
+	Time timeStamp = mobilityModel.getTickDuration();
 	
 	MovementPattern currentSourceTick = sourceTicks.get(sourceTicks.size()-1);
 	MovementPattern currentSinkTick = sinkTicks.get(sinkTicks.size()-1);
