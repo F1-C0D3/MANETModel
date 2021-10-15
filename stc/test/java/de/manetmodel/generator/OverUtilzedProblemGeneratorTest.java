@@ -48,11 +48,64 @@ import de.manetmodel.units.DataUnit.Type;
 public class OverUtilzedProblemGeneratorTest {
 
     @Test
+    public void overUtilzedProblemGeneratorPenetrationTest()
+	    throws IOException, InvocationTargetException, InterruptedException {
+
+	int runs = 200;
+	RandomNumbers random = new RandomNumbers(0);
+
+	while (runs != 0) {
+	    ScalarRadioModel radioModel = new ScalarRadioModel(new Watt(0.001d), new Watt(1e-11), 2000000d, 2412000000d,
+		    35d, 100);
+	    PedestrianMobilityModel mobilityModel = new PedestrianMobilityModel(random,
+		    new SpeedRange(0, 100, Unit.TimeSteps.second, Unit.Distance.meter),
+		    new Speed(50, Unit.Distance.meter, Unit.TimeSteps.second));
+	    ScalarLinkQualityEvaluator evaluator = new ScalarLinkQualityEvaluator(new DoubleScope(0d, 1d), radioModel,
+		    mobilityModel);
+
+	    ScalarRadioMANET manet = new ScalarRadioMANET(new ScalarRadioMANETSupplier().getNodeSupplier(),
+			new ScalarRadioMANETSupplier().getLinkSupplier(),
+			new ScalarRadioMANETSupplier().getLinkPropertySupplier(),
+			new ScalarRadioMANETSupplier().getFlowSupplier(), radioModel, mobilityModel, evaluator);
+
+		NetworkGraphProperties graphProperties = new NetworkGraphProperties(1024, 768, new IntRange(100, 100),
+			new DoubleRange(50d, 100d), new DoubleRange(100d, 100d));
+
+		NetworkGraphGenerator<ScalarRadioNode, ScalarRadioLink, ScalarLinkQuality> generator = new NetworkGraphGenerator<ScalarRadioNode, ScalarRadioLink, ScalarLinkQuality>(
+			manet, new ScalarRadioMANETSupplier().getLinkPropertySupplier(), random);
+
+		generator.generate(graphProperties);
+		manet.initialize();
+	    Function<ScalarLinkQuality, Double> metric = (ScalarLinkQuality w) -> {
+		return w.getScore();
+	    };
+
+	    OverUtilzedProblemGenerator<ScalarRadioNode, ScalarRadioLink, ScalarLinkQuality, ScalarRadioFlow> overUtilizedProblemGenerator = new OverUtilzedProblemGenerator<ScalarRadioNode, ScalarRadioLink, ScalarLinkQuality, ScalarRadioFlow>(
+		    manet, metric);
+
+		OverUtilizedProblemProperties problemProperties = new OverUtilizedProblemProperties(
+			/* Number of paths */10, /* Minimum path length */10,
+			/* Maximum path length */20, /* Minimum demand of each flow */new DataRate(100, Type.kilobit),
+			/* Maximum demand of each flow */new DataRate(200, Type.kilobit),
+			/* Unique source destination pairs */true,
+			/* Over-utilization percentage */10,
+			/* Increase factor of each tick */new DataRate(50, Type.kilobit));
+	    List<ScalarRadioFlow> flowProblems = overUtilizedProblemGenerator.compute(problemProperties,random);
+
+	    DijkstraShortestPath<ScalarRadioNode, ScalarRadioLink, ScalarLinkQuality> sp = new DijkstraShortestPath<ScalarRadioNode, ScalarRadioLink, ScalarLinkQuality>(
+		    manet);
+	    manetOverUtilizedDueToSeveralFlowsInternalTest(manet, flowProblems, sp, metric);
+	    runs--;
+	}
+
+    }
+
+    @Test
     public void simpleSingleFlowProblemGeneratorTestGridMANET()
 	    throws IOException, InvocationTargetException, InterruptedException {
 
 	ScalarRadioModel radioModel = new ScalarRadioModel(new Watt(0.001d), new Watt(1e-11), 2000000d, 2412000000d,
-		35d,100);
+		35d, 100);
 	PedestrianMobilityModel mobilityModel = new PedestrianMobilityModel(new RandomNumbers(),
 		new SpeedRange(0, 100, Unit.TimeSteps.second, Unit.Distance.meter),
 		new Speed(50, Unit.Distance.meter, Unit.TimeSteps.second));
@@ -80,15 +133,13 @@ public class OverUtilzedProblemGeneratorTest {
 	OverUtilzedProblemGenerator<ScalarRadioNode, ScalarRadioLink, ScalarLinkQuality, ScalarRadioFlow> overUtilizedProblemGenerator = new OverUtilzedProblemGenerator<ScalarRadioNode, ScalarRadioLink, ScalarLinkQuality, ScalarRadioFlow>(
 		manet, metric);
 
-	OverUtilizedProblemProperties problemProperties = new OverUtilizedProblemProperties();
-	problemProperties.pathCount = 1;
-	problemProperties.minLength = 10;
-	problemProperties.maxLength = 20;
-	problemProperties.minDemand = new DataRate(1, Type.megabit);
-	problemProperties.maxDemand = new DataRate(2, Type.megabit);
-	problemProperties.overUtilizationPercentage = 5;
-	problemProperties.uniqueSourceDestination = true;
-	problemProperties.increaseFactor = new DataRate(500, Type.kilobit);
+	OverUtilizedProblemProperties problemProperties = new OverUtilizedProblemProperties(
+		/* Number of paths */1, /* Minimum path length */10,
+		/* Maximum path length */20, /* Minimum demand of each flow */new DataRate(10, Type.kilobit),
+		/* Maximum demand of each flow */new DataRate(20, Type.kilobit),
+		/* Unique source destination pairs */true,
+		/* Over-utilization percentage */2,
+		/* Increase factor of each tick */new DataRate(2, Type.kilobit));
 	List<ScalarRadioFlow> flowProblems = overUtilizedProblemGenerator.compute(problemProperties);
 
 	assertEquals(flowProblems.get(0).size(), 1);
@@ -98,7 +149,7 @@ public class OverUtilzedProblemGeneratorTest {
     public void overUtilzedProblemGeneratorTest() throws IOException, InvocationTargetException, InterruptedException {
 
 	ScalarRadioModel radioModel = new ScalarRadioModel(new Watt(0.001d), new Watt(1e-11), 2000000d, 2412000000d,
-		35d,100);
+		35d, 100);
 	PedestrianMobilityModel mobilityModel = new PedestrianMobilityModel(new RandomNumbers(),
 		new SpeedRange(0, 100, Unit.TimeSteps.second, Unit.Distance.meter),
 		new Speed(50, Unit.Distance.meter, Unit.TimeSteps.second));
@@ -126,15 +177,13 @@ public class OverUtilzedProblemGeneratorTest {
 	OverUtilzedProblemGenerator<ScalarRadioNode, ScalarRadioLink, ScalarLinkQuality, ScalarRadioFlow> overUtilizedProblemGenerator = new OverUtilzedProblemGenerator<ScalarRadioNode, ScalarRadioLink, ScalarLinkQuality, ScalarRadioFlow>(
 		manet, metric);
 
-	OverUtilizedProblemProperties problemProperties = new OverUtilizedProblemProperties();
-	problemProperties.pathCount = 2;
-	problemProperties.minLength = 10;
-	problemProperties.maxLength = 20;
-	problemProperties.minDemand = new DataRate(1, Type.megabit);
-	problemProperties.maxDemand = new DataRate(2, Type.megabit);
-	problemProperties.overUtilizationPercentage = 5;
-	problemProperties.uniqueSourceDestination = true;
-	problemProperties.increaseFactor = new DataRate(100, Type.kilobit);
+	OverUtilizedProblemProperties problemProperties = new OverUtilizedProblemProperties(
+		/* Number of paths */2, /* Minimum path length */10,
+		/* Maximum path length */20, /* Minimum demand of each flow */new DataRate(10, Type.kilobit),
+		/* Maximum demand of each flow */new DataRate(20, Type.kilobit),
+		/* Unique source destination pairs */true,
+		/* Over-utilization percentage */2,
+		/* Increase factor of each tick */new DataRate(2, Type.kilobit));
 	List<ScalarRadioFlow> flowProblems = overUtilizedProblemGenerator.compute(problemProperties);
 
 	DijkstraShortestPath<ScalarRadioNode, ScalarRadioLink, ScalarLinkQuality> sp = new DijkstraShortestPath<ScalarRadioNode, ScalarRadioLink, ScalarLinkQuality>(
@@ -147,7 +196,7 @@ public class OverUtilzedProblemGeneratorTest {
     public void generateUniqueSourceDestinationNodes() throws InvocationTargetException, InterruptedException {
 
 	ScalarRadioModel radioModel = new ScalarRadioModel(new Watt(0.001d), new Watt(1e-11), 2000000d, 2412000000d,
-		35d,100);
+		35d, 100);
 	PedestrianMobilityModel mobilityModel = new PedestrianMobilityModel(new RandomNumbers(),
 		new SpeedRange(0, 100, Unit.TimeSteps.second, Unit.Distance.meter),
 		new Speed(50, Unit.Distance.meter, Unit.TimeSteps.second));
@@ -175,15 +224,13 @@ public class OverUtilzedProblemGeneratorTest {
 	OverUtilzedProblemGenerator<ScalarRadioNode, ScalarRadioLink, ScalarLinkQuality, ScalarRadioFlow> overUtilizedProblemGenerator = new OverUtilzedProblemGenerator<ScalarRadioNode, ScalarRadioLink, ScalarLinkQuality, ScalarRadioFlow>(
 		manet, metric);
 
-	OverUtilizedProblemProperties problemProperties = new OverUtilizedProblemProperties();
-	problemProperties.pathCount = 1;
-	problemProperties.minLength = 10;
-	problemProperties.maxLength = 20;
-	problemProperties.minDemand = new DataRate(100);
-	problemProperties.maxDemand = new DataRate(200);
-	problemProperties.overUtilizationPercentage = 5;
-	problemProperties.uniqueSourceDestination = true;
-	problemProperties.increaseFactor = new DataRate(50);
+	OverUtilizedProblemProperties problemProperties = new OverUtilizedProblemProperties(
+		/* Number of paths */20, /* Minimum path length */10,
+		/* Maximum path length */20, /* Minimum demand of each flow */new DataRate(10, Type.kilobit),
+		/* Maximum demand of each flow */new DataRate(20, Type.kilobit),
+		/* Unique source destination pairs */true,
+		/* Over-utilization percentage */2,
+		/* Increase factor of each tick */new DataRate(2, Type.kilobit));
 
 	List<ScalarRadioFlow> flowProblems = overUtilizedProblemGenerator.compute(problemProperties);
 
@@ -206,7 +253,7 @@ public class OverUtilzedProblemGeneratorTest {
     public void verifyAccurateOverUtilizationPercentage() throws InvocationTargetException, InterruptedException {
 
 	ScalarRadioModel radioModel = new ScalarRadioModel(new Watt(0.001d), new Watt(1e-11), 2000000d, 2412000000d,
-		35d,100);
+		35d, 100);
 	PedestrianMobilityModel mobilityModel = new PedestrianMobilityModel(new RandomNumbers(),
 		new SpeedRange(0, 100, Unit.TimeSteps.second, Unit.Distance.meter),
 		new Speed(50, Unit.Distance.meter, Unit.TimeSteps.second));
@@ -237,43 +284,41 @@ public class OverUtilzedProblemGeneratorTest {
 	DijkstraShortestPath<ScalarRadioNode, ScalarRadioLink, ScalarLinkQuality> sp = new DijkstraShortestPath<ScalarRadioNode, ScalarRadioLink, ScalarLinkQuality>(
 		manet);
 
-	OverUtilizedProblemProperties problemProperties = new OverUtilizedProblemProperties();
-	problemProperties.pathCount = 10;
-	problemProperties.minLength = 10;
-	problemProperties.maxLength = 20;
-	problemProperties.minDemand = new DataRate(100, Type.kilobit);
-	problemProperties.maxDemand = new DataRate(200, Type.kilobit);
-	problemProperties.overUtilizationPercentage = 2;
-	problemProperties.uniqueSourceDestination = true;
-	
-	
-	problemProperties.increaseFactor = new DataRate(1, Type.kilobit);
+	OverUtilizedProblemProperties problemProperties = new OverUtilizedProblemProperties(
+		/* Number of paths */10, /* Minimum path length */10,
+		/* Maximum path length */20, /* Minimum demand of each flow */new DataRate(100, Type.kilobit),
+		/* Maximum demand of each flow */new DataRate(200, Type.kilobit),
+		/* Unique source destination pairs */true,
+		/* Over-utilization percentage */1,
+		/* Increase factor of each tick */new DataRate(50, Type.kilobit));
+
 	List<ScalarRadioFlow> flowProblems = overUtilizedProblemGenerator.compute(problemProperties);
 	double previousOverUtilizedPercentage = 0d;
 	manetOverUtilizedDueToSeveralFlowsInternalTest(manet, flowProblems, sp, metric);
-	assertTrue(manet.getOverUtilizationPercentageOf(manet.getOverUtilizedActiveLinks()) > previousOverUtilizedPercentage);
-	previousOverUtilizedPercentage =  manet.getOverUtilizationPercentageOf(manet.getOverUtilizedActiveLinks());
-
-	manet.reset();
-	for (ScalarRadioFlow scalarRadioFlow : flowProblems) {
-	    scalarRadioFlow.setDataRate(new DataRate(0));
-	}
-	problemProperties.increaseFactor = new DataRate(1, Type.kilobit);
-	problemProperties.overUtilizationPercentage =10;
-	flowProblems = overUtilizedProblemGenerator.compute(problemProperties);
-	manetOverUtilizedDueToSeveralFlowsInternalTest(manet, flowProblems, sp, metric);
-	assertTrue(manet.getOverUtilizationPercentageOf(manet.getOverUtilizedActiveLinks())>previousOverUtilizedPercentage);
+	assertTrue(manet
+		.getOverUtilizationPercentageOf(manet.getOverUtilizedActiveLinks()) > previousOverUtilizedPercentage);
 	previousOverUtilizedPercentage = manet.getOverUtilizationPercentageOf(manet.getOverUtilizedActiveLinks());
 
 	manet.reset();
 	for (ScalarRadioFlow scalarRadioFlow : flowProblems) {
 	    scalarRadioFlow.setDataRate(new DataRate(0));
 	}
-	problemProperties.increaseFactor = new DataRate(1, Type.kilobit);
-	problemProperties.overUtilizationPercentage = 20;
+	problemProperties.setOverUtilizationPercentage(10);
 	flowProblems = overUtilizedProblemGenerator.compute(problemProperties);
 	manetOverUtilizedDueToSeveralFlowsInternalTest(manet, flowProblems, sp, metric);
-	assertTrue(manet.getOverUtilizationPercentageOf(manet.getOverUtilizedActiveLinks()) > previousOverUtilizedPercentage);
+	assertTrue(manet
+		.getOverUtilizationPercentageOf(manet.getOverUtilizedActiveLinks()) > previousOverUtilizedPercentage);
+	previousOverUtilizedPercentage = manet.getOverUtilizationPercentageOf(manet.getOverUtilizedActiveLinks());
+
+	manet.reset();
+	for (ScalarRadioFlow scalarRadioFlow : flowProblems) {
+	    scalarRadioFlow.setDataRate(new DataRate(0));
+	}
+	problemProperties.setOverUtilizationPercentage(20);
+	flowProblems = overUtilizedProblemGenerator.compute(problemProperties);
+	manetOverUtilizedDueToSeveralFlowsInternalTest(manet, flowProblems, sp, metric);
+	assertTrue(manet
+		.getOverUtilizationPercentageOf(manet.getOverUtilizedActiveLinks()) > previousOverUtilizedPercentage);
 	previousOverUtilizedPercentage = manet.getOverUtilizationPercentageOf(manet.getOverUtilizedActiveLinks());
 	manet.reset();
 

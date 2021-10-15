@@ -27,11 +27,11 @@ public class FlowProblemGenerator<N extends Vertex<Position2D>, L extends Weight
 
 	List<F> flowProblems = new ArrayList<F>();
 
-	if (problemProperties.uniqueSourceDestination ) {
+	if (problemProperties.isUniqueSourceDestination() ) {
 
 	    List<Integer> nodeIdExclusionList = new ArrayList<Integer>();
 	    
-	    for (int i = 0; i < problemProperties.pathCount; i++) {
+	    for (int i = 0; i < problemProperties.getPathCount(); i++) {
 		
 		int randomSourceNodeID = randomNumbers.getRandomNotInE(0, graph.getVertices().size() - 1, nodeIdExclusionList);
 		nodeIdExclusionList.add(randomSourceNodeID);
@@ -55,7 +55,7 @@ public class FlowProblemGenerator<N extends Vertex<Position2D>, L extends Weight
     
     public List<F> adjustDataRates(List<F> flowProblems, FlowProblemProperties problemProperties){
 	for (F flowProblem : flowProblems)
-	    flowProblem.setDataRate(new DataRate((long) randomNumbers.getRandom(problemProperties.minDemand.get(), problemProperties.maxDemand.get())));
+	    flowProblem.setDataRate(new DataRate((long) randomNumbers.getRandom(problemProperties.getMinDemand().get(), problemProperties.getMaxDemand().get())));
 	return flowProblems;
     }
 

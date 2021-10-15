@@ -49,7 +49,7 @@ public class CplexFeasibleSolutionTest {
     public void simpleTest() throws InvocationTargetException, InterruptedException, IloException, IOException {
 
 	ScalarRadioModel radioModel = new ScalarRadioModel(new Watt(0.001d), new Watt(1e-11), 2000000d, 2412000000d,
-		35d,100);
+		35d, 100);
 	PedestrianMobilityModel mobilityModel = new PedestrianMobilityModel(new RandomNumbers(),
 		new SpeedRange(0, 100, Unit.TimeSteps.second, Unit.Distance.meter),
 		new Speed(50, Unit.Distance.meter, Unit.TimeSteps.second));
@@ -71,23 +71,20 @@ public class CplexFeasibleSolutionTest {
 	generator.generate(properties);
 
 	manet.initialize();
-	
+
 	Function<ScalarLinkQuality, Double> metric = (ScalarLinkQuality w) -> {
-		return w.getDistance();
+	    return w.getDistance();
 	};
 
 	OverUtilzedProblemGenerator<ScalarRadioNode, ScalarRadioLink, ScalarLinkQuality, ScalarRadioFlow> overUtilizedProblemGenerator = new OverUtilzedProblemGenerator<ScalarRadioNode, ScalarRadioLink, ScalarLinkQuality, ScalarRadioFlow>(
-			manet, metric);
+		manet, metric);
 
-	OverUtilizedProblemProperties problemProperties = new OverUtilizedProblemProperties();
-	problemProperties.pathCount = 30;
-	problemProperties.minLength = 10;
-	problemProperties.maxLength = 20;
-	problemProperties.minDemand = new DataRate(200, Type.kilobit);
-	problemProperties.maxDemand = new DataRate(400, Type.kilobit);
-	problemProperties.increaseFactor = new DataRate(200, Type.kilobit);
-	problemProperties.overUtilizationPercentage = 1;
-	problemProperties.uniqueSourceDestination = true;
+	OverUtilizedProblemProperties problemProperties = new OverUtilizedProblemProperties(/* Number of paths */30,
+		/* Minimum path length */10, /* Maximum path length */20,
+		/* Minimum demand of each flow */new DataRate(10, Type.kilobit),
+		/* Maximum demand of each flow */new DataRate(20, Type.kilobit),
+		/* Unique source destination pairs */true, /* Over-utilization percentage */2,
+		/* Increase factor of each tick */new DataRate(2, Type.kilobit));
 	List<ScalarRadioFlow> flowProblems = overUtilizedProblemGenerator.compute(problemProperties, randomNumbers);
 	manet.addFlows(flowProblems);
 	CplexFlowDistribution<ScalarRadioNode, ScalarRadioLink, ScalarLinkQuality, ScalarRadioFlow> naiveOptimalFlowDistribution = new CplexFlowDistribution<ScalarRadioNode, ScalarRadioLink, ScalarLinkQuality, ScalarRadioFlow>();
@@ -109,7 +106,7 @@ public class CplexFeasibleSolutionTest {
 	    throws InvocationTargetException, InterruptedException, IloException, IOException {
 
 	ScalarRadioModel radioModel = new ScalarRadioModel(new Watt(0.001d), new Watt(1e-11), 2000000d, 2412000000d,
-		35d,100);
+		35d, 100);
 	PedestrianMobilityModel mobilityModel = new PedestrianMobilityModel(new RandomNumbers(),
 		new SpeedRange(0, 100, Unit.TimeSteps.second, Unit.Distance.meter),
 		new Speed(50, Unit.Distance.meter, Unit.TimeSteps.second));
@@ -156,7 +153,6 @@ public class CplexFeasibleSolutionTest {
 
 	SwingUtilities.invokeAndWait(new VisualGraphApp<ScalarRadioNode, ScalarRadioLink, ScalarLinkQuality>(manet,
 		new WeightedEdgeIDPrinter<ScalarRadioLink, ScalarLinkQuality>()));
-	
 
     }
 }
