@@ -9,7 +9,7 @@ import de.manetmodel.network.scalar.ScalarRadioNode;
 public class SimpleLinkQualityEvaluator
 	extends LinkQualityEvaluator<ScalarRadioNode, ScalarRadioLink, ScalarLinkQuality> {
 
-    private SinkSingleTickMobilityEvaluator<ScalarRadioNode> sinkMobilityProperty;
+    private SinkWeightedMovingAverageMobilityEvaluator<ScalarRadioNode> sinkMobilityProperty;
     private ConfidenceDistanceEvaluator confidenceDistanceProperty;
     private SourceSinkRelativeDirectionEvaluator<ScalarRadioNode, ScalarRadioLink, ScalarLinkQuality> relativeDirectionProperty;
 
@@ -18,7 +18,7 @@ public class SimpleLinkQualityEvaluator
 
 	super(scoreScope);
 
-	this.sinkMobilityProperty = new SinkSingleTickMobilityEvaluator<ScalarRadioNode>(
+	this.sinkMobilityProperty = new SinkWeightedMovingAverageMobilityEvaluator<ScalarRadioNode>(
 		/* scoreScope */ new DoubleScope(0d, 1d), /* weight */ 1d, /* mobilityModel */ mobilityModel);
 
 	this.confidenceDistanceProperty = new ConfidenceDistanceEvaluator(/* scoreScope */ new DoubleScope(0d, 1d),

@@ -33,6 +33,13 @@ public class Node extends Vertex<Position2D> {
 	return mobility.get(mobility.size()-1);
     }
     
+    public List<MovementPattern> getNPreviousMobilityPatterns (int n) {
+	if (mobility==null || mobility.size()<n)
+	    return null;
+	
+	return mobility.subList(mobility.size()-(1+n), mobility.size()-1);
+    }
+    
     public void setMobility(MovementPattern mobility) {
 	this.mobility = Arrays.asList(mobility);
     }
