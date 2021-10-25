@@ -22,6 +22,9 @@ public class TotalResultParameter extends ResultParameter {
     @CsvBindByName(column = "minAverageConnectionStability")
     private Time minAverageConnectionStability;
     
+    @CsvBindByName(column = "maxAverageConnectionStability")
+    private Time maxAverageConnectionStability;
+    
     @CsvBindByName(column = "meanNumberOfUndeployedFlows")
     private double meanNumberOfUndeployedFlows;
 
@@ -34,6 +37,9 @@ public class TotalResultParameter extends ResultParameter {
 
     @CsvBindByName(column = "maxAveragesimulationTime")
     private Time maxAveragesimulationTime;
+    
+    @CsvBindByName(column = "finishedRuns")
+    private int finishedRuns;
     
 
     public TotalResultParameter() {
@@ -104,6 +110,15 @@ public class TotalResultParameter extends ResultParameter {
     public void setMinAverageConnectionStability(Time minAverageConnectionStability) {
         this.minAverageConnectionStability = minAverageConnectionStability;
     }
+    
+
+    public Time getMaxAverageConnectionStability() {
+        return maxAverageConnectionStability;
+    }
+
+    public void setMaxAverageConnectionStability(Time maxAverageConnectionStability) {
+        this.maxAverageConnectionStability = maxAverageConnectionStability;
+    }
 
     public double getNumberOfUndeployedFlows() {
         return meanNumberOfUndeployedFlows;
@@ -112,6 +127,16 @@ public class TotalResultParameter extends ResultParameter {
     public void setNumberOfUndeployedFlows(double numberOfUndeployedFlows) {
         this.meanNumberOfUndeployedFlows = numberOfUndeployedFlows;
     }
+
+    public int getFinishedRuns() {
+        return finishedRuns;
+    }
+
+    public void setFinishedRuns(int finishedRuns) {
+        this.finishedRuns = finishedRuns;
+    }
+    
+    
 
     
 }

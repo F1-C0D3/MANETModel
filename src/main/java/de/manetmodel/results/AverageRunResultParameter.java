@@ -22,11 +22,17 @@ public class AverageRunResultParameter extends ResultParameter {
     @CsvBindByName(column = "minConnectionStability")
     private Time minConnectionStability;
     
+    @CsvBindByName(column = "maxConnectionStability")
+    private Time maxConnectionStability;
+    
     @CsvBindByName(column = "numberOfUndeployedFlows")
     private double numberOfUndeployedFlows;
 
     @CsvBindByName(column = "simulationTime")
     private Time simulationTime;
+    
+    @CsvBindByName(column = "runNumber")
+    private int runNumber;
 
     public AverageRunResultParameter() {
 	overUtilization = 0;
@@ -64,8 +70,14 @@ public class AverageRunResultParameter extends ResultParameter {
 	return this.overUtilization;
     }
 
-    
-    
+    public Time getMaxConnectionStability() {
+        return maxConnectionStability;
+    }
+
+    public void setMaxConnectionStability(Time maxConnectionStability) {
+        this.maxConnectionStability = maxConnectionStability;
+    }
+
     public Time getMinConnectionStability() {
         return minConnectionStability;
     }
@@ -89,6 +101,16 @@ public class AverageRunResultParameter extends ResultParameter {
     public void setNumberOfUndeployedFlows(double numberOfUndeployedFlows) {
         this.numberOfUndeployedFlows = numberOfUndeployedFlows;
     }
+
+    public int getRunNumber() {
+        return runNumber;
+    }
+
+    public void setRunNumber(int runNumber) {
+        this.runNumber = runNumber;
+    }
+    
+    
 
     
 }
