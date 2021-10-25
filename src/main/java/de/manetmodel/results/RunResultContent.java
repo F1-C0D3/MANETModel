@@ -10,6 +10,8 @@ public class RunResultContent<I extends ResultParameter, A extends ResultParamet
     private List<I> individualResultContent;
     private Time runDuration;
     private A averageResultContent;
+    
+    private boolean doRecord;
 
     public RunResultContent(int run) {
 	this.currentRun = run;
@@ -47,4 +49,17 @@ public class RunResultContent<I extends ResultParameter, A extends ResultParamet
 	this.averageResultContent = averageResultContent;
     }
 
+    
+
+    public boolean doRecord() {
+        return doRecord;
+    }
+
+    public void recordRun() {
+        this.doRecord =true;
+    }
+    
+    public void undoRecord() {
+        this.doRecord =false;
+    }
 }
