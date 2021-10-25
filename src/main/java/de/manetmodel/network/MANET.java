@@ -296,7 +296,7 @@ public class MANET<N extends Node, L extends Link<W>, W extends LinkQuality, F e
 	return fContainingl;
     }
 
-    private void increaseUtilizationBy(L link, DataRate dataRate) {
+    public void increaseUtilizationBy(L link, DataRate dataRate) {
 
 	link.setActive();
 
