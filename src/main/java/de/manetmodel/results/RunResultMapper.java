@@ -44,6 +44,6 @@ public abstract class RunResultMapper<I extends ResultParameter, A extends Resul
     public abstract I individualRunResultMapper(N source, N sink, L link);
 
     public abstract <F extends Flow<N, L, W>> A averageRunResultMapper(List<I> runParameters, List<F> flows,
-	    Time duration);
+	    Time duration,int runNumber);
 
 }

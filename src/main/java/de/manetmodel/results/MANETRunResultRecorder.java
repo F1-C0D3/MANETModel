@@ -53,13 +53,14 @@ public class MANETRunResultRecorder<I extends ResultParameter, A extends ResultP
     public void recordAverage(MANET<N, L, W, F> manet) {
 	List<I> individualResultContent = this.runResultContent.getIndividualResultContent();
 	Time runDuration = runResultContent.getRunDuration();
+	int currentRun =runResultContent.getCurrentRun();
 
 	if (individualResultContent != null && runDuration != null) {
 
 	    CSVExporter averageRunExporter = new CSVExporter(resultFileName, RecordType.averageRun);
 
 	    A averageRunResult = resultMapper.averageRunResultMapper(individualResultContent, manet.getFlows(),
-		    runDuration);
+		    runDuration,currentRun);
 
 	    runResultContent.setAverageResultContent(averageRunResult);
 
