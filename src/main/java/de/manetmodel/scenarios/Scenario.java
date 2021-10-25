@@ -17,7 +17,7 @@ public class Scenario {
 	this.indivdualName = indivdualName;
 	this.numNodes = numNodes;
 	this.numFlows = numFlows;
-	this.overUtilizePercentage= overUtilizePercentage;
+	this.overUtilizePercentage = overUtilizePercentage;
     }
 
     public Scenario(int flows, int nodes, int runs) {
@@ -70,8 +70,9 @@ public class Scenario {
     }
 
     public String getResultFile() {
-	return new StringBuffer().append(indivdualName).append("_Flows_").append(numFlows).append("_")
-		.append("MeanTransmissionRate").append("_Nodes_").append(numNodes).toString();
+
+	return String.format("%s_flows=%d_overUtilization=%d_totalRuns=%d", this.indivdualName, this.numFlows,
+		this.overUtilizePercentage, this.numRuns);
     }
 
 }

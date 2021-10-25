@@ -83,10 +83,10 @@ public class CSVExporter {
     }
 
     public <R extends ResultParameter> void write(List<R> result, ColumnPositionMappingStrategy<R> mappingStrategy,
-	    Scenario scenario, String run) {
+	    Scenario scenario, String fileDescription) {
 	try {
 	    Path resFile = createResultFile(
-		    new StringBuffer().append(run).append("_").append(scenario.getResultFile()).toString());
+		    new StringBuffer().append(fileDescription).append("_").append(scenario.getResultFile()).toString());
 	    Writer writer = new PrintWriter(resFile.toFile());
 	    StatefulBeanToCsv<R> beanToCsv = new StatefulBeanToCsvBuilder<R>(writer)
 		    .withMappingStrategy(mappingStrategy).build();
