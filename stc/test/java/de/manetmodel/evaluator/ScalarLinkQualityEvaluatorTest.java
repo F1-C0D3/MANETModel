@@ -63,7 +63,7 @@ public class ScalarLinkQualityEvaluatorTest {
 
 	manet.initialize();
 
-	SwingUtilities.invokeAndWait(new VisualGraphApp<ScalarRadioNode, ScalarRadioLink, ScalarLinkQuality>(manet, new LinkQualityScorePrinter<ScalarLinkQuality>()));
+	SwingUtilities.invokeAndWait(new VisualGraphApp<ScalarRadioNode, ScalarRadioLink, ScalarLinkQuality>(manet, new LinkQualityScorePrinter<ScalarRadioLink,ScalarLinkQuality>()));
 	
 	System.in.read();
     }

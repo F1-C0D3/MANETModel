@@ -8,12 +8,15 @@ import de.jgraphlib.graph.generator.NetworkGraphGenerator;
 import de.jgraphlib.graph.generator.NetworkGraphProperties;
 import de.jgraphlib.graph.generator.GraphProperties.DoubleRange;
 import de.jgraphlib.graph.generator.GraphProperties.IntRange;
+import de.jgraphlib.graph.elements.EdgeDistance;
 import de.jgraphlib.graph.elements.Position2D;
+import de.jgraphlib.graph.elements.WeightedEdge;
 import de.jgraphlib.graph.generator.GridGraphGenerator;
 import de.jgraphlib.graph.io.VertextPosition2DMapper;
 import de.jgraphlib.graph.io.XMLExporter;
 import de.jgraphlib.graph.io.XMLImporter;
 import de.jgraphlib.gui.VisualGraphApp;
+import de.jgraphlib.gui.printer.WeightedEdgeIDPrinter;
 import de.jgraphlib.util.RandomNumbers;
 import de.manetmodel.evaluator.DoubleScope;
 import de.manetmodel.evaluator.ScalarLinkQualityEvaluator;
@@ -109,6 +112,6 @@ public class GridTopology_1024x786 {
 	importer.importGraph(xmlFilePath);
 
 	VisualGraphApp<ScalarRadioNode, ScalarRadioLink, ScalarLinkQuality> visualGraphApp = 
-		new VisualGraphApp<ScalarRadioNode, ScalarRadioLink, ScalarLinkQuality>(manet);
+		new VisualGraphApp<ScalarRadioNode, ScalarRadioLink, ScalarLinkQuality>(manet, new WeightedEdgeIDPrinter<ScalarRadioLink, ScalarLinkQuality>());
     }
 }

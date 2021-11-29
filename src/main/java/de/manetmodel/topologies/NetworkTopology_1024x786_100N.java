@@ -12,6 +12,7 @@ import de.jgraphlib.graph.io.VertextPosition2DMapper;
 import de.jgraphlib.graph.io.XMLExporter;
 import de.jgraphlib.graph.io.XMLImporter;
 import de.jgraphlib.gui.VisualGraphApp;
+import de.jgraphlib.gui.printer.WeightedEdgeIDPrinter;
 import de.jgraphlib.util.RandomNumbers;
 import de.manetmodel.evaluator.DoubleScope;
 import de.manetmodel.evaluator.ScalarLinkQualityEvaluator;
@@ -112,6 +113,6 @@ public class NetworkTopology_1024x786_100N {
 	manet.initialize();
 
 	VisualGraphApp<ScalarRadioNode, ScalarRadioLink, ScalarLinkQuality> visualGraphApp = 
-		new VisualGraphApp<ScalarRadioNode, ScalarRadioLink, ScalarLinkQuality>(manet);
+		new VisualGraphApp<ScalarRadioNode, ScalarRadioLink, ScalarLinkQuality>(manet,  new WeightedEdgeIDPrinter<ScalarRadioLink, ScalarLinkQuality>());
     }
 }
