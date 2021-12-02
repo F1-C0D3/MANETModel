@@ -20,11 +20,12 @@ public class Scenario {
 	this.overUtilizePercentage = overUtilizePercentage;
     }
 
-    public Scenario(int flows, int nodes, int runs) {
+    public Scenario(int flows, int nodes, int runs,int overUtilizePercentage) {
 	this.numRuns = runs;
 	this.indivdualName = new String();
 	this.numNodes = nodes;
 	this.numFlows = flows;
+	this.overUtilizePercentage = overUtilizePercentage;
     }
 
     public Scenario(int runs) {
@@ -59,6 +60,9 @@ public class Scenario {
 
     public String getScenarioName() {
 	return indivdualName;
+    }
+    public void setScenarioName(String individualName) {
+	this.indivdualName = individualName;
     }
 
     public int getNumNodes() {
