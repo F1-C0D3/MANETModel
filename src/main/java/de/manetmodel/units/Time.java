@@ -24,7 +24,7 @@ public class Time {
 	return this.value;
     }
     
-    public double getMinutes() {
+    public double getSeconds() {
 	return this.value/1000d;
     }
     
