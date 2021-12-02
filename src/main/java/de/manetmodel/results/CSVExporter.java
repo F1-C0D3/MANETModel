@@ -27,10 +27,24 @@ public class CSVExporter {
     private Path normalizedResults;
     private final String csvSuffix = ".csv";
 
-    public CSVExporter(String optName, RecordType type) {
+    public CSVExporter(String optName,  RecordType type) {
+	directoryStructure(optName, "", type);
+    }
+    public CSVExporter(String optName, String prefix, RecordType type) {
+	directoryStructure(optName, prefix, type);
+    }
+    
+    private void directoryStructure(String optName,String prefix, RecordType type) {
 	Path tmpDir = FileSystems.getDefault().getPath("").toAbsolutePath();
 	String recordTypeToFolderName = type.toString();
-	Path[] paths = { Paths.get("results"), Paths.get(optName), Paths.get(recordTypeToFolderName) };
+	
+	StringBuffer optNameBuffer = new StringBuffer();
+	if(prefix!="")
+	    optNameBuffer.append(String.format("%s_", prefix));
+	
+	optNameBuffer.append(optName);
+	
+	Path[] paths = { Paths.get("results"), Paths.get(optNameBuffer.toString()), Paths.get(recordTypeToFolderName) };
 	try {
 	    for (int i = 0; i < paths.length; i++) {
 
@@ -62,7 +76,6 @@ public class CSVExporter {
 	    // TODO Auto-generated catch block
 	    e.printStackTrace();
 	}
-
     }
 
     private boolean fileExistsInDirectory(Path directory, Path file) throws IOException {
@@ -85,8 +98,7 @@ public class CSVExporter {
     public <R extends ResultParameter> void write(List<R> result, ColumnPositionMappingStrategy<R> mappingStrategy,
 	    Scenario scenario, String fileDescription) {
 	try {
-	    Path resFile = createResultFile(
-		    new StringBuffer().append(fileDescription).append("_").append(scenario.getResultFile()).toString());
+	    Path resFile = createResultFile(String.format("%s_%s", fileDescription,scenario.getResultFile()));
 	    Writer writer = new PrintWriter(resFile.toFile());
 	    StatefulBeanToCsv<R> beanToCsv = new StatefulBeanToCsvBuilder<R>(writer)
 		    .withMappingStrategy(mappingStrategy).build();

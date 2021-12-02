@@ -3,7 +3,7 @@ package de.manetmodel.results;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class TotalResultRecorder<T extends ResultParameter, I extends IndividualRunResultParameter, A extends AverageRunResultParameter> {
+public abstract class TotalResultRecorder<T extends ResultParameter, I extends IndividualRunResultParameter, A extends AverageRunResultParameter> extends ResultRecorder{
 
     protected String resultFileName;
     protected List<RunResultContent<I, A>> resultContents;
