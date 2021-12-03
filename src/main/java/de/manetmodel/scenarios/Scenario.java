@@ -9,29 +9,28 @@ public class Scenario {
 
     protected int overUtilizePercentage;
     protected int numFlows;
-    protected int numNodes;
     protected int numRuns;
+    protected int numNodes;
 
     public Scenario(String indivdualName, int numFlows, int numNodes, int runs, int overUtilizePercentage) {
 	this.numRuns = runs;
 	this.indivdualName = indivdualName;
-	this.numNodes = numNodes;
 	this.numFlows = numFlows;
 	this.overUtilizePercentage = overUtilizePercentage;
+	this.numNodes = numNodes;
     }
 
     public Scenario(int flows, int nodes, int runs,int overUtilizePercentage) {
 	this.numRuns = runs;
 	this.indivdualName = new String();
-	this.numNodes = nodes;
 	this.numFlows = flows;
 	this.overUtilizePercentage = overUtilizePercentage;
+	this.numNodes = nodes;
     }
 
     public Scenario(int runs) {
 	this.numRuns = runs;
 	this.numFlows = -1;
-	this.numNodes = -1;
     }
 
     public int getOverUtilizePercentage() {
@@ -57,16 +56,16 @@ public class Scenario {
     public void setNumRuns(int numRuns) {
 	this.numRuns = numRuns;
     }
+    
+    public int getNumNodes() {
+	return numNodes;
+    }
 
     public String getScenarioName() {
 	return indivdualName;
     }
     public void setScenarioName(String individualName) {
 	this.indivdualName = individualName;
-    }
-
-    public int getNumNodes() {
-	return numNodes;
     }
 
     public Path getResultFolder() {
