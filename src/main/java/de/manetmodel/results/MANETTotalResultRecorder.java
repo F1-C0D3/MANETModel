@@ -37,7 +37,7 @@ public class MANETTotalResultRecorder<T extends ResultParameter, I extends Indiv
 	// TODO Auto-generated method stub
 	StringBuffer outputBuffer = new StringBuffer();
 	outputBuffer
-		.append(String.format("flows=%d_oU=%d", scenario.getNumFlows(), scenario.getOverUtilizePercentage()));
+		.append(String.format("flows=%d_oU=%d_", scenario.getNumFlows(), scenario.getOverUtilizePercentage()));
 	outputBuffer.append(super.outputFilename());
 	return outputBuffer.toString();
 
