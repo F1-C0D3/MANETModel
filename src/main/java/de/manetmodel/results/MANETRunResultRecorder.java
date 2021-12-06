@@ -1,5 +1,7 @@
 package de.manetmodel.results;
 
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -11,17 +13,16 @@ import de.manetmodel.network.LinkQuality;
 import de.manetmodel.network.MANET;
 import de.manetmodel.network.Node;
 import de.manetmodel.results.CSVExporter.RecordType;
+import de.manetmodel.scenarios.Scenario;
 import de.manetmodel.units.Time;
 
 public class MANETRunResultRecorder<I extends ResultParameter, A extends ResultParameter, N extends Node, L extends Link<W>, W extends LinkQuality, F extends Flow<N, L, W>>
 	extends RunResultRecorder<I, A, N, L, W, F> {
 
-    private String resultFileName;
-    RunResultMapper<I, A, N, L, W> resultMapper;
+    private RunResultMapper<I, A, N, L, W> resultMapper;
 
-    public MANETRunResultRecorder(String resultFileName, RunResultMapper<I, A, N, L, W> resultMapper, int run) {
-	super(new RunResultContent<I, A>(run));
-	this.resultFileName = resultFileName;
+    public MANETRunResultRecorder(Scenario scenario, RunResultMapper<I, A, N, L, W> resultMapper, int run) {
+	super(scenario, new RunResultContent<I, A>(run));
 	this.resultMapper = resultMapper;
 
     }
@@ -29,7 +30,8 @@ public class MANETRunResultRecorder<I extends ResultParameter, A extends ResultP
     public void recordIndividual(MANET<N, L, W, F> manet, Time runDuration) {
 
 	if (manet.getUtilization().get() > 0) {
-	    CSVExporter exporter = new CSVExporter(resultFileName, RecordType.individualRun);
+	    List<Path> individualDirectoryPath = new ArrayList<Path>(directoryStructure);
+	    CSVExporter exporter = new CSVExporter(individualDirectoryPath, RecordType.individualRun);
 	    List<I> individualRun = new ArrayList<I>();
 
 	    for (L link : manet.getEdges()) {
@@ -45,28 +47,39 @@ public class MANETRunResultRecorder<I extends ResultParameter, A extends ResultP
 	    this.runResultContent.setIndividualResultContent(individualRun);
 	    this.runResultContent.setRunDuration(runDuration);
 
-	    exporter.write(individualRun, resultMapper.getIndividualMappingStrategy(), resultMapper.getScenario(),
-		    Integer.toString(runResultContent.getCurrentRun()));
+	    exporter.write(individualRun, resultMapper.getIndividualMappingStrategy(), outputFilename());
 	}
     }
 
     public void recordAverage(MANET<N, L, W, F> manet) {
 	List<I> individualResultContent = this.runResultContent.getIndividualResultContent();
 	Time runDuration = runResultContent.getRunDuration();
-	int currentRun =runResultContent.getCurrentRun();
+	int currentRun = runResultContent.getCurrentRun();
 
 	if (individualResultContent != null && runDuration != null) {
 
-	    CSVExporter averageRunExporter = new CSVExporter(resultFileName, RecordType.averageRun);
+	    List<Path> averageDirectoryPath = new ArrayList<Path>(directoryStructure);
+	    CSVExporter averageRunExporter = new CSVExporter(averageDirectoryPath, RecordType.averageRun);
 
 	    A averageRunResult = resultMapper.averageRunResultMapper(individualResultContent, manet.getFlows(),
-		    runDuration,currentRun);
+		    runDuration, currentRun);
 
 	    runResultContent.setAverageResultContent(averageRunResult);
 
 	    averageRunExporter.write(Arrays.asList(averageRunResult), resultMapper.getAverageMappingStrategy(),
-		    resultMapper.getScenario(), Integer.toString(runResultContent.getCurrentRun()));
+		    outputFilename());
 	}
+    }
+
+    @Override
+    protected String outputFilename() {
+	// TODO Auto-generated method stub
+	StringBuffer outputBuffer = new StringBuffer();
+	outputBuffer.append(String.format("Run=%d_flows=%d_oU=%d_", runResultContent.getCurrentRun(),
+		scenario.getNumFlows(), scenario.getOverUtilizePercentage()));
+	outputBuffer.append(super.outputFilename());
+	return outputBuffer.toString();
+
     }
 
 }

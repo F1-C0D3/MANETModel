@@ -3,13 +3,14 @@ package de.manetmodel.results;
 import java.util.ArrayList;
 import java.util.List;
 
+import de.manetmodel.scenarios.Scenario;
+
 public abstract class TotalResultRecorder<T extends ResultParameter, I extends IndividualRunResultParameter, A extends AverageRunResultParameter> extends ResultRecorder{
 
-    protected String resultFileName;
     protected List<RunResultContent<I, A>> resultContents;
 
-    public TotalResultRecorder(String resultFileName, List<RunResultContent<I, A>> runResultContents) {
-	this.resultFileName = resultFileName;
+    public TotalResultRecorder(Scenario scenario, List<RunResultContent<I, A>> runResultContents) {
+	super(scenario);
 
 	resultContents = new ArrayList<RunResultContent<I, A>>();
 

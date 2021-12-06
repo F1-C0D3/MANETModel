@@ -11,21 +11,24 @@ public class Scenario {
     protected int numFlows;
     protected int numRuns;
     protected int numNodes;
+    protected int datePrefixFlag;
 
-    public Scenario(String indivdualName, int numFlows, int numNodes, int runs, int overUtilizePercentage) {
+    public Scenario(String indivdualName, int numFlows, int numNodes, int runs, int overUtilizePercentage, int datePrefixFlag) {
 	this.numRuns = runs;
 	this.indivdualName = indivdualName;
 	this.numFlows = numFlows;
 	this.overUtilizePercentage = overUtilizePercentage;
 	this.numNodes = numNodes;
+	this.datePrefixFlag = datePrefixFlag;
     }
 
-    public Scenario(int flows, int nodes, int runs,int overUtilizePercentage) {
+    public Scenario(int flows, int nodes, int runs,int overUtilizePercentage,int datePrefixFlag) {
 	this.numRuns = runs;
 	this.indivdualName = new String();
 	this.numFlows = flows;
 	this.overUtilizePercentage = overUtilizePercentage;
 	this.numNodes = nodes;
+	this.datePrefixFlag = datePrefixFlag;
     }
 
     public Scenario(int runs) {
@@ -68,14 +71,13 @@ public class Scenario {
 	this.indivdualName = individualName;
     }
 
-    public Path getResultFolder() {
-	return Paths.get(new StringBuffer().append(indivdualName).toString());
+    public int getDatePrefixFlag() {
+        return datePrefixFlag;
     }
 
-    public String getResultFile() {
-
-	return String.format("%s_flows=%d_overUtilization=%d_totalRuns=%d", this.indivdualName, this.numFlows,
-		this.overUtilizePercentage, this.numRuns);
+    public void setDatePrefixFlag(int datePrefixFlag) {
+        this.datePrefixFlag = datePrefixFlag;
     }
 
+    
 }
