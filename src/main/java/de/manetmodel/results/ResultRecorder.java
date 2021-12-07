@@ -11,7 +11,8 @@ import de.manetmodel.scenarios.Scenario;
 
 public class ResultRecorder {
     private Date date;
-    private SimpleDateFormat dateFormatter;
+    private SimpleDateFormat directoryDateFormatter;
+    private SimpleDateFormat outputFileNameDateFormatter;
     
     protected Scenario scenario;
     protected List<Path> directoryStructure;
@@ -23,8 +24,10 @@ public class ResultRecorder {
 
 	if (scenario.getDatePrefixFlag() == 1) {
 	    date = new Date();
-	    dateFormatter = new SimpleDateFormat("mm:HH:MM:yyyy");
-	    directoryStructure.add(Paths.get(String.format("ResultRecord_%s", formateDate())));
+	    directoryDateFormatter = new SimpleDateFormat("dd:MM:yyyy");
+	    directoryStructure.add(Paths.get(String.format("Date_%s", directoryDateFormatter.format(date))));
+
+	    outputFileNameDateFormatter = new SimpleDateFormat("ss:mm:hh:dd:MM:yyyy");
 	}
 	else{
 
@@ -33,9 +36,7 @@ public class ResultRecorder {
 
     }
 
-    private String formateDate() {
-	return dateFormatter.format(date);
-    }
+   
     
     public Date getDate() {
 	return this.date;
@@ -44,13 +45,13 @@ public class ResultRecorder {
     public void setDate(Date date) {
 	this.date = date;
     }
-
+    
     protected String outputFilename() {
 
 	StringBuffer filenameBuffer = new StringBuffer();
 	
 	if (date != null) 
-	    filenameBuffer.append(String.format("RR=%s_", formateDate()));
+	    filenameBuffer.append(String.format("TimeStamp=%s_", outputFileNameDateFormatter.format(date)));
 	
 	filenameBuffer.append(String.format("%s", scenario.getScenarioName()))	;
 	
