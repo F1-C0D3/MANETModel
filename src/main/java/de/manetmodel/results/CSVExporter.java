@@ -18,6 +18,8 @@ import com.opencsv.exceptions.CsvRequiredFieldEmptyException;
 import de.manetmodel.scenarios.Scenario;
 
 public class CSVExporter {
+    
+    private final String RootDirName = new String("Results");
 //    FileWriter csvWriter;
     enum RecordType {
 	individualRun, averageRun, total
@@ -27,33 +29,42 @@ public class CSVExporter {
     private Path normalizedResults;
     private final String csvSuffix = ".csv";
 
-    public CSVExporter(String optName, RecordType type) {
-	Path tmpDir = FileSystems.getDefault().getPath("").toAbsolutePath();
-	String recordTypeToFolderName = type.toString();
-	Path[] paths = { Paths.get("results"), Paths.get(optName), Paths.get(recordTypeToFolderName) };
-	try {
-	    for (int i = 0; i < paths.length; i++) {
+    public CSVExporter(List<Path> directoryStructure, RecordType type) {
+	
+	directoryStructure.add(Paths.get(type.toString()));
+	directoryStructure.add(0,Paths.get(RootDirName));
+	
+	directoryStructure(directoryStructure);
+    }
 
-		boolean resultFolderExists = fileExistsInDirectory(tmpDir, paths[i]);
+    private void directoryStructure(List<Path> directoryStructure) {
+	Path tmpDir = FileSystems.getDefault().getPath("").toAbsolutePath();
+
+	try {
+	    for (int i = 0; i < directoryStructure.size(); i++) {
+
+		boolean resultFolderExists = fileExistsInDirectory(tmpDir, directoryStructure.get(i));
 
 		if (!resultFolderExists) {
 		    if (i == 1) {
-			normalizedResults = Files.createDirectories(tmpDir.resolve(paths[i]));
+			normalizedResults = Files.createDirectories(tmpDir.resolve(directoryStructure.get(i)));
 			tmpDir = normalizedResults;
-		    } else if (i == 2 || i == 3 || i == 4) {
-			individualResults = Files.createDirectories(tmpDir.resolve(paths[i]));
+		    } else if (i > 1  && i<= (directoryStructure.size()-1)) {
+			individualResults = Files.createDirectories(tmpDir.resolve(directoryStructure.get(i)));
+			tmpDir = individualResults;
 		    } else {
-			tmpDir = Files.createDirectories(tmpDir.resolve(paths[i]));
+			tmpDir = Files.createDirectories(tmpDir.resolve(directoryStructure.get(i)));
 		    }
 
 		} else {
 		    if (i == 1) {
-			normalizedResults = tmpDir.resolve(paths[i]);
+			normalizedResults = tmpDir.resolve(directoryStructure.get(i));
 			tmpDir = normalizedResults;
-		    } else if (i == 2 || i == 3 || i == 4) {
-			individualResults = tmpDir.resolve(paths[i]);
+		    } else if (i > 1  && i<= (directoryStructure.size()-1)) {
+			individualResults = tmpDir.resolve(directoryStructure.get(i));
+			tmpDir = individualResults;
 		    } else {
-			tmpDir = tmpDir.resolve(paths[i]);
+			tmpDir = tmpDir.resolve(directoryStructure.get(i));
 		    }
 
 		}
@@ -62,7 +73,6 @@ public class CSVExporter {
 	    // TODO Auto-generated catch block
 	    e.printStackTrace();
 	}
-
     }
 
     private boolean fileExistsInDirectory(Path directory, Path file) throws IOException {
@@ -83,10 +93,9 @@ public class CSVExporter {
     }
 
     public <R extends ResultParameter> void write(List<R> result, ColumnPositionMappingStrategy<R> mappingStrategy,
-	    Scenario scenario, String fileDescription) {
+	    String resultFilename) {
 	try {
-	    Path resFile = createResultFile(
-		    new StringBuffer().append(fileDescription).append("_").append(scenario.getResultFile()).toString());
+	    Path resFile = createResultFile(resultFilename);
 	    Writer writer = new PrintWriter(resFile.toFile());
 	    StatefulBeanToCsv<R> beanToCsv = new StatefulBeanToCsvBuilder<R>(writer)
 		    .withMappingStrategy(mappingStrategy).build();

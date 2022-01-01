@@ -9,28 +9,31 @@ public class Scenario {
 
     protected int overUtilizePercentage;
     protected int numFlows;
-    protected int numNodes;
     protected int numRuns;
+    protected int numNodes;
+    protected int datePrefixFlag;
 
-    public Scenario(String indivdualName, int numFlows, int numNodes, int runs, int overUtilizePercentage) {
+    public Scenario(String indivdualName, int numFlows, int numNodes, int runs, int overUtilizePercentage, int datePrefixFlag) {
 	this.numRuns = runs;
 	this.indivdualName = indivdualName;
-	this.numNodes = numNodes;
 	this.numFlows = numFlows;
 	this.overUtilizePercentage = overUtilizePercentage;
+	this.numNodes = numNodes;
+	this.datePrefixFlag = datePrefixFlag;
     }
 
-    public Scenario(int flows, int nodes, int runs) {
+    public Scenario(int flows, int nodes, int runs,int overUtilizePercentage,int datePrefixFlag) {
 	this.numRuns = runs;
 	this.indivdualName = new String();
-	this.numNodes = nodes;
 	this.numFlows = flows;
+	this.overUtilizePercentage = overUtilizePercentage;
+	this.numNodes = nodes;
+	this.datePrefixFlag = datePrefixFlag;
     }
 
     public Scenario(int runs) {
 	this.numRuns = runs;
 	this.numFlows = -1;
-	this.numNodes = -1;
     }
 
     public int getOverUtilizePercentage() {
@@ -56,23 +59,25 @@ public class Scenario {
     public void setNumRuns(int numRuns) {
 	this.numRuns = numRuns;
     }
-
-    public String getScenarioName() {
-	return indivdualName;
-    }
-
+    
     public int getNumNodes() {
 	return numNodes;
     }
 
-    public Path getResultFolder() {
-	return Paths.get(new StringBuffer().append(indivdualName).toString());
+    public String getScenarioName() {
+	return indivdualName;
+    }
+    public void setScenarioName(String individualName) {
+	this.indivdualName = individualName;
     }
 
-    public String getResultFile() {
-
-	return String.format("%s_flows=%d_overUtilization=%d_totalRuns=%d", this.indivdualName, this.numFlows,
-		this.overUtilizePercentage, this.numRuns);
+    public int getDatePrefixFlag() {
+        return datePrefixFlag;
     }
 
+    public void setDatePrefixFlag(int datePrefixFlag) {
+        this.datePrefixFlag = datePrefixFlag;
+    }
+
+    
 }

@@ -2,7 +2,6 @@ package de.manetmodel.results;
 
 import com.opencsv.bean.CsvBindByName;
 
-import de.manetmodel.units.Time;
 
 public class IndividualRunResultParameter extends ResultParameter {
 
@@ -15,6 +14,9 @@ public class IndividualRunResultParameter extends ResultParameter {
     @CsvBindByName(column = "n2Id")
     int n2Id;
 
+    @CsvBindByName(column = "linkQuality")
+    private double linkQuality;
+    
     @CsvBindByName(column = "overUtilization")
     private long overUtilization;
 
@@ -25,7 +27,7 @@ public class IndividualRunResultParameter extends ResultParameter {
     private boolean isPathParticipant;
 
     @CsvBindByName(column = "connectionStability")
-    private Time connectionStability;
+    private double connectionStability;
 
     public void setIndividualRunResultParameter(int lId, int n1Id, int n2Id) {
 	this.lId = lId;
@@ -61,7 +63,7 @@ public class IndividualRunResultParameter extends ResultParameter {
     public void setN2Id(int n2Id) {
 	this.n2Id = n2Id;
     }
-
+    
     public boolean isPathParticipant() {
 	return isPathParticipant;
     }
@@ -77,6 +79,14 @@ public class IndividualRunResultParameter extends ResultParameter {
     public void setUtilization(long utilization) {
 	this.utilization = utilization;
     }
+    
+    public double getLinkQuality() {
+        return linkQuality;
+    }
+
+    public void setLinkQuality(double linkQuality) {
+        this.linkQuality = linkQuality;
+    }
 
     public long getUtilization() {
 	return this.utilization;
@@ -86,11 +96,11 @@ public class IndividualRunResultParameter extends ResultParameter {
 	return this.overUtilization;
     }
 
-    public Time getConnectionStability() {
+    public double getConnectionStability() {
 	return connectionStability;
     }
 
-    public void setConnectionStability(Time connectionStability) {
+    public void setConnectionStability(double connectionStability) {
 	this.connectionStability = connectionStability;
     }
 

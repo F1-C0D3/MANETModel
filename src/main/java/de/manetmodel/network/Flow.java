@@ -30,6 +30,12 @@ public class Flow<N extends Vertex<Position2D>, L extends WeightedEdge<W>, W ext
 
     public Flow() {
     }
+    
+    public Flow(Flow<N,L,W>flow) {
+	super(flow);
+	this.dataRate = new DataRate(flow.getDataRate().get());
+	this.ID = flow.getID();
+    }
 
     public void set(int ID, N source, N target, DataRate dataRate) {
 	setID(ID);

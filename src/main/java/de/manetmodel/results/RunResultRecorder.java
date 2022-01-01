@@ -5,13 +5,15 @@ import de.manetmodel.network.Link;
 import de.manetmodel.network.LinkQuality;
 import de.manetmodel.network.MANET;
 import de.manetmodel.network.Node;
+import de.manetmodel.scenarios.Scenario;
 import de.manetmodel.units.Time;
 
-public abstract class RunResultRecorder<I extends ResultParameter, A extends ResultParameter, N extends Node, L extends Link<W>, W extends LinkQuality, F extends Flow<N, L, W>> {
+public abstract class RunResultRecorder<I extends ResultParameter, A extends ResultParameter, N extends Node, L extends Link<W>, W extends LinkQuality, F extends Flow<N, L, W>> extends ResultRecorder{
 
     protected RunResultContent<I, A> runResultContent;
 
-    public RunResultRecorder(RunResultContent<I, A> runResultContent) {
+    public RunResultRecorder(Scenario scenario,RunResultContent<I, A> runResultContent) {
+	super(scenario);
 	this.runResultContent = runResultContent;
     }
 

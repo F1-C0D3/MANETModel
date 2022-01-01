@@ -12,14 +12,13 @@ import de.manetmodel.scenarios.Scenario;
 import de.manetmodel.units.Time;
 
 public abstract class RunResultMapper<I extends ResultParameter, A extends ResultParameter, N extends Node, L extends Link<W>, W extends LinkQuality>
-	extends ResultMapper {
+	 {
 
     protected ColumnPositionMappingStrategy<I> individualMappingStrategy;
     protected ColumnPositionMappingStrategy<A> averageMappingStrategy;
 
     public RunResultMapper(Scenario scenario, ColumnPositionMappingStrategy<I> individualMappingStrategy,
 	    ColumnPositionMappingStrategy<A> averageMappingStrategy) {
-	super(scenario);
 	this.individualMappingStrategy = individualMappingStrategy;
 	this.averageMappingStrategy = averageMappingStrategy;
 

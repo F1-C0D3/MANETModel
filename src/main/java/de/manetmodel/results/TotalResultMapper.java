@@ -6,12 +6,11 @@ import com.opencsv.bean.ColumnPositionMappingStrategy;
 
 import de.manetmodel.scenarios.Scenario;
 
-public abstract class TotalResultMapper<T extends ResultParameter, I extends IndividualRunResultParameter,A extends AverageRunResultParameter> extends ResultMapper {
+public abstract class TotalResultMapper<T extends ResultParameter, I extends IndividualRunResultParameter,A extends AverageRunResultParameter>  {
 
     protected ColumnPositionMappingStrategy<T> totalMappingStrategy;
     
     public TotalResultMapper(Scenario scenario, ColumnPositionMappingStrategy<T> totalMappingStrategy) {
-	super(scenario);
 	this.totalMappingStrategy = totalMappingStrategy;
     }
     

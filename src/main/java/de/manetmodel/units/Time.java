@@ -1,5 +1,6 @@
 package de.manetmodel.units;
 
+
 public class Time {
     public long value;
 
@@ -22,7 +23,11 @@ public class Time {
     public long getMillis() {
 	return this.value;
     }
-
+    
+    public double getSeconds() {
+	return this.value/1000d;
+    }
+    
     private long toBase(Unit.TimeSteps unit, long value) {
 	return value * Unit.getTimeFactor(unit);
     }

@@ -7,6 +7,10 @@ import de.manetmodel.units.Time;
 
 public class AverageRunResultParameter extends ResultParameter {
 
+    
+    @CsvBindByName(column = "linkQuality")
+    private double linkQuality;
+    
     @CsvBindByName(column = "overUtilization")
     private long overUtilization;
 
@@ -17,22 +21,31 @@ public class AverageRunResultParameter extends ResultParameter {
     private double activePathParticipants;
 
     @CsvBindByName(column = "meanConnectionStability")
-    private Time meanConnectionStability;
+    private double meanConnectionStability;
     
     @CsvBindByName(column = "minConnectionStability")
-    private Time minConnectionStability;
+    private double minConnectionStability;
     
     @CsvBindByName(column = "maxConnectionStability")
-    private Time maxConnectionStability;
+    private double maxConnectionStability;
     
     @CsvBindByName(column = "numberOfUndeployedFlows")
     private double numberOfUndeployedFlows;
 
     @CsvBindByName(column = "simulationTime")
-    private Time simulationTime;
+    private double simulationTime;
     
     @CsvBindByName(column = "runNumber")
     private int runNumber;
+    
+    
+    public double getLinkQuality() {
+        return linkQuality;
+    }
+
+    public void setLinkQuality(double linkQuality) {
+        this.linkQuality = linkQuality;
+    }
 
     public AverageRunResultParameter() {
 	overUtilization = 0;
@@ -46,11 +59,11 @@ public class AverageRunResultParameter extends ResultParameter {
 	this.activePathParticipants = activePathParticipants;
     }
 
-    public Time getSimulationTime() {
+    public double getSimulationTime() {
 	return simulationTime;
     }
 
-    public void setSimulationTime(Time simulationTime) {
+    public void setSimulationTime(double simulationTime) {
 	this.simulationTime = simulationTime;
     }
 
@@ -70,27 +83,27 @@ public class AverageRunResultParameter extends ResultParameter {
 	return this.overUtilization;
     }
 
-    public Time getMaxConnectionStability() {
+    public double getMaxConnectionStability() {
         return maxConnectionStability;
     }
 
-    public void setMaxConnectionStability(Time maxConnectionStability) {
+    public void setMaxConnectionStability(double maxConnectionStability) {
         this.maxConnectionStability = maxConnectionStability;
     }
 
-    public Time getMinConnectionStability() {
+    public double getMinConnectionStability() {
         return minConnectionStability;
     }
 
-    public void setMinConnectionStability(Time minConnectionStability) {
+    public void setMinConnectionStability(double minConnectionStability) {
         this.minConnectionStability = minConnectionStability;
     }
 
-    public Time getMeanConnectionStability() {
+    public double getMeanConnectionStability() {
 	return meanConnectionStability;
     }
 
-    public void setMeanConnectionStability(Time connectionStability) {
+    public void setMeanConnectionStability(double connectionStability) {
 	this.meanConnectionStability = connectionStability;
     }
 

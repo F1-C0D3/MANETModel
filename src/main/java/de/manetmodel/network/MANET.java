@@ -27,7 +27,7 @@ public class MANET<N extends Node, L extends Link<W>, W extends LinkQuality, F e
     protected MobilityModel mobilityModel;
     protected DataRate utilization;
     protected DataRate capacity;
-    protected List<List<Integer>> utilizationAdjacencies;
+    protected TreeMap<Integer, List<Integer>> utilizationAdjacencies;
     protected LinkQualityEvaluator<N, L, W> linkQualityEvaluator;
 
     public MANET(Supplier<N> vertexSupplier, Supplier<L> edgeSupplier, Supplier<W> edgeWeightSupplier,
@@ -38,23 +38,23 @@ public class MANET<N extends Node, L extends Link<W>, W extends LinkQuality, F e
 	this.mobilityModel = mobilityModel;
 	this.capacity = new DataRate(0L);
 	this.utilization = new DataRate(0L);
-	this.utilizationAdjacencies = new ArrayList<List<Integer>>();
+	this.utilizationAdjacencies = new TreeMap<Integer, List<Integer>>();
 	this.linkQualityEvaluator = linkQualityEvaluator;
     }
 
     public MANET(MANET<N, L, W, F> manet) {
 	super(manet.vertexSupplier, manet.edgeSupplier, manet.edgeWeightSupplier, manet.pathSupplier);
-	this.vertices = manet.vertices;
+	this.vertices = manet.copyVertices();
 	this.edges = manet.copyEdges();
 	this.paths = manet.copyPaths(manet);
 	this.utilization = new DataRate(manet.utilization.get());
 	this.capacity = new DataRate(manet.capacity.get());
 	this.radioModel = manet.radioModel;
 	this.mobilityModel = manet.mobilityModel;
-	this.sourceTargetAdjacencies = manet.sourceTargetAdjacencies;
-	this.targetSourceAdjacencies = manet.targetSourceAdjacencies;
-	this.edgeAdjacencies = manet.edgeAdjacencies;
-	this.utilizationAdjacencies = new ArrayList<List<Integer>>(manet.utilizationAdjacencies);
+	this.sourceTargetAdjacencies = manet.copySourceTargetAdjacencies();
+	this.targetSourceAdjacencies = manet.copyTargetSourceAdjacencies();
+	this.edgeAdjacencies = manet.copyEdgeAdjacencies();
+	this.utilizationAdjacencies = new TreeMap<Integer, List<Integer>>(manet.utilizationAdjacencies);
     }
 
     public MobilityModel getMobilityModel() {
@@ -73,15 +73,61 @@ public class MANET<N extends Node, L extends Link<W>, W extends LinkQuality, F e
 	return new MANET<N, L, W, F>(this);
     }
 
-    public List<N> copyVertices() {
-	List<N> nodeCopies = new ArrayList<N>();
+    public TreeMap<Integer, N> copyVertices() {
+	TreeMap<Integer, N> nodeCopies = new TreeMap<Integer, N>();
 	for (N node : getVertices()) {
 	    N nodeCopy = vertexSupplier.get();
 	    nodeCopy.setID(node.getID());
-	    nodeCopy.setPosition(node.getPosition());
-	    nodeCopies.add(nodeCopy);
+	    if (!Objects.isNull(mobilityModel)) {
+		List<MovementPattern> patternListCopy = new ArrayList<MovementPattern>();
+
+		for (MovementPattern movementPattern : node.getMobilityCharacteristic()) {
+		    Speed speedCopy = new Speed(movementPattern.getSpeed().value);
+		    Position2D positionCopy = new Position2D(movementPattern.getPostion().x(),
+			    movementPattern.getPostion().y());
+		    MovementPattern movementPatternCopy = new MovementPattern(speedCopy, positionCopy,
+			    movementPattern.getAngle());
+		    patternListCopy.add(movementPatternCopy);
+		}
+
+		nodeCopy.setMobilityCharacteristic(patternListCopy);
+	    }
+
+	    if (!Objects.isNull(linkQualityEvaluator) && !Objects.isNull(radioModel))
+		// I don't know another way howto obtain the maximum distance a link can have
+		radioModel.setNodeRadioParameters(nodeCopy, radioModel.getLinkMaxTransmissionRange());
+	    nodeCopies.put(node.getID(), nodeCopy);
 	}
 	return nodeCopies;
+    }
+
+    @Override
+    public N addVertex(Position2D position) {
+
+	N n = super.addVertex(position);
+
+	if (!Objects.isNull(mobilityModel)) {
+
+	    Speed initialSpeed = mobilityModel.initializeSpeed();
+
+	    List<MovementPattern> patternList = new ArrayList<MovementPattern>();
+
+	    MovementPattern movementPattern = new MovementPattern(initialSpeed, n.getPosition(), 0d);
+
+	    patternList.add(movementPattern);
+
+	    for (int i = 0; i < mobilityModel.getTicks() - 1; i++) {
+		movementPattern = mobilityModel.computeNextMovementPattern(movementPattern);
+		patternList.add(movementPattern);
+	    }
+	    Collections.reverse(patternList);
+	    n.setMobilityCharacteristic(patternList);
+	}
+	if (!Objects.isNull(linkQualityEvaluator) && !Objects.isNull(radioModel))
+	    // I don't know another way howto obtain the maximum distance a link can have
+	    radioModel.setNodeRadioParameters(n, radioModel.getLinkMaxTransmissionRange());
+
+	return n;
     }
 
     public TreeMap<Integer, L> copyEdges() {
@@ -160,7 +206,7 @@ public class MANET<N extends Node, L extends Link<W>, W extends LinkQuality, F e
 
 	    link.setNumberOfUtilizedLinks(utilizedLinks.size());
 
-	    utilizationAdjacencies.add(utilizedLinks.stream().map(L::getID).collect(Collectors.toList()));
+	    utilizationAdjacencies.put(link.getID(), utilizedLinks.stream().map(L::getID).collect(Collectors.toList()));
 	}
     }
 
@@ -303,8 +349,7 @@ public class MANET<N extends Node, L extends Link<W>, W extends LinkQuality, F e
 	for (L utilizedLink : getUtilizedLinksOf(link)) {
 	    utilization.set(this.utilization.get() + dataRate.get());
 
-	    utilizedLink
-		    .setUtilization(new DataRate(utilizedLink.getUtilization().get() + dataRate.get()));
+	    utilizedLink.setUtilization(new DataRate(utilizedLink.getUtilization().get() + dataRate.get()));
 	}
     }
 
@@ -316,58 +361,27 @@ public class MANET<N extends Node, L extends Link<W>, W extends LinkQuality, F e
 	    this.utilization.set(this.utilization.get() - dataRate.get());
 	}
     }
-    
-    
+
     // Determine max possible utilization based on DataRates of flows
     public DataRate maxPossibleUtilization() {
-	
-	//(1) Set DataRates 
+
+	// (1) Set DataRates
 	for (L link : this.getEdges()) {
-	 for (F flow : this.paths)
-	     increaseUtilizationBy(link, flow.getDataRate());
+	    for (F flow : this.paths)
+		increaseUtilizationBy(link, flow.getDataRate());
 	}
-	
+
 	// (2) Record utilization
 	DataRate utilization = new DataRate(this.getUtilization().get());
-	
-	//(3) Remove DataRates
+
+	// (3) Remove DataRates
 	for (L link : this.getEdges()) {
-		 for (F flow : this.paths)
-		     decreaseUtilizationBy(link, flow.getDataRate());
-		}
-	
-	return utilization;
-	
-    }
-    
-
-    @Override
-    public N addVertex(Position2D position) {
-
-	N n = super.addVertex(position);
-
-	if (!Objects.isNull(mobilityModel)) {
-
-	    Speed initialSpeed = mobilityModel.initializeSpeed();
-
-	    List<MovementPattern> patternList = new ArrayList<MovementPattern>();
-
-	    MovementPattern movementPattern = new MovementPattern(initialSpeed, n.getPosition(), 0d);
-
-	    patternList.add(movementPattern);
-
-	    for (int i = 0; i < mobilityModel.getTicks() - 1; i++) {
-		movementPattern = mobilityModel.computeNextMovementPattern(movementPattern);
-		patternList.add(movementPattern);
-	    }
-	    Collections.reverse(patternList);
-	    n.setMobilityCharacteristic(patternList);
+	    for (F flow : this.paths)
+		decreaseUtilizationBy(link, flow.getDataRate());
 	}
-	if (!Objects.isNull(linkQualityEvaluator) && !Objects.isNull(radioModel))
-	    // I don't know another way howto obtain the maximum distance a link can have
-	    radioModel.setNodeRadioParameters(n, radioModel.getLinkMaxTransmissionRange());
 
-	return n;
+	return utilization;
+
     }
 
     public N addVertex(double x, double y) {
@@ -469,7 +483,7 @@ public class MANET<N extends Node, L extends Link<W>, W extends LinkQuality, F e
     }
 
     public List<L> getActiveUtilizedLinks() {
-	return this.getEdges().stream().filter(l->l.isActive()==true).collect(Collectors.toList());
+	return this.getEdges().stream().filter(l -> l.isActive() == true).collect(Collectors.toList());
     }
 
     // Returns all active utilized links of flows that are utilized by given link
@@ -518,6 +532,12 @@ public class MANET<N extends Node, L extends Link<W>, W extends LinkQuality, F e
 	    path.setDataRate(flow.getDataRate());
 
 	return allPaths;
+    }
+
+    @Override
+    public boolean removeEdge(L edge) {
+	utilizationAdjacencies.remove(edge.getID());
+	return super.removeEdge(edge);
     }
 
 }

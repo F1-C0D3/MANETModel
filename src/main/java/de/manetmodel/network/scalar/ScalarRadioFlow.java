@@ -11,6 +11,10 @@ public class ScalarRadioFlow extends Flow<ScalarRadioNode, ScalarRadioLink, Scal
     public ScalarRadioFlow() {
     }
 
+    public ScalarRadioFlow(ScalarRadioFlow flow) {
+	super(flow);
+    }
+
     public ScalarRadioFlow(ScalarRadioNode source, ScalarRadioNode sink, DataRate dataRate) {
 	super(source, sink, dataRate);
     }
