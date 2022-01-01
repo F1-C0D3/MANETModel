@@ -16,14 +16,14 @@ import javax.swing.SwingUtilities;
 
 import org.junit.Test;
 
+import de.jgraphlib.generator.GridGraphGenerator;
+import de.jgraphlib.generator.GridGraphProperties;
+import de.jgraphlib.generator.NetworkGraphGenerator;
+import de.jgraphlib.generator.NetworkGraphProperties;
+import de.jgraphlib.generator.GraphProperties.DoubleRange;
+import de.jgraphlib.generator.GraphProperties.IntRange;
 import de.jgraphlib.graph.algorithms.DijkstraShortestPath;
 import de.jgraphlib.graph.elements.Path;
-import de.jgraphlib.graph.generator.GraphProperties.DoubleRange;
-import de.jgraphlib.graph.generator.GraphProperties.IntRange;
-import de.jgraphlib.graph.generator.GridGraphGenerator;
-import de.jgraphlib.graph.generator.GridGraphProperties;
-import de.jgraphlib.graph.generator.NetworkGraphGenerator;
-import de.jgraphlib.graph.generator.NetworkGraphProperties;
 import de.jgraphlib.gui.VisualGraphApp;
 import de.jgraphlib.util.RandomNumbers;
 import de.jgraphlib.util.Tuple;

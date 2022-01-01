@@ -18,13 +18,24 @@ public class OverUtilzedProblemGenerator<N extends Node, L extends Link<W>, W ex
 
     MANET<N, L, W, F> manet;
     DataRate maxDataRate;
+    DataRate minDataRate;
+
     Function<W, Double> metric;
+    RandomNumbers randomNumbers;
     FlowProblemGenerator<N, L, W, F> flowProblemGenerator;
     Log log;
 
     public OverUtilzedProblemGenerator(MANET<N, L, W, F> manet, Function<W, Double> metric) {
 	this.manet = manet;
 	this.metric = metric;
+	this.randomNumbers = new RandomNumbers();
+	this.log = new Log();
+    }
+    
+    public OverUtilzedProblemGenerator(MANET<N, L, W, F> manet, Function<W, Double> metric, RandomNumbers randomNumbers) {
+	this.manet = manet;
+	this.metric = metric;
+	this.randomNumbers = randomNumbers;
 	this.log = new Log();
     }
 
@@ -36,16 +47,20 @@ public class OverUtilzedProblemGenerator<N extends Node, L extends Link<W>, W ex
 	for (L link : manet.getEdges())
 	    if (link.getTransmissionRate().get() > maxDataRate.get())
 		maxDataRate = link.getTransmissionRate();
+	
+	// Find minimum dataRate
+		for (L link : manet.getEdges())
+		    if (link.getTransmissionRate().get() < maxDataRate.get())
+			minDataRate = link.getTransmissionRate();
 
-	log.info(String.format("Maximum DataRate of %s is %s", manet.getClass().getSimpleName(),
-		maxDataRate.toString()));
+	log.info(String.format(
+		"Maximum DataRate of %s is %s", manet.getClass().getSimpleName(),maxDataRate.toString()));
+	
+	log.info(String.format(
+		"Minimum DataRate of %s is %s", manet.getClass().getSimpleName(),minDataRate.toString()));
     }
 
     public List<F> compute(OverUtilizedProblemProperties properties) {
-	return compute(properties, new RandomNumbers());
-    }
-
-    public List<F> compute(OverUtilizedProblemProperties properties, RandomNumbers randomNumbers) {
 
 	log.infoHeader(HeaderLevel.h1, getClass().getSimpleName());
 	initialize();

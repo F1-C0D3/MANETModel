@@ -1,6 +1,6 @@
 package de.manetmodel.generator;
 
-import de.jgraphlib.graph.generator.PathProblemProperties;
+import de.jgraphlib.generator.PathProblemProperties;
 import de.manetmodel.units.DataRate;
 
 public class FlowProblemProperties extends PathProblemProperties {
@@ -16,8 +16,7 @@ public class FlowProblemProperties extends PathProblemProperties {
 	
 	this.minDemand = minDemand;
 	this.maxDemand = maxDemand;
-	this.uniqueSourceDestination = uniqueSourceDestination;
-	
+	this.uniqueSourceDestination = uniqueSourceDestination;	
     }
 
     public DataRate getMinDemand() {
@@ -43,6 +42,4 @@ public class FlowProblemProperties extends PathProblemProperties {
     public void setUniqueSourceDestination(boolean uniqueSourceDestination) {
         this.uniqueSourceDestination = uniqueSourceDestination;
     }
-    
-    
 }

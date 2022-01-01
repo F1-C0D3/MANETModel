@@ -9,16 +9,16 @@ import javax.swing.SwingUtilities;
 
 import org.junit.Test;
 
+import de.jgraphlib.generator.GridGraphGenerator;
+import de.jgraphlib.generator.GridGraphProperties;
+import de.jgraphlib.generator.NetworkGraphGenerator;
+import de.jgraphlib.generator.NetworkGraphProperties;
+import de.jgraphlib.generator.GraphProperties.DoubleRange;
+import de.jgraphlib.generator.GraphProperties.IntRange;
 import de.jgraphlib.graph.elements.EdgeDistance;
 import de.jgraphlib.graph.elements.Position2D;
 import de.jgraphlib.graph.elements.Vertex;
 import de.jgraphlib.graph.elements.WeightedEdge;
-import de.jgraphlib.graph.generator.GridGraphGenerator;
-import de.jgraphlib.graph.generator.GridGraphProperties;
-import de.jgraphlib.graph.generator.NetworkGraphGenerator;
-import de.jgraphlib.graph.generator.NetworkGraphProperties;
-import de.jgraphlib.graph.generator.GraphProperties.DoubleRange;
-import de.jgraphlib.graph.generator.GraphProperties.IntRange;
 import de.jgraphlib.graph.suppliers.EdgeDistanceSupplier;
 import de.jgraphlib.gui.VisualGraphApp;
 import de.jgraphlib.gui.printer.WeightedEdgeIDPrinter;
@@ -48,6 +48,8 @@ public class CplexFeasibleSolutionTest {
     @Test
     public void simpleTest() throws InvocationTargetException, InterruptedException, IloException, IOException {
 
+	RandomNumbers randomNumbers = new RandomNumbers(0);
+	
 	ScalarRadioModel radioModel = new ScalarRadioModel(new Watt(0.001d), new Watt(1e-11), 2000000d, 2412000000d,
 		35d, 100);
 	PedestrianMobilityModel mobilityModel = new PedestrianMobilityModel(new RandomNumbers(),
@@ -60,7 +62,7 @@ public class CplexFeasibleSolutionTest {
 		new ScalarRadioMANETSupplier().getLinkSupplier(),
 		new ScalarRadioMANETSupplier().getLinkPropertySupplier(),
 		new ScalarRadioMANETSupplier().getFlowSupplier(), radioModel, mobilityModel, evaluator);
-	RandomNumbers randomNumbers = new RandomNumbers(0);
+		
 	GridGraphProperties properties = new GridGraphProperties(/* playground width */ 1000,
 		/* playground height */ 600, /* distance between vertices */
 		100, /* length of edges */
@@ -85,9 +87,12 @@ public class CplexFeasibleSolutionTest {
 		/* Maximum demand of each flow */new DataRate(20, Type.kilobit),
 		/* Unique source destination pairs */true, /* Over-utilization percentage */2,
 		/* Increase factor of each tick */new DataRate(2, Type.kilobit));
-	List<ScalarRadioFlow> flowProblems = overUtilizedProblemGenerator.compute(problemProperties, randomNumbers);
+	
+	List<ScalarRadioFlow> flowProblems = overUtilizedProblemGenerator.compute(problemProperties);
 	manet.addFlows(flowProblems);
-	CplexFlowDistribution<ScalarRadioNode, ScalarRadioLink, ScalarLinkQuality, ScalarRadioFlow> naiveOptimalFlowDistribution = new CplexFlowDistribution<ScalarRadioNode, ScalarRadioLink, ScalarLinkQuality, ScalarRadioFlow>();
+	
+	CplexFlowDistribution<ScalarRadioNode, ScalarRadioLink, ScalarLinkQuality, ScalarRadioFlow> naiveOptimalFlowDistribution = 
+		new CplexFlowDistribution<ScalarRadioNode, ScalarRadioLink, ScalarLinkQuality, ScalarRadioFlow>();
 
 	List<ScalarRadioFlow> flows = naiveOptimalFlowDistribution.generateFeasibleSolution(manet);
 

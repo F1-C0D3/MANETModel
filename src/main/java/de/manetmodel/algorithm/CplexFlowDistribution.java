@@ -49,6 +49,8 @@ public class CplexFlowDistribution<N extends Node, L extends Link<W>, W extends 
 
 	try (IloCplex cplex = new IloCplex()) {
 
+	    cplex.setParam(IloCplex.Param.Threads, 1);
+	    
 	    // Decision variables
 	    IloIntVar[][] x_f_l = new IloIntVar[manet.getFlows().size()][manet.getEdges().size()];
 	    IloIntVar[] a_l = new IloIntVar[manet.getEdges().size()];
@@ -197,6 +199,7 @@ public class CplexFlowDistribution<N extends Node, L extends Link<W>, W extends 
 		    }
 
 		    feasibleDistribution.add(flow);
+		    manet.deployFlow(flow);
 		}
 	    }
 

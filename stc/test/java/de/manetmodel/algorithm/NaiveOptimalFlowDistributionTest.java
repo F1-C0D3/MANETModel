@@ -6,10 +6,10 @@ import javax.swing.SwingUtilities;
 
 import org.junit.Test;
 
-import de.jgraphlib.graph.generator.NetworkGraphGenerator;
-import de.jgraphlib.graph.generator.NetworkGraphProperties;
-import de.jgraphlib.graph.generator.GraphProperties.DoubleRange;
-import de.jgraphlib.graph.generator.GraphProperties.IntRange;
+import de.jgraphlib.generator.NetworkGraphGenerator;
+import de.jgraphlib.generator.NetworkGraphProperties;
+import de.jgraphlib.generator.GraphProperties.DoubleRange;
+import de.jgraphlib.generator.GraphProperties.IntRange;
 import de.jgraphlib.gui.VisualGraphApp;
 import de.jgraphlib.gui.printer.WeightedEdgeIDPrinter;
 import de.jgraphlib.util.RandomNumbers;

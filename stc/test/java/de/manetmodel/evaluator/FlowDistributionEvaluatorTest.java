@@ -8,9 +8,9 @@ import javax.swing.SwingUtilities;
 
 import org.junit.Test;
 
+import de.jgraphlib.generator.GridGraphGenerator;
+import de.jgraphlib.generator.GridGraphProperties;
 import de.jgraphlib.graph.algorithms.DijkstraShortestPath;
-import de.jgraphlib.graph.generator.GridGraphGenerator;
-import de.jgraphlib.graph.generator.GridGraphProperties;
 import de.jgraphlib.gui.VisualGraphApp;
 import de.jgraphlib.util.RandomNumbers;
 import de.manetmodel.gui.printer.LinkQualityScorePrinter;

@@ -2,11 +2,11 @@ package de.manetmodel.network.generator;
 
 import java.util.function.Supplier;
 
+import de.jgraphlib.generator.NetworkGraphGenerator;
+import de.jgraphlib.generator.NetworkGraphProperties;
 import de.jgraphlib.graph.Weighted2DGraph;
 import de.jgraphlib.graph.WeightedGraph;
 import de.jgraphlib.graph.elements.Position2D;
-import de.jgraphlib.graph.generator.NetworkGraphGenerator;
-import de.jgraphlib.graph.generator.NetworkGraphProperties;
 import de.jgraphlib.util.RandomNumbers;
 import de.manetmodel.mobilitymodel.MobilityModel;
 import de.manetmodel.mobilitymodel.MovementPattern;
