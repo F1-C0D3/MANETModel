@@ -21,6 +21,7 @@ import de.jgraphlib.generator.GridGraphProperties;
 import de.jgraphlib.generator.NetworkGraphGenerator;
 import de.jgraphlib.generator.NetworkGraphProperties;
 import de.jgraphlib.generator.GraphProperties.DoubleRange;
+import de.jgraphlib.generator.GraphProperties.EdgeStyle;
 import de.jgraphlib.generator.GraphProperties.IntRange;
 import de.jgraphlib.graph.algorithms.DijkstraShortestPath;
 import de.jgraphlib.graph.elements.Path;
@@ -90,7 +91,8 @@ public class OverUtilzedProblemGeneratorTest {
 			/* Unique source destination pairs */true,
 			/* Over-utilization percentage */10,
 			/* Increase factor of each tick */new DataRate(50, Type.kilobit));
-	    List<ScalarRadioFlow> flowProblems = overUtilizedProblemGenerator.compute(problemProperties,random);
+		
+	    List<ScalarRadioFlow> flowProblems = overUtilizedProblemGenerator.compute(problemProperties);
 
 	    DijkstraShortestPath<ScalarRadioNode, ScalarRadioLink, ScalarLinkQuality> sp = new DijkstraShortestPath<ScalarRadioNode, ScalarRadioLink, ScalarLinkQuality>(
 		    manet);
@@ -118,7 +120,8 @@ public class OverUtilzedProblemGeneratorTest {
 		new ScalarRadioMANETSupplier().getFlowSupplier(), radioModel, mobilityModel, evaluator);
 
 	GridGraphProperties graphProperties = new GridGraphProperties(/* playground width */ 300,
-		/* playground height */ 100, /* distance between vertices */ 100, /* length of edges */ 100);
+		/* playground height */ 100, /* distance between vertices */ 100, /* length of edges */ 100,
+		EdgeStyle.BIDIRECTIONAL);
 
 	RandomNumbers random = new RandomNumbers(0);
 
@@ -162,7 +165,8 @@ public class OverUtilzedProblemGeneratorTest {
 		new ScalarRadioMANETSupplier().getFlowSupplier(), radioModel, mobilityModel, evaluator);
 
 	GridGraphProperties graphProperties = new GridGraphProperties(/* playground width */ 300,
-		/* playground height */ 100, /* distance between vertices */ 100, /* length of edges */ 100);
+		/* playground height */ 100, /* distance between vertices */ 100, /* length of edges */ 100,
+		EdgeStyle.BIDIRECTIONAL);
 
 	RandomNumbers random = new RandomNumbers(0);
 

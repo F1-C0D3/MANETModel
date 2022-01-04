@@ -8,6 +8,7 @@ import javax.swing.SwingUtilities;
 
 import org.junit.Test;
 
+import de.jgraphlib.generator.GraphProperties.EdgeStyle;
 import de.jgraphlib.generator.GridGraphGenerator;
 import de.jgraphlib.generator.GridGraphProperties;
 import de.jgraphlib.graph.algorithms.DijkstraShortestPath;
@@ -36,8 +37,7 @@ public class FlowDistributionEvaluatorTest {
     public void flowDistributionEvaluatorTest() throws InvocationTargetException, InterruptedException, IOException {
 	
 	/**************************************************************************************************************************************/
-	ScalarRadioModel radioModel = new ScalarRadioModel(new Watt(0.001d), new Watt(1e-11), 2000000d, 2412000000d,
-		35d,100);
+	ScalarRadioModel radioModel = new ScalarRadioModel(new Watt(0.001d), new Watt(1e-11), 2000000d, 2412000000d, 35d,100);
 	PedestrianMobilityModel mobilityModel = new PedestrianMobilityModel(
 		new RandomNumbers(), 
 		new SpeedRange(0, 100, Unit.TimeSteps.second, Unit.Distance.meter), 
@@ -60,7 +60,8 @@ public class FlowDistributionEvaluatorTest {
 		/* playground width */ 			500,
 		/* playground height */ 		500, 
 		/* distance between vertices */ 	100, 
-		/* length of edges */ 			100);	
+		/* length of edges */ 			100,
+		EdgeStyle.BIDIRECTIONAL);	
 
 	RandomNumbers random = new RandomNumbers();
 

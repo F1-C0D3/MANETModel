@@ -14,6 +14,7 @@ import de.jgraphlib.generator.GridGraphProperties;
 import de.jgraphlib.generator.NetworkGraphGenerator;
 import de.jgraphlib.generator.NetworkGraphProperties;
 import de.jgraphlib.generator.GraphProperties.DoubleRange;
+import de.jgraphlib.generator.GraphProperties.EdgeStyle;
 import de.jgraphlib.generator.GraphProperties.IntRange;
 import de.jgraphlib.graph.elements.EdgeDistance;
 import de.jgraphlib.graph.elements.Position2D;
@@ -66,7 +67,8 @@ public class CplexFeasibleSolutionTest {
 	GridGraphProperties properties = new GridGraphProperties(/* playground width */ 1000,
 		/* playground height */ 600, /* distance between vertices */
 		100, /* length of edges */
-		100);
+		100,
+		EdgeStyle.BIDIRECTIONAL);
 
 	GridGraphGenerator<ScalarRadioNode, ScalarRadioLink, ScalarLinkQuality> generator = new GridGraphGenerator<ScalarRadioNode, ScalarRadioLink, ScalarLinkQuality>(
 		manet, new RandomNumbers(0));
