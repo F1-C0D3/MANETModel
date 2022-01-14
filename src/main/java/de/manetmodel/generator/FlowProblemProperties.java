@@ -1,6 +1,6 @@
 package de.manetmodel.generator;
 
-import de.jgraphlib.graph.generator.PathProblemProperties;
+import de.jgraphlib.generator.PathProblemProperties;
 import de.manetmodel.units.DataRate;
 
 public class FlowProblemProperties extends PathProblemProperties {

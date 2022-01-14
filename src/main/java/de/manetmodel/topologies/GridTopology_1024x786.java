@@ -2,16 +2,12 @@ package de.manetmodel.topologies;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.function.Supplier;
 
-import de.jgraphlib.graph.generator.GridGraphProperties;
-import de.jgraphlib.graph.generator.NetworkGraphGenerator;
-import de.jgraphlib.graph.generator.NetworkGraphProperties;
-import de.jgraphlib.graph.generator.GraphProperties.DoubleRange;
-import de.jgraphlib.graph.generator.GraphProperties.IntRange;
-import de.jgraphlib.graph.elements.EdgeDistance;
+import de.jgraphlib.generator.GraphProperties.EdgeStyle;
+import de.jgraphlib.generator.GridGraphGenerator;
+import de.jgraphlib.generator.GridGraphProperties;
 import de.jgraphlib.graph.elements.Position2D;
-import de.jgraphlib.graph.elements.WeightedEdge;
-import de.jgraphlib.graph.generator.GridGraphGenerator;
 import de.jgraphlib.graph.io.VertextPosition2DMapper;
 import de.jgraphlib.graph.io.XMLExporter;
 import de.jgraphlib.graph.io.XMLImporter;
@@ -21,26 +17,16 @@ import de.jgraphlib.util.RandomNumbers;
 import de.manetmodel.evaluator.DoubleScope;
 import de.manetmodel.evaluator.ScalarLinkQualityEvaluator;
 import de.manetmodel.mobilitymodel.PedestrianMobilityModel;
-import de.manetmodel.network.Flow;
-import de.manetmodel.network.Link;
-import de.manetmodel.network.LinkQuality;
-import de.manetmodel.network.MANET;
-import de.manetmodel.network.MANETSupplier;
-import de.manetmodel.network.Node;
 import de.manetmodel.network.scalar.ScalarLinkQuality;
 import de.manetmodel.network.scalar.ScalarRadioLink;
 import de.manetmodel.network.scalar.ScalarRadioMANET;
 import de.manetmodel.network.scalar.ScalarRadioMANETSupplier;
 import de.manetmodel.network.scalar.ScalarRadioModel;
 import de.manetmodel.network.scalar.ScalarRadioNode;
-import de.manetmodel.radiomodel.RadioModel;
-import de.manetmodel.units.DataRate;
 import de.manetmodel.units.Speed;
-import de.manetmodel.units.Time;
+import de.manetmodel.units.Speed.SpeedRange;
 import de.manetmodel.units.Unit;
 import de.manetmodel.units.Watt;
-import de.manetmodel.units.DataUnit.Type;
-import de.manetmodel.units.Speed.SpeedRange;
 
 public class GridTopology_1024x786 {
 
@@ -55,10 +41,11 @@ public class GridTopology_1024x786 {
 	ScalarLinkQualityEvaluator evaluator = new ScalarLinkQualityEvaluator(new DoubleScope(0d, 1d), radioModel,
 		mobilityModel);
 	
-	
+
+	Supplier<ScalarLinkQuality> linkPropertySupplier = new ScalarRadioMANETSupplier().getLinkPropertySupplier();
 	ScalarRadioMANET manet = new ScalarRadioMANET(new ScalarRadioMANETSupplier().getNodeSupplier(),
 		new ScalarRadioMANETSupplier().getLinkSupplier(),
-		new ScalarRadioMANETSupplier().getLinkPropertySupplier(),
+		linkPropertySupplier,
 		new ScalarRadioMANETSupplier().getFlowSupplier(),
 		radioModel, 
 		mobilityModel,
@@ -68,10 +55,10 @@ public class GridTopology_1024x786 {
 		/* playground width */ 1024,
 		/* playground height */ 768, 
 		/* distance between vertices */ 100, 
-		/* length of edges */ 100);
+		/* length of edges */ 100,EdgeStyle.BIDIRECTIONAL);
 
 	GridGraphGenerator<ScalarRadioNode, ScalarRadioLink, ScalarLinkQuality> generator = 
-		new GridGraphGenerator<ScalarRadioNode, ScalarRadioLink, ScalarLinkQuality>(manet, new RandomNumbers());
+		new GridGraphGenerator<ScalarRadioNode, ScalarRadioLink, ScalarLinkQuality>(manet,linkPropertySupplier, new RandomNumbers());
 
 	generator.generate(properties);
 

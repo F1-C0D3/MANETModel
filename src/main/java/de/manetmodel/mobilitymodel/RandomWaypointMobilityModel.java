@@ -1,13 +1,11 @@
 package de.manetmodel.mobilitymodel;
 
 import de.jgraphlib.graph.elements.Position2D;
-import de.jgraphlib.graph.generator.GraphProperties.DoubleRange;
 import de.jgraphlib.util.RandomNumbers;
 import de.jgraphlib.util.Tuple;
 import de.manetmodel.units.Speed;
-import de.manetmodel.units.Time;
-import de.manetmodel.units.Unit;
 import de.manetmodel.units.Speed.SpeedRange;
+import de.manetmodel.units.Time;
 import de.manetmodel.units.Unit.Distance;
 import de.manetmodel.units.Unit.TimeSteps;
 

@@ -4,15 +4,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Supplier;
 
+import de.jgraphlib.generator.PathProblemGenerator;
 import de.jgraphlib.graph.WeightedGraph;
 import de.jgraphlib.graph.elements.Position2D;
 import de.jgraphlib.graph.elements.Vertex;
 import de.jgraphlib.graph.elements.WeightedEdge;
-import de.jgraphlib.graph.generator.PathProblemGenerator;
-import de.jgraphlib.util.Log;
 import de.jgraphlib.util.RandomNumbers;
 import de.manetmodel.network.Flow;
-import de.manetmodel.network.FlowSupplier;
 import de.manetmodel.network.LinkQuality;
 import de.manetmodel.units.DataRate;
 
