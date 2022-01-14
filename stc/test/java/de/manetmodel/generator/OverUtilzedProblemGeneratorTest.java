@@ -60,18 +60,17 @@ public class OverUtilzedProblemGeneratorTest {
 
 	    Supplier<ScalarLinkQuality> linkPropertySupplier = new ScalarRadioMANETSupplier().getLinkPropertySupplier();
 	    ScalarRadioMANET manet = new ScalarRadioMANET(new ScalarRadioMANETSupplier().getNodeSupplier(),
-			new ScalarRadioMANETSupplier().getLinkSupplier(),
-			linkPropertySupplier,
-			new ScalarRadioMANETSupplier().getFlowSupplier(), radioModel, mobilityModel, evaluator);
+		    new ScalarRadioMANETSupplier().getLinkSupplier(), linkPropertySupplier,
+		    new ScalarRadioMANETSupplier().getFlowSupplier(), radioModel, mobilityModel, evaluator);
 
-		NetworkGraphProperties graphProperties = new NetworkGraphProperties(1024, 768, new IntRange(100, 100),
-			new DoubleRange(50d, 100d), new DoubleRange(100d, 100d));
+	    NetworkGraphProperties graphProperties = new NetworkGraphProperties(1024, 768, new IntRange(100, 100),
+		    new DoubleRange(50d, 100d), new DoubleRange(100d, 100d));
 
-		NetworkGraphGenerator<ScalarRadioNode, ScalarRadioLink, ScalarLinkQuality> generator = new NetworkGraphGenerator<ScalarRadioNode, ScalarRadioLink, ScalarLinkQuality>(
-			manet,linkPropertySupplier, random);
+	    NetworkGraphGenerator<ScalarRadioNode, ScalarRadioLink, ScalarLinkQuality> generator = new NetworkGraphGenerator<ScalarRadioNode, ScalarRadioLink, ScalarLinkQuality>(
+		    manet, linkPropertySupplier, random);
 
-		generator.generate(graphProperties);
-		manet.initialize();
+	    generator.generate(graphProperties);
+	    manet.initialize();
 	    Function<ScalarLinkQuality, Double> metric = (ScalarLinkQuality w) -> {
 		return w.getScore();
 	    };
@@ -79,14 +78,14 @@ public class OverUtilzedProblemGeneratorTest {
 	    OverUtilzedProblemGenerator<ScalarRadioNode, ScalarRadioLink, ScalarLinkQuality, ScalarRadioFlow> overUtilizedProblemGenerator = new OverUtilzedProblemGenerator<ScalarRadioNode, ScalarRadioLink, ScalarLinkQuality, ScalarRadioFlow>(
 		    manet, metric);
 
-		OverUtilizedProblemProperties problemProperties = new OverUtilizedProblemProperties(
-			/* Number of paths */10, /* Minimum path length */10,
-			/* Maximum path length */20, /* Minimum demand of each flow */new DataRate(100, Type.kilobit),
-			/* Maximum demand of each flow */new DataRate(200, Type.kilobit),
-			/* Unique source destination pairs */true,
-			/* Over-utilization percentage */10,
-			/* Increase factor of each tick */new DataRate(50, Type.kilobit));
-	    List<ScalarRadioFlow> flowProblems = overUtilizedProblemGenerator.compute(problemProperties,random);
+	    OverUtilizedProblemProperties problemProperties = new OverUtilizedProblemProperties(/* Number of paths */10,
+		    /* Minimum path length */10, /* Maximum path length */20,
+		    /* Minimum demand of each flow */new DataRate(100, Type.kilobit),
+		    /* Maximum demand of each flow */new DataRate(200, Type.kilobit),
+		    /* Unique source destination pairs */true, /* Over-utilization percentage */10,
+		    /* Increase factor of each tick */new DataRate(50, Type.kilobit));
+
+	    List<ScalarRadioFlow> flowProblems = overUtilizedProblemGenerator.compute(problemProperties);
 
 	    DijkstraShortestPath<ScalarRadioNode, ScalarRadioLink, ScalarLinkQuality> sp = new DijkstraShortestPath<ScalarRadioNode, ScalarRadioLink, ScalarLinkQuality>(
 		    manet);
@@ -110,17 +109,17 @@ public class OverUtilzedProblemGeneratorTest {
 
 	Supplier<ScalarLinkQuality> linkPropertySupplier = new ScalarRadioMANETSupplier().getLinkPropertySupplier();
 	ScalarRadioMANET manet = new ScalarRadioMANET(new ScalarRadioMANETSupplier().getNodeSupplier(),
-		new ScalarRadioMANETSupplier().getLinkSupplier(),
-		linkPropertySupplier,
+		new ScalarRadioMANETSupplier().getLinkSupplier(), linkPropertySupplier,
 		new ScalarRadioMANETSupplier().getFlowSupplier(), radioModel, mobilityModel, evaluator);
 
 	GridGraphProperties graphProperties = new GridGraphProperties(/* playground width */ 300,
-		/* playground height */ 100, /* distance between vertices */ 100, /* length of edges */ 100, EdgeStyle.BIDIRECTIONAL);
+		/* playground height */ 100, /* distance between vertices */ 100, /* length of edges */ 100,
+		EdgeStyle.BIDIRECTIONAL);
 
 	RandomNumbers random = new RandomNumbers(0);
 
 	GridGraphGenerator<ScalarRadioNode, ScalarRadioLink, ScalarLinkQuality> generator = new GridGraphGenerator<ScalarRadioNode, ScalarRadioLink, ScalarLinkQuality>(
-		manet,linkPropertySupplier, random);
+		manet, linkPropertySupplier, random);
 	generator.generate(graphProperties);
 	manet.initialize();
 	Function<ScalarLinkQuality, Double> metric = (ScalarLinkQuality w) -> {
@@ -130,12 +129,11 @@ public class OverUtilzedProblemGeneratorTest {
 	OverUtilzedProblemGenerator<ScalarRadioNode, ScalarRadioLink, ScalarLinkQuality, ScalarRadioFlow> overUtilizedProblemGenerator = new OverUtilzedProblemGenerator<ScalarRadioNode, ScalarRadioLink, ScalarLinkQuality, ScalarRadioFlow>(
 		manet, metric);
 
-	OverUtilizedProblemProperties problemProperties = new OverUtilizedProblemProperties(
-		/* Number of paths */1, /* Minimum path length */10,
-		/* Maximum path length */20, /* Minimum demand of each flow */new DataRate(10, Type.kilobit),
+	OverUtilizedProblemProperties problemProperties = new OverUtilizedProblemProperties(/* Number of paths */1,
+		/* Minimum path length */10, /* Maximum path length */20,
+		/* Minimum demand of each flow */new DataRate(10, Type.kilobit),
 		/* Maximum demand of each flow */new DataRate(20, Type.kilobit),
-		/* Unique source destination pairs */true,
-		/* Over-utilization percentage */2,
+		/* Unique source destination pairs */true, /* Over-utilization percentage */2,
 		/* Increase factor of each tick */new DataRate(2, Type.kilobit));
 	List<ScalarRadioFlow> flowProblems = overUtilizedProblemGenerator.compute(problemProperties);
 
@@ -161,6 +159,7 @@ public class OverUtilzedProblemGeneratorTest {
 
 	GridGraphProperties graphProperties = new GridGraphProperties(/* playground width */ 300,
 		/* playground height */ 100, /* distance between vertices */ 100, /* length of edges */ 100,EdgeStyle.BIDIRECTIONAL);
+
 
 	RandomNumbers random = new RandomNumbers(0);
 
@@ -222,12 +221,11 @@ public class OverUtilzedProblemGeneratorTest {
 	OverUtilzedProblemGenerator<ScalarRadioNode, ScalarRadioLink, ScalarLinkQuality, ScalarRadioFlow> overUtilizedProblemGenerator = new OverUtilzedProblemGenerator<ScalarRadioNode, ScalarRadioLink, ScalarLinkQuality, ScalarRadioFlow>(
 		manet, metric);
 
-	OverUtilizedProblemProperties problemProperties = new OverUtilizedProblemProperties(
-		/* Number of paths */20, /* Minimum path length */10,
-		/* Maximum path length */20, /* Minimum demand of each flow */new DataRate(10, Type.kilobit),
+	OverUtilizedProblemProperties problemProperties = new OverUtilizedProblemProperties(/* Number of paths */20,
+		/* Minimum path length */10, /* Maximum path length */20,
+		/* Minimum demand of each flow */new DataRate(10, Type.kilobit),
 		/* Maximum demand of each flow */new DataRate(20, Type.kilobit),
-		/* Unique source destination pairs */true,
-		/* Over-utilization percentage */2,
+		/* Unique source destination pairs */true, /* Over-utilization percentage */2,
 		/* Increase factor of each tick */new DataRate(2, Type.kilobit));
 
 	List<ScalarRadioFlow> flowProblems = overUtilizedProblemGenerator.compute(problemProperties);
@@ -282,12 +280,11 @@ public class OverUtilzedProblemGeneratorTest {
 	DijkstraShortestPath<ScalarRadioNode, ScalarRadioLink, ScalarLinkQuality> sp = new DijkstraShortestPath<ScalarRadioNode, ScalarRadioLink, ScalarLinkQuality>(
 		manet);
 
-	OverUtilizedProblemProperties problemProperties = new OverUtilizedProblemProperties(
-		/* Number of paths */10, /* Minimum path length */10,
-		/* Maximum path length */20, /* Minimum demand of each flow */new DataRate(100, Type.kilobit),
+	OverUtilizedProblemProperties problemProperties = new OverUtilizedProblemProperties(/* Number of paths */10,
+		/* Minimum path length */10, /* Maximum path length */20,
+		/* Minimum demand of each flow */new DataRate(100, Type.kilobit),
 		/* Maximum demand of each flow */new DataRate(200, Type.kilobit),
-		/* Unique source destination pairs */true,
-		/* Over-utilization percentage */1,
+		/* Unique source destination pairs */true, /* Over-utilization percentage */1,
 		/* Increase factor of each tick */new DataRate(50, Type.kilobit));
 
 	List<ScalarRadioFlow> flowProblems = overUtilizedProblemGenerator.compute(problemProperties);

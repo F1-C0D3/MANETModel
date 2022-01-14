@@ -11,6 +11,7 @@ import de.manetmodel.units.dBm;
 public class ConfidenceRangeEvaluation extends LinearStandardization {
 
     private ScalarRadioModel radioModel;
+    
     public ConfidenceRangeEvaluation(DoubleScope scoreScope, double weight, ScalarRadioModel radioModel) {
 	super(scoreScope, weight);
 	this.radioModel = radioModel;
@@ -26,19 +27,26 @@ public class ConfidenceRangeEvaluation extends LinearStandardization {
 	Watt receptionThreshold = sink.getReceptionThreshold();
 	double carrierFrequency = radioModel.getCarrierFrequency();
 
-	double theoreticalMaxDistance = ScalarRadioModel.Propagation.theoreticalDistance(receptionThreshold,
-		transmissionPower, carrierFrequency);
+	double theoreticalMaxDistance = 
+		ScalarRadioModel.Propagation.theoreticalDistance(
+			receptionThreshold,
+			transmissionPower, 
+			carrierFrequency);
 
 	double maxConfidenceDistance = theoreticalMaxDistance * confidenceMax;
 
-	dBm confidenceThreshold = ScalarRadioModel.Propagation
-		.receptionPower(maxConfidenceDistance, transmissionPower, carrierFrequency).todBm();
+	dBm confidenceThreshold = ScalarRadioModel.Propagation.receptionPower(
+		maxConfidenceDistance, 
+		transmissionPower, 
+		carrierFrequency).todBm();
 
 	dBm theoreticalMaxReceptionPower = transmissionPower.todBm();
 
 	if (receptionPower.get() > confidenceThreshold.get())
-	    confidenceValue = Math.pow(((receptionPower.get() - theoreticalMaxReceptionPower.get())
-		    / (confidenceThreshold.get() - theoreticalMaxReceptionPower.get())), 4);
+	    confidenceValue = 
+	    	Math.pow(
+	    		(
+	    		(receptionPower.get() - theoreticalMaxReceptionPower.get()) / (confidenceThreshold.get() - theoreticalMaxReceptionPower.get()) ), 4);
 	else {
 	    dBm receptionThresholddBm = receptionThreshold.todBm();
 

@@ -1,5 +1,6 @@
 package de.manetmodel.mobilitymodel;
 
+import de.jgraphlib.generator.GraphProperties.DoubleRange;
 import de.jgraphlib.graph.elements.Position2D;
 import de.jgraphlib.util.RandomNumbers;
 import de.jgraphlib.util.Tuple;

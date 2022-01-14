@@ -13,7 +13,6 @@ import de.jgraphlib.generator.NetworkGraphGenerator;
 import de.jgraphlib.generator.NetworkGraphProperties;
 import de.jgraphlib.gui.VisualGraphApp;
 import de.jgraphlib.util.RandomNumbers;
-import de.manetmodel.gui.printer.LinkQualityScorePrinter;
 import de.manetmodel.gui.printer.LinkUtilizationPrinter;
 import de.manetmodel.mobilitymodel.PedestrianMobilityModel;
 import de.manetmodel.network.scalar.ScalarLinkQuality;

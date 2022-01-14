@@ -95,10 +95,6 @@ public class UtilizationTest {
 	manet.deployFlow(flow1);
 	manet.deployFlow(flow2);
 
-	SwingUtilities.invokeAndWait(new VisualGraphApp<IdealRadioNode, IdealRadioLink, IdealLinkQuality>(manet,
-		new LinkUtilizationPrinter<IdealRadioLink, IdealLinkQuality>()));
-
-	System.in.read();
 	Assert.assertFalse(manet.isOverutilized());
     }
 
@@ -149,10 +145,6 @@ public class UtilizationTest {
 	manet.deployFlow(flow2);
 	manet.deployFlow(flow3);
 
-	SwingUtilities.invokeAndWait(new VisualGraphApp<IdealRadioNode, IdealRadioLink, IdealLinkQuality>(manet,
-		new LinkUtilizationPrinter<IdealRadioLink, IdealLinkQuality>()));
-
-	System.in.read();
-	Assert.assertFalse(manet.isOverutilized());
+	Assert.assertTrue(manet.isOverutilized());
     }
 }

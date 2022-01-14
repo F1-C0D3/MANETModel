@@ -9,9 +9,15 @@ import javax.swing.SwingUtilities;
 
 import org.junit.Test;
 
+<<<<<<< HEAD
 import de.jgraphlib.generator.GridGraphGenerator;
 import de.jgraphlib.generator.GridGraphProperties;
 import de.jgraphlib.generator.GraphProperties.EdgeStyle;
+=======
+import de.jgraphlib.generator.GraphProperties.EdgeStyle;
+import de.jgraphlib.generator.GridGraphGenerator;
+import de.jgraphlib.generator.GridGraphProperties;
+>>>>>>> ed5a7332e17c33f3278cbc7b16cd7be7750e61d6
 import de.jgraphlib.graph.algorithms.DijkstraShortestPath;
 import de.jgraphlib.gui.VisualGraphApp;
 import de.jgraphlib.util.RandomNumbers;
@@ -37,8 +43,7 @@ public class FlowDistributionEvaluatorTest {
     public void flowDistributionEvaluatorTest() throws InvocationTargetException, InterruptedException, IOException {
 	
 	/**************************************************************************************************************************************/
-	ScalarRadioModel radioModel = new ScalarRadioModel(new Watt(0.001d), new Watt(1e-11), 2000000d, 2412000000d,
-		35d,100);
+	ScalarRadioModel radioModel = new ScalarRadioModel(new Watt(0.001d), new Watt(1e-11), 2000000d, 2412000000d, 35d,100);
 	PedestrianMobilityModel mobilityModel = new PedestrianMobilityModel(
 		new RandomNumbers(), 
 		new SpeedRange(0, 100, Unit.TimeSteps.second, Unit.Distance.meter), 
@@ -65,6 +70,7 @@ public class FlowDistributionEvaluatorTest {
 		/* distance between vertices */ 	100, 
 		/* length of edges */ 			100,
 		/* Style of edges*/			EdgeStyle.BIDIRECTIONAL);	
+
 
 	RandomNumbers random = new RandomNumbers();
 
