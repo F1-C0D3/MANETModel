@@ -4,6 +4,6 @@ import de.manetmodel.network.Link;
 import de.manetmodel.network.LinkQuality;
 import de.manetmodel.units.DataRate;
 
-public class IdealRadioLink extends Link<LinkQuality> {
+public class IdealRadioLink extends Link<IdealLinkQuality> {
 
 }
