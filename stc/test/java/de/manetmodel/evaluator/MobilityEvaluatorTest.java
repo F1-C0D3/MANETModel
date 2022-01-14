@@ -4,14 +4,13 @@ import org.junit.Test;
 
 import de.jgraphlib.graph.elements.Position2D;
 import de.jgraphlib.util.RandomNumbers;
-import de.manetmodel.evaluator.DoubleScope;
-import de.manetmodel.evaluator.SourceSinkSingleTickMobilityEvaluator;
+import de.manetmodel.evaluation.SourceSinkSingleTickMobilityEvaluation;
 import de.manetmodel.mobilitymodel.MovementPattern;
 import de.manetmodel.mobilitymodel.PedestrianMobilityModel;
 import de.manetmodel.network.scalar.ScalarRadioNode;
 import de.manetmodel.units.Speed;
-import de.manetmodel.units.Unit;
 import de.manetmodel.units.Speed.SpeedRange;
+import de.manetmodel.units.Unit;
 
 //@formatter:off
 
@@ -20,7 +19,7 @@ public class MobilityEvaluatorTest {
     @Test
     public void mobilityEvaluatorTest() {
 		
-	SourceSinkSingleTickMobilityEvaluator<ScalarRadioNode> evaluator = new SourceSinkSingleTickMobilityEvaluator<ScalarRadioNode>(
+	SourceSinkSingleTickMobilityEvaluation<ScalarRadioNode> evaluator = new SourceSinkSingleTickMobilityEvaluation<ScalarRadioNode>(
 		/*scoreScope*/new DoubleScope(1d, 10d), 
 		/*weight*/1,
 		new PedestrianMobilityModel(new RandomNumbers(), new SpeedRange(1000, 5000, Unit.TimeSteps.second, Unit.Distance.meter), new Speed(50, Unit.Distance.meter, Unit.TimeSteps.second)));

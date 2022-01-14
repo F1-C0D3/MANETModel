@@ -6,10 +6,10 @@ import javax.swing.SwingUtilities;
 
 import org.junit.Test;
 
-import de.jgraphlib.graph.generator.NetworkGraphGenerator;
-import de.jgraphlib.graph.generator.NetworkGraphProperties;
-import de.jgraphlib.graph.generator.GraphProperties.DoubleRange;
-import de.jgraphlib.graph.generator.GraphProperties.IntRange;
+import de.jgraphlib.generator.GraphProperties.DoubleRange;
+import de.jgraphlib.generator.GraphProperties.IntRange;
+import de.jgraphlib.generator.NetworkGraphGenerator;
+import de.jgraphlib.generator.NetworkGraphProperties;
 import de.jgraphlib.gui.VisualGraphApp;
 import de.jgraphlib.gui.printer.WeightedEdgeIDPrinter;
 import de.jgraphlib.util.RandomNumbers;
@@ -25,9 +25,9 @@ import de.manetmodel.network.scalar.ScalarRadioModel;
 import de.manetmodel.network.scalar.ScalarRadioNode;
 import de.manetmodel.units.DataRate;
 import de.manetmodel.units.Speed;
+import de.manetmodel.units.Speed.SpeedRange;
 import de.manetmodel.units.Unit;
 import de.manetmodel.units.Watt;
-import de.manetmodel.units.Speed.SpeedRange;
 
 
 public class NaiveOptimalFlowDistributionTest {

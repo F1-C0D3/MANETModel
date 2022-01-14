@@ -7,15 +7,14 @@ import javax.swing.SwingUtilities;
 
 import org.junit.Test;
 
-import de.jgraphlib.graph.generator.NetworkGraphGenerator;
-import de.jgraphlib.graph.generator.NetworkGraphProperties;
-import de.jgraphlib.graph.generator.GraphProperties.DoubleRange;
-import de.jgraphlib.graph.generator.GraphProperties.IntRange;
+import de.jgraphlib.generator.GraphProperties.DoubleRange;
+import de.jgraphlib.generator.GraphProperties.IntRange;
+import de.jgraphlib.generator.NetworkGraphGenerator;
+import de.jgraphlib.generator.NetworkGraphProperties;
 import de.jgraphlib.gui.VisualGraphApp;
 import de.jgraphlib.util.RandomNumbers;
-import de.manetmodel.evaluator.DoubleScope;
-import de.manetmodel.evaluator.ScalarLinkQualityEvaluator;
 import de.manetmodel.gui.printer.LinkQualityScorePrinter;
+import de.manetmodel.gui.printer.LinkUtilizationPrinter;
 import de.manetmodel.mobilitymodel.PedestrianMobilityModel;
 import de.manetmodel.network.scalar.ScalarLinkQuality;
 import de.manetmodel.network.scalar.ScalarRadioLink;
@@ -24,9 +23,9 @@ import de.manetmodel.network.scalar.ScalarRadioMANETSupplier;
 import de.manetmodel.network.scalar.ScalarRadioModel;
 import de.manetmodel.network.scalar.ScalarRadioNode;
 import de.manetmodel.units.Speed;
+import de.manetmodel.units.Speed.SpeedRange;
 import de.manetmodel.units.Unit;
 import de.manetmodel.units.Watt;
-import de.manetmodel.units.Speed.SpeedRange;
 
 public class ScalarLinkQualityEvaluatorTest {
 
@@ -63,7 +62,7 @@ public class ScalarLinkQualityEvaluatorTest {
 
 	manet.initialize();
 
-	SwingUtilities.invokeAndWait(new VisualGraphApp<ScalarRadioNode, ScalarRadioLink, ScalarLinkQuality>(manet, new LinkQualityScorePrinter<ScalarRadioLink,ScalarLinkQuality>()));
+	SwingUtilities.invokeAndWait(new VisualGraphApp<ScalarRadioNode, ScalarRadioLink, ScalarLinkQuality>(manet, new LinkUtilizationPrinter<ScalarRadioLink,ScalarLinkQuality>()));
 	
 	System.in.read();
     }

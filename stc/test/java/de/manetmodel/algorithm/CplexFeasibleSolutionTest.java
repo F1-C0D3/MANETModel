@@ -4,22 +4,19 @@ import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 import java.util.function.Function;
+import java.util.function.Supplier;
 
 import javax.swing.SwingUtilities;
 
 import org.junit.Test;
 
-import de.jgraphlib.graph.elements.EdgeDistance;
-import de.jgraphlib.graph.elements.Position2D;
-import de.jgraphlib.graph.elements.Vertex;
-import de.jgraphlib.graph.elements.WeightedEdge;
-import de.jgraphlib.graph.generator.GridGraphGenerator;
-import de.jgraphlib.graph.generator.GridGraphProperties;
-import de.jgraphlib.graph.generator.NetworkGraphGenerator;
-import de.jgraphlib.graph.generator.NetworkGraphProperties;
-import de.jgraphlib.graph.generator.GraphProperties.DoubleRange;
-import de.jgraphlib.graph.generator.GraphProperties.IntRange;
-import de.jgraphlib.graph.suppliers.EdgeDistanceSupplier;
+import de.jgraphlib.generator.GraphProperties.DoubleRange;
+import de.jgraphlib.generator.GraphProperties.EdgeStyle;
+import de.jgraphlib.generator.GraphProperties.IntRange;
+import de.jgraphlib.generator.GridGraphGenerator;
+import de.jgraphlib.generator.GridGraphProperties;
+import de.jgraphlib.generator.NetworkGraphGenerator;
+import de.jgraphlib.generator.NetworkGraphProperties;
 import de.jgraphlib.gui.VisualGraphApp;
 import de.jgraphlib.gui.printer.WeightedEdgeIDPrinter;
 import de.jgraphlib.util.RandomNumbers;
@@ -38,10 +35,10 @@ import de.manetmodel.network.scalar.ScalarRadioNode;
 import de.manetmodel.units.DataRate;
 import de.manetmodel.units.DataUnit.Type;
 import de.manetmodel.units.Speed;
+import de.manetmodel.units.Speed.SpeedRange;
 import de.manetmodel.units.Unit;
 import de.manetmodel.units.Watt;
 import ilog.concert.IloException;
-import de.manetmodel.units.Speed.SpeedRange;
 
 public class CplexFeasibleSolutionTest {
 
@@ -56,18 +53,19 @@ public class CplexFeasibleSolutionTest {
 	ScalarLinkQualityEvaluator evaluator = new ScalarLinkQualityEvaluator(new DoubleScope(0d, 1d), radioModel,
 		mobilityModel);
 
+	Supplier<ScalarLinkQuality> linkPropertySupplier = new ScalarRadioMANETSupplier().getLinkPropertySupplier();
 	ScalarRadioMANET manet = new ScalarRadioMANET(new ScalarRadioMANETSupplier().getNodeSupplier(),
 		new ScalarRadioMANETSupplier().getLinkSupplier(),
-		new ScalarRadioMANETSupplier().getLinkPropertySupplier(),
+		linkPropertySupplier,
 		new ScalarRadioMANETSupplier().getFlowSupplier(), radioModel, mobilityModel, evaluator);
 	RandomNumbers randomNumbers = new RandomNumbers(0);
 	GridGraphProperties properties = new GridGraphProperties(/* playground width */ 1000,
 		/* playground height */ 600, /* distance between vertices */
 		100, /* length of edges */
-		100);
+		100, EdgeStyle.BIDIRECTIONAL);
 
 	GridGraphGenerator<ScalarRadioNode, ScalarRadioLink, ScalarLinkQuality> generator = new GridGraphGenerator<ScalarRadioNode, ScalarRadioLink, ScalarLinkQuality>(
-		manet, new RandomNumbers(0));
+		manet,linkPropertySupplier, new RandomNumbers(0));
 	generator.generate(properties);
 
 	manet.initialize();

@@ -3,17 +3,18 @@ package de.manetmodel.evaluator;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Map;
+import java.util.function.Supplier;
 
 import javax.swing.SwingUtilities;
 
 import org.junit.Test;
 
+import de.jgraphlib.generator.GridGraphGenerator;
+import de.jgraphlib.generator.GridGraphProperties;
+import de.jgraphlib.generator.GraphProperties.EdgeStyle;
 import de.jgraphlib.graph.algorithms.DijkstraShortestPath;
-import de.jgraphlib.graph.generator.GridGraphGenerator;
-import de.jgraphlib.graph.generator.GridGraphProperties;
 import de.jgraphlib.gui.VisualGraphApp;
 import de.jgraphlib.util.RandomNumbers;
-import de.manetmodel.gui.printer.LinkQualityScorePrinter;
 import de.manetmodel.gui.printer.LinkUtilizationPrinter;
 import de.manetmodel.mobilitymodel.PedestrianMobilityModel;
 import de.manetmodel.network.scalar.ScalarLinkQuality;
@@ -24,11 +25,11 @@ import de.manetmodel.network.scalar.ScalarRadioMANETSupplier;
 import de.manetmodel.network.scalar.ScalarRadioModel;
 import de.manetmodel.network.scalar.ScalarRadioNode;
 import de.manetmodel.units.DataRate;
+import de.manetmodel.units.DataUnit.Type;
 import de.manetmodel.units.Speed;
+import de.manetmodel.units.Speed.SpeedRange;
 import de.manetmodel.units.Unit;
 import de.manetmodel.units.Watt;
-import de.manetmodel.units.DataUnit.Type;
-import de.manetmodel.units.Speed.SpeedRange;
 
 public class FlowDistributionEvaluatorTest {
 
@@ -46,9 +47,11 @@ public class FlowDistributionEvaluatorTest {
 	ScalarLinkQualityEvaluator linkQualityEvaluator = 
 		new ScalarLinkQualityEvaluator(new DoubleScope(0d, 1d), radioModel, mobilityModel);
 	
+
+	Supplier<ScalarLinkQuality> linkPropertySupplier = new ScalarRadioMANETSupplier().getLinkPropertySupplier();
 	ScalarRadioMANET manet = new ScalarRadioMANET(new ScalarRadioMANETSupplier().getNodeSupplier(),
 		new ScalarRadioMANETSupplier().getLinkSupplier(),
-		new ScalarRadioMANETSupplier().getLinkPropertySupplier(),
+		linkPropertySupplier,
 		new ScalarRadioMANETSupplier().getFlowSupplier(),
 		radioModel, 
 		mobilityModel,
@@ -60,13 +63,14 @@ public class FlowDistributionEvaluatorTest {
 		/* playground width */ 			500,
 		/* playground height */ 		500, 
 		/* distance between vertices */ 	100, 
-		/* length of edges */ 			100);	
+		/* length of edges */ 			100,
+		/* Style of edges*/			EdgeStyle.BIDIRECTIONAL);	
 
 	RandomNumbers random = new RandomNumbers();
 
 	GridGraphGenerator<ScalarRadioNode, ScalarRadioLink, ScalarLinkQuality> generator = 
 		new GridGraphGenerator<ScalarRadioNode, ScalarRadioLink, ScalarLinkQuality>(
-			manet, random);
+			manet, linkPropertySupplier, random);
 
 	generator.generate(graphProperties);
 

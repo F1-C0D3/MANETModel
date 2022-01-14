@@ -1,50 +1,33 @@
 package de.manetmodel.io;
 
 import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
-import java.util.List;
-import java.util.function.Function;
-
-import javax.swing.SwingUtilities;
 
 import org.junit.Test;
 
-import de.jgraphlib.graph.DirectedWeighted2DGraph;
-import de.jgraphlib.graph.elements.EdgeDistance;
-import de.jgraphlib.graph.elements.Path;
+import de.jgraphlib.generator.GraphProperties.DoubleRange;
+import de.jgraphlib.generator.GraphProperties.IntRange;
+import de.jgraphlib.generator.NetworkGraphGenerator;
+import de.jgraphlib.generator.NetworkGraphProperties;
 import de.jgraphlib.graph.elements.Position2D;
-import de.jgraphlib.graph.elements.Vertex;
-import de.jgraphlib.graph.elements.WeightedEdge;
-import de.jgraphlib.graph.generator.NetworkGraphGenerator;
-import de.jgraphlib.graph.generator.NetworkGraphProperties;
-import de.jgraphlib.graph.generator.GraphProperties.DoubleRange;
-import de.jgraphlib.graph.generator.GraphProperties.IntRange;
 import de.jgraphlib.graph.io.VertextPosition2DMapper;
 import de.jgraphlib.graph.io.XMLExporter;
 import de.jgraphlib.graph.io.XMLImporter;
-import de.jgraphlib.graph.suppliers.EdgeDistanceSupplier;
-import de.jgraphlib.graph.suppliers.Weighted2DGraphSupplier;
 import de.jgraphlib.gui.VisualGraphApp;
 import de.jgraphlib.gui.printer.WeightedEdgeIDPrinter;
 import de.jgraphlib.util.RandomNumbers;
 import de.manetmodel.evaluator.DoubleScope;
 import de.manetmodel.evaluator.ScalarLinkQualityEvaluator;
-import de.manetmodel.gui.printer.LinkQualityScorePrinter;
-import de.manetmodel.gui.printer.LinkUtilizationPrinter;
 import de.manetmodel.mobilitymodel.PedestrianMobilityModel;
-import de.manetmodel.network.MANET;
 import de.manetmodel.network.scalar.ScalarLinkQuality;
-import de.manetmodel.network.scalar.ScalarRadioFlow;
 import de.manetmodel.network.scalar.ScalarRadioLink;
 import de.manetmodel.network.scalar.ScalarRadioMANET;
 import de.manetmodel.network.scalar.ScalarRadioMANETSupplier;
 import de.manetmodel.network.scalar.ScalarRadioModel;
 import de.manetmodel.network.scalar.ScalarRadioNode;
-import de.manetmodel.units.DataRate;
 import de.manetmodel.units.Speed;
+import de.manetmodel.units.Speed.SpeedRange;
 import de.manetmodel.units.Unit;
 import de.manetmodel.units.Watt;
-import de.manetmodel.units.Speed.SpeedRange;
 
 public class XMLManetImportExportTest {
 
