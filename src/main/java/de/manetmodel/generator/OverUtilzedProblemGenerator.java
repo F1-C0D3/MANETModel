@@ -22,6 +22,7 @@ public class OverUtilzedProblemGenerator<N extends Node, L extends Link<W>, W ex
 
     Function<W, Double> metric;
     FlowProblemGenerator<N, L, W, F> flowProblemGenerator;
+    RandomNumbers randomNumbers;
     Log log;
 
     public OverUtilzedProblemGenerator(MANET<N, L, W, F> manet, Function<W, Double> metric) {
@@ -33,6 +34,7 @@ public class OverUtilzedProblemGenerator<N extends Node, L extends Link<W>, W ex
     public OverUtilzedProblemGenerator(MANET<N, L, W, F> manet, Function<W, Double> metric, RandomNumbers randomNumbers) {
 	this.manet = manet;
 	this.metric = metric;
+	this.randomNumbers = randomNumbers;
 	this.log = new Log();
     }
 
@@ -57,7 +59,7 @@ public class OverUtilzedProblemGenerator<N extends Node, L extends Link<W>, W ex
 		"Minimum DataRate of %s is %s", manet.getClass().getSimpleName(),minDataRate.toString()));
     }
 
-    public List<F> compute(OverUtilizedProblemProperties properties,RandomNumbers randomNumbers) {
+    public List<F> compute(OverUtilizedProblemProperties properties) {
 
 	log.infoHeader(HeaderLevel.h1, getClass().getSimpleName());
 	initialize();

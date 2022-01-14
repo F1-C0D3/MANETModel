@@ -78,7 +78,7 @@ public class CplexFeasibleSolutionTest {
 	};
 
 	OverUtilzedProblemGenerator<ScalarRadioNode, ScalarRadioLink, ScalarLinkQuality, ScalarRadioFlow> overUtilizedProblemGenerator = new OverUtilzedProblemGenerator<ScalarRadioNode, ScalarRadioLink, ScalarLinkQuality, ScalarRadioFlow>(
-		manet, metric);
+		manet, metric,randomNumbers);
 
 	OverUtilizedProblemProperties problemProperties = new OverUtilizedProblemProperties(/* Number of paths */30,
 		/* Minimum path length */10, /* Maximum path length */20,

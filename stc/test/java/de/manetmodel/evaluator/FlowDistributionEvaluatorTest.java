@@ -9,15 +9,9 @@ import javax.swing.SwingUtilities;
 
 import org.junit.Test;
 
-<<<<<<< HEAD
-import de.jgraphlib.generator.GridGraphGenerator;
-import de.jgraphlib.generator.GridGraphProperties;
-import de.jgraphlib.generator.GraphProperties.EdgeStyle;
-=======
 import de.jgraphlib.generator.GraphProperties.EdgeStyle;
 import de.jgraphlib.generator.GridGraphGenerator;
 import de.jgraphlib.generator.GridGraphProperties;
->>>>>>> ed5a7332e17c33f3278cbc7b16cd7be7750e61d6
 import de.jgraphlib.graph.algorithms.DijkstraShortestPath;
 import de.jgraphlib.gui.VisualGraphApp;
 import de.jgraphlib.util.RandomNumbers;
