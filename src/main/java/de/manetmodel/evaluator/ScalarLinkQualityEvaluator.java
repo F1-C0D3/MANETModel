@@ -1,5 +1,7 @@
 package de.manetmodel.evaluator;
 
+import de.manetmodel.evaluation.ConfidenceRangeEvaluation;
+import de.manetmodel.evaluation.SourceSinkSingleTickMobilityEvaluation;
 import de.manetmodel.mobilitymodel.MobilityModel;
 import de.manetmodel.network.scalar.ScalarLinkQuality;
 import de.manetmodel.network.scalar.ScalarRadioLink;
@@ -9,18 +11,18 @@ import de.manetmodel.network.scalar.ScalarRadioNode;
 public class ScalarLinkQualityEvaluator
 	extends LinkQualityEvaluator<ScalarRadioNode, ScalarRadioLink, ScalarLinkQuality> {
 
-    private SourceSinkSingleTickMobilityEvaluator<ScalarRadioNode> mobilityEvaluator;
-    private ConfidenceRangeEvaluator confidenceRangeEvaluator;
+    private SourceSinkSingleTickMobilityEvaluation<ScalarRadioNode> mobilityEvaluator;
+    private ConfidenceRangeEvaluation confidenceRangeEvaluator;
 
     public ScalarLinkQualityEvaluator(DoubleScope scoreScope, ScalarRadioModel radioModel,
 	    MobilityModel mobilityModel) {
 
 	super(scoreScope);
 
-	this.mobilityEvaluator = new SourceSinkSingleTickMobilityEvaluator<ScalarRadioNode>(
+	this.mobilityEvaluator = new SourceSinkSingleTickMobilityEvaluation<ScalarRadioNode>(
 		/* scoreScope */ new DoubleScope(0d, 1d), /* weight */ 1, /* mobilityModel */ mobilityModel);
 
-	this.confidenceRangeEvaluator = new ConfidenceRangeEvaluator(/* scoreScope */ new DoubleScope(0d, 1d),
+	this.confidenceRangeEvaluator = new ConfidenceRangeEvaluation(/* scoreScope */ new DoubleScope(0d, 1d),
 		/* weight */ 1, radioModel);
 
 

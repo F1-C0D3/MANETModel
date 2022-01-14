@@ -1,9 +1,9 @@
 package de.manetmodel.evaluator;
 
+import de.manetmodel.evaluation.FlowDistributionEvaluation;
 import de.manetmodel.network.Flow;
 import de.manetmodel.network.Link;
 import de.manetmodel.network.MANET;
-import de.manetmodel.units.DataRate;
 
 public class FlowDistributionEvaluator<L extends Link<?>, F extends Flow<?,L,?>> {
         

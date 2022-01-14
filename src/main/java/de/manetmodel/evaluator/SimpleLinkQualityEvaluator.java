@@ -1,5 +1,8 @@
 package de.manetmodel.evaluator;
 
+import de.manetmodel.evaluation.ConfidenceDistanceEvaluation;
+import de.manetmodel.evaluation.SinkWeightedMovingAverageMobilityEvaluation;
+import de.manetmodel.evaluation.SourceSinkRelativeDirectionEvaluation;
 import de.manetmodel.mobilitymodel.MobilityModel;
 import de.manetmodel.network.scalar.ScalarLinkQuality;
 import de.manetmodel.network.scalar.ScalarRadioLink;
@@ -9,21 +12,21 @@ import de.manetmodel.network.scalar.ScalarRadioNode;
 public class SimpleLinkQualityEvaluator
 	extends LinkQualityEvaluator<ScalarRadioNode, ScalarRadioLink, ScalarLinkQuality> {
 
-    private SinkWeightedMovingAverageMobilityEvaluator<ScalarRadioNode> sinkMobilityProperty;
-    private ConfidenceDistanceEvaluator confidenceDistanceProperty;
-    private SourceSinkRelativeDirectionEvaluator<ScalarRadioNode, ScalarRadioLink, ScalarLinkQuality> relativeDirectionProperty;
+    private SinkWeightedMovingAverageMobilityEvaluation<ScalarRadioNode> sinkMobilityProperty;
+    private ConfidenceDistanceEvaluation confidenceDistanceProperty;
+    private SourceSinkRelativeDirectionEvaluation<ScalarRadioNode, ScalarRadioLink, ScalarLinkQuality> relativeDirectionProperty;
 
     public SimpleLinkQualityEvaluator(DoubleScope scoreScope, ScalarRadioModel radioModel,
 	    MobilityModel mobilityModel) {
 
 	super(scoreScope);
 
-	this.sinkMobilityProperty = new SinkWeightedMovingAverageMobilityEvaluator<ScalarRadioNode>(
+	this.sinkMobilityProperty = new SinkWeightedMovingAverageMobilityEvaluation<ScalarRadioNode>(
 		/* scoreScope */ new DoubleScope(0d, 1d), /* weight */ 1d, /* mobilityModel */ mobilityModel);
 
-	this.confidenceDistanceProperty = new ConfidenceDistanceEvaluator(/* scoreScope */ new DoubleScope(0d, 1d),
+	this.confidenceDistanceProperty = new ConfidenceDistanceEvaluation(/* scoreScope */ new DoubleScope(0d, 1d),
 		/* weight */ 0.33d, radioModel);
-	this.relativeDirectionProperty = new SourceSinkRelativeDirectionEvaluator<ScalarRadioNode, ScalarRadioLink, ScalarLinkQuality>(
+	this.relativeDirectionProperty = new SourceSinkRelativeDirectionEvaluation<ScalarRadioNode, ScalarRadioLink, ScalarLinkQuality>(
 		/* scoreScope */ new DoubleScope(0d, 1d), /* weight */ 0.33d, mobilityModel);
 
 	this.setPropertyScope(new DoubleScope(0d, 1d));
