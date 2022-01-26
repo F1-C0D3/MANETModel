@@ -12,23 +12,26 @@ public class Scenario {
     protected int numRuns;
     protected int numNodes;
     protected int datePrefixFlag;
+    protected int seed;
 
-    public Scenario(String indivdualName, int numFlows, int numNodes, int runs, int overUtilizePercentage, int datePrefixFlag) {
+    public Scenario(String indivdualName, int numFlows, int numNodes, int runs, int overUtilizePercentage, int datePrefixFlag, int seed) {
 	this.numRuns = runs;
 	this.indivdualName = indivdualName;
 	this.numFlows = numFlows;
 	this.overUtilizePercentage = overUtilizePercentage;
 	this.numNodes = numNodes;
 	this.datePrefixFlag = datePrefixFlag;
+	this.seed=seed;
     }
 
-    public Scenario(int flows, int nodes, int runs,int overUtilizePercentage,int datePrefixFlag) {
+    public Scenario(int flows, int nodes, int runs,int overUtilizePercentage,int datePrefixFlag, int seed) {
 	this.numRuns = runs;
 	this.indivdualName = new String();
 	this.numFlows = flows;
 	this.overUtilizePercentage = overUtilizePercentage;
 	this.numNodes = nodes;
 	this.datePrefixFlag = datePrefixFlag;
+	this.seed=seed;
     }
 
     public Scenario(int runs) {
@@ -78,6 +81,16 @@ public class Scenario {
     public void setDatePrefixFlag(int datePrefixFlag) {
         this.datePrefixFlag = datePrefixFlag;
     }
+
+    public int getSeed() {
+        return seed;
+    }
+
+    public void setSeed(int seed) {
+        this.seed = seed;
+    }
+    
+    
 
     
 }

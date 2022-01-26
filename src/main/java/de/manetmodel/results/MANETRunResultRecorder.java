@@ -75,7 +75,7 @@ public class MANETRunResultRecorder<I extends ResultParameter, A extends ResultP
     protected String outputFilename() {
 	// TODO Auto-generated method stub
 	StringBuffer outputBuffer = new StringBuffer();
-	outputBuffer.append(String.format("Run=%d_flows=%d_oU=%d_", runResultContent.getCurrentRun(),
+	outputBuffer.append(String.format("Run=%d_Seed=%d_flows=%d_oU=%d_", runResultContent.getCurrentRun(),scenario.getSeed(),
 		scenario.getNumFlows(), scenario.getOverUtilizePercentage()));
 	outputBuffer.append(super.outputFilename());
 	return outputBuffer.toString();
